@@ -18,8 +18,11 @@ describe('POST task',() => {
             headers: {
                 'Content-Type':'application/json'
             },
-            body: JSON.stringify({'user_id':'3','email':'tester2@tester.com','password_hash':'12345'})
-        })
+            body: JSON.stringify({
+                user_id: 5,
+                email: 'tester2@tester.com',
+                password_hash: '12345'})
+            })
         const data = await response.json()
         expect(response.status).to.equal(200)
         expect(data).to.be.an('object')

@@ -26,19 +26,16 @@ app.post('/create',(req,res) => {
 
   const pool = openDb()
 
-  //const queryText = 'INSERT INTO Users (user_id, email, password_hash) VALUES ($1, $2, $3) RETURNING *';
-  pool.query('insert into Users (user_id, email, password_hash) values ($1, $2, $3) returning *'),
-  //const values = ['2', 'tester@tester.com', 'hashedPassword123'];
-  //pool.query(queryText,values),
-  [req.body.user_id],
-  [req.body.email],
-  [req.body.password_hash],
-  (error,result) => {
-    if (error) {
-        return res.status(500).json({error: error.message})
+  pool.query(
+    'insert into Users (user_id, email, password_hash) values ($1, $2, $3) returning *',
+    [req.body.user_id, req.body.email, req.body.password_hash],
+    (error,result) => {
+      if (error) {
+          return res.status(500).json({error: error.message})
+      }
+      res.status(200).json(result.rows)
     }
-    res.status(200).json(result.rows)
-  }
+  )
 })
 
 
