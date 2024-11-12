@@ -23,8 +23,14 @@ app.get('/', (req, res) => {
 });
 
 app.post('/create',(req,res) => {
-  pool.query('insert into Users (id, email, password_hash) values ($1, $2, $3) returning *'),
-  [req.body.id],
+
+  const pool = openDb()
+
+  //const queryText = 'INSERT INTO Users (user_id, email, password_hash) VALUES ($1, $2, $3) RETURNING *';
+  pool.query('insert into Users (user_id, email, password_hash) values ($1, $2, $3) returning *'),
+  //const values = ['2', 'tester@tester.com', 'hashedPassword123'];
+  //pool.query(queryText,values),
+  [req.body.user_id],
   [req.body.email],
   [req.body.password_hash],
   (error,result) => {
