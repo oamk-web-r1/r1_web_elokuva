@@ -10,6 +10,7 @@ app.use(cors());
 
 
 app.get('/', (req, res) => {
+
   const pool = openDb()
 
   pool.query('select * from Users', (error, result) => {
@@ -19,6 +20,10 @@ app.get('/', (req, res) => {
     res.status(200).json(result.rows);
   })
 });
+
+  res.json('Hello from the backend!')
+})
+main
 
 const openDb = () => {
   const pool = new Pool({
@@ -37,5 +42,5 @@ const openDb = () => {
 
 
 app.listen(PORT, () => {
-  console.log('Server is running');
-});
+  console.log(`Server is running on http://localhost:${PORT}`)
+})
