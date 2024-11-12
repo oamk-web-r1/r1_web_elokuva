@@ -8,6 +8,7 @@ import { AllReviews } from './pages/allReviews';
 import { Home } from './pages/home';
 import { SignIn } from './pages/signIn';
 import { SignUp } from './pages/signUp';
+import Showtimes from './components/showtimes';
 
 const router = createBrowserRouter([
   {
@@ -41,5 +42,5 @@ root.render(
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// or send to ain analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
