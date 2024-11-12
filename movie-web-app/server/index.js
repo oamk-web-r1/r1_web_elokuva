@@ -21,16 +21,14 @@ app.get('/', (req, res) => {
   })
 });
 
-  res.json('Hello from the backend!')
-})
-main
+
 
 const openDb = () => {
   const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'Web_sovellus_DB_template1',
-    password: 'root',
+    password: 'nowciv-duvNig-bajku7',
     port: 5432
   })
   return pool
