@@ -76,7 +76,7 @@ const HeaderLinks = styled(Link)`
   }
 `;
 
-/*const Header = () => {
+const Header = () => {
   return (
     <HeaderContainer>
       <HeaderContent>
@@ -97,54 +97,6 @@ const HeaderLinks = styled(Link)`
       </HeaderContent>
     </HeaderContainer>
   )
-}*/
-
-const Header = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(`/api/search`, {
-        params: { q: searchQuery },
-      });
-      setSearchResults(response.data.results);
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }
-  };
-
-  return (
-    <HeaderContainer>
-      <HeaderContent>
-        <Logo to="/">
-          <img src={logo} alt="Logo" />
-        </Logo>
-
-        <SearchContainer>
-          <SearchInput
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <FilterButton onClick={handleSearch}>Search</FilterButton>
-        </SearchContainer>
-
-        <div>
-          {searchResults.map(movie => (
-            <div key={movie.id}>{movie.title}</div>
-          ))}
-        </div>
-
-        <div>
-          <HeaderLinks to={'/allgroups'}>GROUPS</HeaderLinks>
-          <HeaderLinks to={'/allreviews'}>REVIEWS</HeaderLinks>
-          <HeaderLinks to={'/signin'}>SIGN IN</HeaderLinks>
-        </div>
-      </HeaderContent>
-    </HeaderContainer>
-  );
-};
+}
 
 export default Header
