@@ -3,11 +3,12 @@ import cors from 'cors';
 import pkg from 'pg';
 
 const PORT = 3001;
+
+
 const { Pool } = pkg;
 
 const app = express();
 app.use(cors());
-
 
 app.get('/', (req, res) => {
 
@@ -34,6 +35,8 @@ app.post('/create',(req,res) => {
   }
 })
 
+
+
 const openDb = () => {
   const pool = new Pool({
     user: 'postgres',
@@ -44,11 +47,6 @@ const openDb = () => {
   })
   return pool
 }
-
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
