@@ -1,59 +1,26 @@
-import express from 'express';
-import cors from 'cors';
-import pkg from 'pg';
+import express from 'express'
+import cors from 'cors'
+import Web_sovellus_DB_template1Router from './routers/Web_sovellus_DB_template1Router.js'
+import userRouter from './routers/userRouter.js'
+import groupRouter from './routers/groupRouter.js'
+import { pool } from './helpers/db.js'
+import { response } from 'express'
 
-const PORT = 3001;
 
-
-const { Pool } = pkg;
 
 const app = express();
+const port = process.env.PORT || 3001;
+
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use('/', Web_sovellus_DB_template1Router); // Database router
+app.use('/user', userRouter); // User router
+app.use('/groups', groupRouter); // Group router
 
-app.get('/', (req, res) => {
-
-  const pool = openDb()
-
-  pool.query('select * from Users', (error, result) => {
-    if (error) {
-      return res.status(500).json({error: error.message});
-    }
-    res.status(200).json(result.rows);
-  })
-});
-
-app.post('/create',(req,res) => {
-
-  const pool = openDb()
-
-  //const queryText = 'INSERT INTO Users (user_id, email, password_hash) VALUES ($1, $2, $3) RETURNING *';
-  pool.query('insert into Users (user_id, email, password_hash) values ($1, $2, $3) returning *'),
-  //const values = ['2', 'tester@tester.com', 'hashedPassword123'];
-  //pool.query(queryText,values),
-  [req.body.user_id],
-  [req.body.email],
-  [req.body.password_hash],
-  (error,result) => {
-    if (error) {
-        return res.status(500).json({error: error.message})
-    }
-    res.status(200).json(result.rows)
-  }
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500
+  res.status(statusCode).json({error: err.message}) 
 })
 
-
-
-const openDb = () => {
-  const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'Web_sovellus_DB_template1',
-    password: 'root',
-    port: 5432
-  })
-  return pool
-}
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
-})
+app.listen(port)
