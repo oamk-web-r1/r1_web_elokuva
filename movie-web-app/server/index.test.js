@@ -30,6 +30,76 @@ describe('POST register', () => {
 
     })
 
+    describe('DELETE /user/delete', () => {
+        const email = 'removableuser@foo.com';
+        const password = 'password123';
+        let token;
+    
+        before(async () => {
+            // Insert the test user into the DB
+            await insertTestUser(email, password);
+            await new Promise(resolve => setTimeout(resolve, 200)); // Optional delay for data commit
+    
+            // Login to get the token
+            const response = await fetch(base_url + '/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'email': email, 'password': password })
+            });
+    
+            const data = await response.json();
+            expect(response.status).to.equal(200, data.error);
+            expect(data).to.be.an('object');
+            expect(data).to.include.all.keys('user_id', 'email', 'token'); // Expect user_id, email, and token
+    
+            // Store the token for subsequent requests
+            token = data.token;
+        });
+    
+        it('should delete the user account successfully', async () => {
+            // Delete user using the token
+            //const test_token = token.split(' ')[1];
+            const response = await fetch(base_url + '/user/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            const data = await response.json();
+            expect(response.status).to.equal(200);
+            expect(data.message).to.equal('User deleted successfully');
+        });
+    
+        it('should return 401 Unauthorized if no token is provided', async () => {
+            const response = await fetch(base_url + '/user/delete', {
+                method: 'DELETE',
+    
+            });
+    
+            const data = await response.json();
+            expect(response.status).to.equal(401);
+            expect(data.message).to.equal('Authorization required');
+        });
+    
+        it('should return 403 Unauthorized if an invalid token is provided', async () => {
+            const response = await fetch(base_url + '/user/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer invalidtoken`
+                }
+            });
+    
+            const data = await response.json();
+            expect(response.status).to.equal(403);
+            expect(data.message).to.equal('Invalid credentials');
+        });
+    
+        
+    });
+
 describe('POST login', () => {
     const email = 'login@foo.com'
     const password = 'login123'
@@ -54,6 +124,69 @@ describe('POST login', () => {
         expect(data).to.include.all.keys('user_id','email','token') // Expect user_id, email, and token
     })
 })
+
+describe('POST /user/logout', () => {
+    const email = 'logout@foo.com'
+    const password = 'logout123'
+    let token;
+
+    before(async () => {
+        await insertTestUser(email, password); // Wait for the user to be inserted to the DB
+        await new Promise(resolve => setTimeout(resolve, 200)); // Optional delay for data commit
+
+        // Login test user 
+        const response = await fetch(base_url + '/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 'email': email, 'password': password })
+        });
+
+        const data = await response.json();
+        expect(response.status).to.equal(200, data.error);
+        expect(data).to.be.an('object');
+        expect(data).to.include.all.keys('user_id', 'email', 'token'); // Expect user_id, email, and token
+
+        // Store the token for subsequent requests
+        token = data.token;
+
+    });
+
+    it ('should logout the user successfully', async () => {
+
+        // Logout the user
+        const response = await fetch(base_url + '/user/logout', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+        expect(response.status).to.equal(200, data.error);
+        expect(data).to.be.an('object');
+        expect(data.message).to.equal('User successfully logged out');
+    });
+
+    it('should prevent access to protected routes after logout', async () => {
+        // Attempt to delete user after logging out
+        const response = await fetch(base_url + '/user/delete', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        expect(response.status).to.equal(403);
+        const data = await response.json();
+        expect(data.message).to.equal('Token has been invalidated. Please login again.');
+    });
+
+})
+
+
+
 
 //Tests for Groups
 
@@ -97,3 +230,4 @@ describe('POST /groups/create', () => {
             });
     }); 
 }); */
+

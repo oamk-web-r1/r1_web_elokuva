@@ -2,6 +2,8 @@ import { pool} from "../helpers/db.js"
 import { Router } from "express"
 import { hash,compare } from "bcrypt"
 import jwt from "jsonwebtoken"
+import { addToBlacklist } from "../helpers/blacklist.js";
+import { auth } from "../helpers/auth.js";
 
 const { sign } = jwt
 
@@ -26,37 +28,6 @@ router.post('/register',(req, res, next) => {
     }
 })
 })
-
-/* router.post('/login',(req,res,next) => {
-    const invalid_message = 'Invalid credentials'
-    try {
-        pool.query('select * from Users where email=$1',
-            [req.body.email],
-            (error,result) => {
-                if (error)  next(error)
-                if (result.rowCount === 0) return next(new Error(invalid_message))
-                    compare(req.body.password,result.rows[0].password_hash,(error,match) => {
-                        if (error) return next(error)
-                        if (!match) return next(new Error(invalid_message))
-                        const token = sign({user: req.body.email},process.env.JWT_SECRET_KEY)
-                        const user = result.rows[0]
-                        // Return user_id, email, and token in the response
-                        return res.status(200).json(
-                    {
-                            'user_id': user.user_id,
-                            'email': user.email,
-                            'token': token
-                        }
-                        )   
-            })
-        })
-        } catch (error) {
-            return next(error)
-        }
-
-    })
-*/
-
 
 
 router.post('/login', (req, res, next) => {
@@ -110,5 +81,59 @@ router.post('/login', (req, res, next) => {
     }
 });
 
+router.post('/logout', auth, (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        addToBlacklist(token);
+        return res.status(200).json({ message: 'User successfully logged out' });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+
+router.delete('/delete', auth, (req, res, next) => {
+
+    try {
+        console.log('Auth middleware user:', req.user); // Debug auth data
+        const userEmail = req.user.user;  // This comes from auth middleware
+        console.log('Attempting to delete user:', userEmail); // Debug user email
+
+        // First get user_id from email
+        pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail], (error, userResult) => {
+            if (error){
+                console.error('Database error:', error); // Debug DB errors
+             return next(error);
+            }
+            if (userResult.rowCount === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            const userId = userResult.rows[0].user_id;
+            console.log('Found user ID:', userId); // Debug user ID
+   
+
+            // Check if user owns groups
+            pool.query('SELECT * FROM Groups WHERE owner_id = $1', [userId], (error, result) => {
+                if (error) return next(error);
+
+                if (result.rowCount > 0) {
+                    return res.status(400).json({ 
+                        error: 'You must transfer ownership of your groups before deleting your account.' 
+                    });
+                }
+
+              
+                // Delete the user
+                pool.query('DELETE FROM Users WHERE user_id=$1', [userId], (deleteError, deleteResult) => {
+                    if (deleteError) return next(deleteError);
+                    return res.status(200).json({ message: 'User deleted successfully' });
+                });
+            });
+        });
+    } catch (error) {
+        return next(error);
+    }
+});
     
 export default router;
