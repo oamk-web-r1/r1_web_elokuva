@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/testlogo.png';
-import axios from 'axios';
+import SearchBar from '../components/search';
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -30,33 +29,6 @@ const Logo = styled(Link)`
   }
 `;
 
-const SearchContainer = styled.div`
-  display: flex;
-  flex: 1;
-  max-width: 500px;
-`;
-
-const SearchInput = styled.input`
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 4px 0 0 4px;
-  outline: none;
-`;
-
-const FilterButton = styled.button`
-  padding: 8px 12px;
-  border: none;
-  background-color: white;
-  color: black;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-
-  &:hover {
-  color: #CA2145;
-  }
-`;
-
 const ButtonContainer = styled.div`
   display: flex;
   gap: 5px;
@@ -76,7 +48,7 @@ const HeaderLinks = styled(Link)`
   }
 `;
 
-const Header = () => {
+const Header = ({setResults}) => {
   return (
     <HeaderContainer>
       <HeaderContent>
@@ -84,14 +56,10 @@ const Header = () => {
           <img src={logo} alt="Logo" />
         </Logo>
 
-        <SearchContainer>
-          <SearchInput type="text" placeholder="Search..." />
-          <FilterButton>Filter</FilterButton>
-        </SearchContainer>
+        <SearchBar setResults={setResults} />
 
         <ButtonContainer>
           <HeaderLinks to={'/allgroups'}>GROUPS</HeaderLinks>
-          <HeaderLinks to={'/allreviews'}>REVIEWS</HeaderLinks>
           <HeaderLinks to={'/signin'}>SIGN IN</HeaderLinks>
         </ButtonContainer>
       </HeaderContent>

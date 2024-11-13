@@ -3,14 +3,20 @@ import Header from '../styled-components/header';
 import GlobalStyle from '../styled-components/globalStyle';
 import Button from '../styled-components/button';
 import Wrapper from '../styled-components/wrapper';
+import { useState } from 'react';
+import Movie from '../components/movie';
 
 export function Home() {
+    const [results, setResults] = useState([])
+
     return (
         <>
-            <Header />
+            <Header setResults={setResults} />
             <GlobalStyle />
-                <Wrapper><Button>Button</Button></Wrapper>
-                <Wrapper><Button>Button</Button></Wrapper>
-        </>
+            <Movie movies={results} />
+            <Wrapper>
+              <Button>Show more</Button>
+            </Wrapper>
+    </>
     )
 }
