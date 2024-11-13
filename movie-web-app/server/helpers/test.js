@@ -8,7 +8,7 @@ const { sign } = jwt
 const __dirname = path.resolve();
 
 const initializeTestDb = async () => {
-    const sql = fs.readFileSync(path.resolve(__dirname,'../server/movie-app-db.sql'),"utf8");
+    const sql = fs.readFileSync(path.resolve(__dirname,'../server/movieAppDb.sql'),"utf8");
     await pool.query(sql)
 }
 
