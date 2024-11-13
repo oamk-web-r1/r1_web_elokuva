@@ -43,12 +43,12 @@ function SearchBar({ setResults }) {
         />
         <button class="filter-button" onClick={() => setDropdownVisible(!isDropdownVisible)}>Filter</button>
         <div className={`dropdown-menu ${isDropdownVisible ? 'visible' : ''}`}>
-  {genres.map((genre) => (
-    <div className="dropdown-item" key={genre.id} onClick={() => handleGenreSelect(genre)}>
-      {genre.name}
-    </div>
-  ))}
-</div>
+          {genres.map((genre) => (
+        <div className="dropdown-item" key={genre.id} onClick={() => handleGenreSelect(genre)}>
+          {genre.name}
+        </div>
+       ))}
+      </div>
       </div>
   )
 }
