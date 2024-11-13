@@ -44,10 +44,6 @@ export const genres = [
         "name": "Horror"
     },
     {
-        "id": 10402,
-        "name": "Music"
-    },
-    {
         "id": 9648,
         "name": "Mystery"
     },
@@ -60,19 +56,7 @@ export const genres = [
         "name": "Science Fiction"
     },
     {
-        "id": 10770,
-        "name": "TV Movie"
-    },
-    {
         "id": 53,
         "name": "Thriller"
     },
-    {
-        "id": 10752,
-        "name": "War"
-    },
-    {
-        "id": 37,
-        "name": "Western"
-    }
 ];
