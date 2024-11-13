@@ -4,7 +4,6 @@ import axios from "axios";
 
 const url = 'http://localhost:3001'
 
-
 export default function UserProvider({children}) {
     const userFromSessionStorage = sessionStorage.getItem('user')
     const [user, setUser] = useState(userFromSessionStorage ? JSON.parse(userFromSessionStorage): {email: '', password: ''})

@@ -3,14 +3,15 @@ import '../stylesheet.css'
 import searchicon from "../assets/searchicon.png";
 import { genres } from '../data/genres';
 
+const MyKey = process.env.REACT_APP_API_KEY
+
 function SearchBar({ setResults }) {
   const [query, setQuery] = useState("")
   const [, setSelectedGenre] = useState(null)
   const [isDropdownVisible, setDropdownVisible] = useState(false)
 
-  const API_KEY = '22a1b5a6a4a47ee5d44b9905a6d233c0'
   const BASE_URL = 'https://api.themoviedb.org/3'
-  const searchURL = `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&include_adult=false&language=en-US&page=1`
+  const searchURL = `${BASE_URL}/search/movie?api_key=${MyKey}&query=${query}&include_adult=false&language=en-US&page=1`
 
   const handleSearch = () => {
     if (query.trim() === "") return
@@ -23,7 +24,7 @@ function SearchBar({ setResults }) {
   const handleGenreSelect = (genre) => {
     setSelectedGenre(genre.id)
     setDropdownVisible(false)
-    fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=${genre.id}`)
+    fetch(`${BASE_URL}/discover/movie?api_key=${MyKey}&language=en-US&with_genres=${genre.id}`)
       .then(res => res.json())
       .then(json => setResults(json.results || []))
       .catch(err => console.error(err))

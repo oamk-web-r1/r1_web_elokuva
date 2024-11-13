@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import '../stylesheet.css'
 
+const MyKey = process.env.REACT_APP_API_KEY
+
 function Movie({ movies }) {
   const [movieList, setMovieList] = useState([]);
 
   const getMovies = () => {
-    fetch("https://api.themoviedb.org/3/movie/popular?api_key=22a1b5a6a4a47ee5d44b9905a6d233c0&language=en-US&page=1")
+    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${MyKey}&language=en-US&page=1`)
       .then(res => res.json())
       .then(json => setMovieList(json.results.slice(0, 9)))
       .catch(err => console.error(err))
