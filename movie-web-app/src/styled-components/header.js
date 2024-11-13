@@ -93,6 +93,8 @@ const Header = () => {
           <HeaderLinks to={'/allgroups'}>GROUPS</HeaderLinks>
           <HeaderLinks to={'/allreviews'}>REVIEWS</HeaderLinks>
           <HeaderLinks to={'/signin'}>SIGN IN</HeaderLinks>
+          <HeaderLinks to={'/showtimes'}>SHOWTIMES</HeaderLinks>
+
         </ButtonContainer>
       </HeaderContent>
     </HeaderContainer>
