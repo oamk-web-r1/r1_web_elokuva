@@ -12,9 +12,9 @@ const initializeTestDb = async () => {
     await pool.query(sql)
 }
 
-const insertTestUser = (email, password) => {
-    hash(password,10,(error,hashedPassword) => {
-        pool.query('insert into Users (email,password_hash) values ($1,$2)',
+const insertTestUser = async (email, password) => {
+     hash(password,10,(error,hashedPassword) => {
+         pool.query('insert into Users (email,password_hash) values ($1,$2)',
             [email,hashedPassword])
     })
 }

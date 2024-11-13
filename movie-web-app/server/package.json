@@ -5,15 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< Updated upstream
-    "start": "node index.js",
-    "devStart": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-=======
     "testStart": "NODE_ENV=test node index.js ",
     "devStart": "NODE_ENV=development nodemon index.js",
     "test": "mocha *.test.js"
->>>>>>> Stashed changes
   },
   "keywords": [],
   "author": "",
