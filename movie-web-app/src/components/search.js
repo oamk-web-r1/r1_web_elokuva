@@ -3,6 +3,8 @@ import '../stylesheet.css'
 import searchicon from "../assets/searchicon.png";
 import { genres } from '../data/genres';
 
+//star rating and release year filter
+
 const MyKey = process.env.REACT_APP_API_KEY
 
 function SearchBar({ setResults }) {
