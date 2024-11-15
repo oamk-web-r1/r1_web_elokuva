@@ -1,16 +1,18 @@
 import React from 'react';
-import Header from '../styled-components/header';
-import GlobalStyle from '../styled-components/globalStyle';
-import Button from '../styled-components/button';
-import Wrapper from '../styled-components/wrapper';
+import Header from '../components/header';
+import { useState } from 'react';
+import Movie from '../components/movie';
 
 export function Home() {
+    const [results, setResults] = useState([])
+
     return (
         <>
-            <Header />
-            <GlobalStyle />
-                <Wrapper><Button>Button</Button></Wrapper>
-                <Wrapper><Button>Button</Button></Wrapper>
-        </>
+            <Header setResults={setResults} />
+            <Movie movies={results} />
+            <div class="wrapper">
+              <button class="button">Show more</button>
+            </div>
+    </>
     )
 }

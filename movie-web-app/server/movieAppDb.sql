@@ -1,3 +1,12 @@
+-- Drop existing tables
+DROP TABLE IF EXISTS Group_Showings;
+DROP TABLE IF EXISTS Showings;
+DROP TABLE IF EXISTS Reviews;
+DROP TABLE IF EXISTS Favorites;
+DROP TABLE IF EXISTS Group_Members;
+DROP TABLE IF EXISTS Groups;
+DROP TABLE IF EXISTS Users;
+
 -- Users Table
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
@@ -9,7 +18,9 @@ CREATE TABLE Users (
 CREATE TABLE Groups (
     group_id SERIAL PRIMARY KEY,
     owner_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL
+    
 );
 
 -- Group_Members Table (Composite Primary Key)
