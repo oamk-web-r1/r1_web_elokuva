@@ -1,23 +1,20 @@
-// src/pages/signIn.js
-import { useContext, useState } from "react";
-import { UserContext } from "./components/UserContext"; // Corrected path to UserContext
+import { useUser } from "../context/useUser";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export function SignIn() {
-    const { SignIn } = useContext(UserContext);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
+export default function SignIn() {
+    const { user, setUser, signIn } = useUser();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
         try {
-            await SignIn(email, password);
-            navigate("/");
-        } catch (err) {
-            setError("Invalid email or password. Please try again.");
+            await signIn();
+            navigate('/');
+        } catch (error) {
+            const message = error.response && error.response.data ? error.response.data.error : error;
+            alert(message);
         }
     };
 
@@ -29,24 +26,23 @@ export function SignIn() {
                     <label>Email:</label>
                     <input
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
+                        value={user.email}
+                        onChange={e=> setUser({ ...user, email: e.target.value })}
                     />
                 </div>
                 <div>
                     <label>Password:</label>
                     <input
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
+                        value={user.password}
+                        onChange={e=> setUser({ ...user, password: e.target.value })}
                     />
                 </div>
-                <button type="submit">Sign In</button>
-            </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                <button type="submit">Sign In</button>     
+            </form>                
+            <div className="register-link">
+                <Link to="/signup">Don't have an account?</Link>
+            </div>
         </div>
     );
 }
-

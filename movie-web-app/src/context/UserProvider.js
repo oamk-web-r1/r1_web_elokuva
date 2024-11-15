@@ -19,8 +19,19 @@ export default function UserProvider({children}) {
         }
     }
 
+    const signIn = async () => {
+        const json = JSON.stringify(user)
+        const headers = { headers: { 'Content-Type': 'application/json' } }
+        try {
+            await axios.post(url + '/user/login', json, headers)
+            setUser({ email: '', password: '' })
+        } catch (error) {
+            throw error
+        }
+    }
+
     return (
-        <UserContext.Provider value={{ user, setUser, signUp }}>
+        <UserContext.Provider value={{ user, setUser, signUp, signIn }}>
             { children }
         </UserContext.Provider>
     )
