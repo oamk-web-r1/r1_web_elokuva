@@ -3,4 +3,3 @@ import { UserContext } from "./UserContext.js";
 
 export const useUser = () => {
     return useContext(UserContext)
-}
