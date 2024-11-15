@@ -38,7 +38,7 @@ export default function SignIn() {
                         onChange={e=> setUser({ ...user, password: e.target.value })}
                     />
                 </div>
-                <button type="submit">Sign In</button>     
+                <button class="button" type="submit">Sign In</button>   
             </form>                
             <div className="register-link">
                 <Link to="/signup">Don't have an account?</Link>

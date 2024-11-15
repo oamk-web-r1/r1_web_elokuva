@@ -8,6 +8,7 @@ import { Home } from './pages/home';
 import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
 import UserProvider from './context/UserProvider';
+import Showtimes from './pages/showtimes';
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/showtimes",
-    element: <showTimes/>,
+    element: <Showtimes/>,
   }
 ]);
 

@@ -17,7 +17,7 @@ const Header = ({setResults}) => {
         <div class="button-container">
         <Link className="header-links" to={'/allgroups'}>GROUPS</Link>
         <Link className="header-links" to={'/signin'}>SIGN IN</Link>
-        <Link className="header-links" to={'/signup'}>SIGN UP</Link>
+        <Link className="header-links" to={'/showtimes'}>SHOWTIMES</Link>
         </div>
       </div>
     </div>
