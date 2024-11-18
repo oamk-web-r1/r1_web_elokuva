@@ -8,6 +8,7 @@ import { Home } from './pages/home';
 import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
 import UserProvider from './context/UserProvider';
+import MoviePage from './pages/moviePage';
 import Showtimes from './pages/showtimes';
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  {
+    path: "/moviepage/:movieId",
+    element: <MoviePage />,
   },
   {
     path: "/showtimes",

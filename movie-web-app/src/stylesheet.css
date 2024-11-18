@@ -1,27 +1,9 @@
-/* Button */
-.button {
-    padding: 11px 16px;
-    border: none;
-    border-radius: 20px;
-    background-color: #CA2145;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 15px;
-  }
-  
-  .button:hover {
-    background-color: #E23E62;
-  }
-  
-  /* Global Styles */
+
   body {
     background: #0F0F0F;
     color: #fff;
   }
   
-  /* Header */
   .header-container {
     display: flex;
     justify-content: center;
@@ -50,16 +32,17 @@
   
   .button-container {
     display: flex;
+    justify-content: center;
     gap: 5px;
   }
   
+  /* header navigation buttons */
   .header-links {
     padding: 8px 14px;
     border: none;
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
-    background-color: #333;
   }
   
   .header-links:hover {
@@ -67,13 +50,11 @@
     color: #CA2145;
   }
   
-  /* Wrapper */
   .wrapper {
     display: flex;
     justify-content: center;
   }
   
-  /* Movie Container */
   .movie-container {
     display: flex;
     flex-wrap: wrap;
@@ -104,7 +85,6 @@
     text-align: center;
   }
   
-  /* Search Container */
   .search-container {
     display: flex;
     flex: 1;
@@ -119,34 +99,6 @@
     outline: none;
   }
   
-  .filter-button {
-    padding: 8px 12px;
-    border: none;
-    background-color: white;
-    color: black;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-  }
-  
-  .filter-button:hover {
-    color: #CA2145;
-  }
-  
-  .search-button {
-    display: flex;
-    padding: 8px 12px;
-    border: none;
-    background-color: white;
-    color: black;
-    border-radius: 4px 0 0 4px;
-    cursor: pointer;
-  }
-  
-  .search-button:hover {
-    background-color: lightgray;
-  }
-  
-  /* Dropdown Menu */
   .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -173,4 +125,127 @@
   
   .dropdown-item:hover {
     background-color: #f0f0f0;
+  }
+
+  .gray-box {
+    display: flex;
+    justify-content: center;
+    padding: 20px 20px;
+    background-color: #242424;
+    color: #fff;
+    width: 200px;
+  }
+
+  /* Buttons */
+
+  /* default button for black background */
+  .default-button-pink {
+    padding: 11px 17px;
+    border: none;
+    border-radius: 20px;
+    background-color: #CA2145;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 15px;
+  }
+  
+  .button-button-pink:hover {
+    background-color: #E23E62;
+  }
+
+  /* sign in/sign up button */
+  .wide-button {
+    padding: 11px 50px;
+    border: none;
+    border-radius: 20px;
+    background-color: #CA2145;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 15px;
+  }
+
+  .wide-button:hover {
+    background-color: #E23E62;
+  }
+
+  .filter-button {
+    padding: 8px 12px;
+    border: none;
+    background-color: white;
+    color: black;
+    border-radius: 0;
+    cursor: pointer;
+  }
+
+  .filter-button-2 {
+    padding: 8px 12px;
+    border: none;
+    background-color: white;
+    color: black;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .filter-button:hover {
+    color: #CA2145;
+  }
+
+  .filter-button-2:hover {
+    color: #CA2145;
+  }
+  
+  .search-button {
+    display: flex;
+    padding: 8px 12px;
+    border: none;
+    background-color: white;
+    color: black;
+    border-radius: 4px 0 0 4px;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: lightgray;
+  }
+
+  /* Header */
+
+  /* Links */
+
+  .link {
+    font-size: 1rem;
+    color: #CA2145;
+  }
+
+  /* Images */
+
+  /* Text */
+
+  .default-big-title-pink {
+    font-size: 1.5rem;
+    color: #CA2145;
+  }
+
+  .default-big-title-white {
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  .default-medium-title {
+    font-size: 1.3rem;
+    color: #fff;
+  }
+
+  .default-text-center {
+    font-size: 1rem;
+    color: #fff;
+  }
+
+  .default-text-left {
+    font-size: 1rem;
+    color: #fff;
   }

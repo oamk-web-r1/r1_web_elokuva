@@ -4,7 +4,8 @@ import logo from '../assets/testlogo.png';
 import SearchBar from './search';
 import { Link } from 'react-router-dom';
 
-const Header = ({setResults}) => {
+const Header = ({ setResults }) => {
+
   return (
     <div class="header-container">
       <div class="header-content">
@@ -16,8 +17,8 @@ const Header = ({setResults}) => {
 
         <div class="button-container">
         <Link className="header-links" to={'/allgroups'}>GROUPS</Link>
-        <Link className="header-links" to={'/signin'}>SIGN IN</Link>
         <Link className="header-links" to={'/showtimes'}>SHOWTIMES</Link>
+        <Link className="header-links" to={'/signin'}>SIGN IN</Link>
         </div>
       </div>
     </div>
