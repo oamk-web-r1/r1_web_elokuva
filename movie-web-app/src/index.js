@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     element: <SignUp />,
   },
   {
-    path: "/moviepage",
+    path: "/moviepage/:movieId",
     element: <MoviePage />,
   },
   {

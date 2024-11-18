@@ -4,7 +4,8 @@ import logo from '../assets/testlogo.png';
 import SearchBar from './search';
 import { Link } from 'react-router-dom';
 
-const Header = ({setResults}) => {
+const Header = ({ setResults }) => {
+
   return (
     <div class="header-container">
       <div class="header-content">

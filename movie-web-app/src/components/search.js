@@ -66,7 +66,7 @@ function SearchBar({ setResults }) {
           type="text"
           placeholder="Search..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}/>
+          onChange={e => setQuery(e.target.value)}/>
         <button class="filter-button" onClick={() => handleDropdownToggle('genre')}>Genre</button>
         <div className={`dropdown-menu ${visibleDropdown === 'genre' ? 'visible' : ''}`}>
           {genres.map((genre) => (
