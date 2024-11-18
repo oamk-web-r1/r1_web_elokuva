@@ -226,36 +226,26 @@
   /* Text */
 
   .default-big-title-pink {
-    display: flex;
-    justify-content: center;
     font-size: 1.5rem;
     color: #CA2145;
   }
 
   .default-big-title-white {
-    display: flex;
-    justify-content: center;
     font-size: 1.5rem;
     color: #fff;
   }
 
   .default-medium-title {
-    display: flex;
-    justify-content: center;
     font-size: 1.3rem;
     color: #fff;
   }
 
   .default-text-center {
-    display: flex;
-    justify-content: center;
     font-size: 1rem;
     color: #fff;
   }
 
   .default-text-left {
-    display: flex;
-    justify-content: left;
     font-size: 1rem;
     color: #fff;
   }
