@@ -17,7 +17,7 @@ const { movieId } = useParams()
   }, [movieId])
 
     return (
-        <div className="movie-detail-container">
+        <div class="movie-detail-container">
       {movieDetails && (
         <>
           <h1>{movieDetails.title}</h1>

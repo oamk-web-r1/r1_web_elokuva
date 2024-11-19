@@ -68,25 +68,25 @@ function SearchBar({ setResults }) {
           value={query}
           onChange={e => setQuery(e.target.value)}/>
         <button class="filter-button" onClick={() => handleDropdownToggle('genre')}>Genre</button>
-        <div className={`dropdown-menu ${visibleDropdown === 'genre' ? 'visible' : ''}`}>
+        <div class={`dropdown-menu ${visibleDropdown === 'genre' ? 'visible' : ''}`}>
           {genres.map((genre) => (
-        <div className="dropdown-item" key={genre.id} onClick={() => handleGenreSelect(genre)}>
+        <div class="dropdown-item" key={genre.id} onClick={() => handleGenreSelect(genre)}>
           {genre.name}
         </div>
        ))}
       </div>
-      <button className="filter-button" onClick={() => handleDropdownToggle('year')}>Year</button>
-      <div className={`dropdown-menu ${visibleDropdown === 'year' ? 'visible' : ''}`}>
+      <button class="filter-button" onClick={() => handleDropdownToggle('year')}>Year</button>
+      <div class={`dropdown-menu ${visibleDropdown === 'year' ? 'visible' : ''}`}>
         {years.map((year) => (
-          <div className="dropdown-item" key={year} onClick={() => handleYearSelect(year)}>
+          <div class="dropdown-item" key={year} onClick={() => handleYearSelect(year)}>
             {year}
           </div>
         ))}
       </div>
-      <button className="filter-button-2" onClick={() => handleDropdownToggle('ageRating')}>Age Rating</button>
-      <div className={`dropdown-menu ${visibleDropdown === 'ageRating' ? 'visible' : ''}`}>
+      <button class="filter-button-corner" onClick={() => handleDropdownToggle('ageRating')}>Age Rating</button>
+      <div class={`dropdown-menu ${visibleDropdown === 'ageRating' ? 'visible' : ''}`}>
         {ageRatings.map((rating) => (
-          <div className="dropdown-item" key={rating} onClick={() => handleAgeRatingSelect(rating)}>
+          <div class="dropdown-item" key={rating} onClick={() => handleAgeRatingSelect(rating)}>
             {rating}
           </div>
         ))}
