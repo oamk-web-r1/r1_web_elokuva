@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom';
 const MyKey = process.env.REACT_APP_API_KEY
 
 export default function MoviePage() {
-const { movieId } = useParams()
+  const { movieId } = useParams()
   const [movieDetails, setMovieDetails] = useState(null)
+  const [tmdbReviews, setTmdbReviews] = useState([])
+  const [localReviews, setLocalReviews] = useState([])
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${MyKey}&language=en-US`)
@@ -14,6 +16,24 @@ const { movieId } = useParams()
         setMovieDetails(json)
       })
       .catch(err => console.error(err))
+  }, [movieId])
+
+  useEffect(() => {
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${MyKey}&language=en-US&page=1`)
+    .then(res => res.json())
+    .then(json => {
+      setTmdbReviews(json.results)
+    })
+    .catch(err => console.error(err))
+  }, [movieId])
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/reviews/${movieId}`)
+      .then(res => res.json())
+      .then(json => {
+        setLocalReviews(json.reviews)
+      })
+      .catch(err => console.error('Error fetching local reviews:', err))
   }, [movieId])
 
     return (
@@ -30,6 +50,25 @@ const { movieId } = useParams()
           <p><strong>Release Date:</strong> {movieDetails.release_date}</p>
         </>
       )}
+      <div class="review-container">
+      <h2>Reviews</h2>
+        {localReviews.length > 0 && (
+          localReviews.map(review => (
+            <div key={review.id} class="review">
+              <p><strong>{review.author}:</strong> {review.content}</p>
+              {review.rating && <p><strong>Rating:</strong> {review.rating}</p>}
+            </div>
+          ))
+        )}
+
+        {tmdbReviews.length > 0 && (
+          tmdbReviews.map(review => (
+            <div key={review.id} className="review">
+              <p><strong>{review.author}:</strong> {review.content}</p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
     )
-}
+  }
