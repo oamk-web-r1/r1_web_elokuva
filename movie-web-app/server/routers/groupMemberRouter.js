@@ -16,10 +16,10 @@ groupMemberRouter.get('/', (req, res, next) => {
 // Add a new member to a group
 
 groupMemberRouter.post('/add', (req, res) => {
-    const { user_id, group_id, role, status, joined_at } = req.body;
+    const { user_id, group_id, role, status } = req.body;
     pool.query(
-        'INSERT INTO Group_Members (user_id, group_id, role, status, joined_at) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-        [user_id, group_id, role, status, joined_at],
+        'INSERT INTO Group_Members (user_id, group_id) VALUES ($1, $2) RETURNING *',
+        [user_id, group_id],
         (error, result) => {
             if (error) {
                 return res.status(500).json({ error: error.message });
@@ -44,3 +44,5 @@ groupMemberRouter.delete('/remove', (req, res) => {
         }
     );
 });
+
+export default groupMemberRouter;

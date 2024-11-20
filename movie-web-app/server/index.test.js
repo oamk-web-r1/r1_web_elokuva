@@ -333,4 +333,54 @@ describe('DELETE /groups/delete/:groupId', () => {
       expect(data.message).to.equal('Group deleted successfully.');
     });
   });
+
+// Group Members Tests
+
+// Add Group Member
+
+describe('POST /groupMembers/add', () => {
+    const email = 'groupmember@foo.com'
+    const password = 'password123'
+
+    before(async () => {
+        await insertTestUser(email, password)
+        await new Promise(resolve => setTimeout(resolve, 200))
+    
+
+   // Get the user_id of the user
+        const userQueryResponse = await fetch(`${base_url}/users/by-email/${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const userQueryData = await userQueryResponse.json();
+        expect(userQueryResponse.status).to.equal(200, userQueryData.error);
+        groupMemberUserId = userQueryData.user_id;
+        console.log("groupMemberUserId: ")(groupMemberUserId)
+    
+    })
+
+    it('should allow the user to request to join a group', async () => {
+        // User requests to join the group
+        const response = await fetch(`${base_url}/groupMembers/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: groupMemberUserId,
+                group_id: groupId,
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).to.equal(200);
+        expect(data).to.be.an('object');
+        expect(data).to.include.all.keys('user_id', 'group_id');
+        expect(data.user_id).to.equal(groupMemberUserId);
+        expect(data.group_id).to.equal(groupId);
+    });
+
+});
   
