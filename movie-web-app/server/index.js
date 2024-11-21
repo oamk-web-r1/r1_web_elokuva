@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import Web_sovellus_DB_template1Router from './routers/Web_sovellus_DB_template1Router.js'
+import movieAppDb from './routers/movieAppDb.js'
 import userRouter from './routers/userRouter.js'
 import groupRouter from './routers/groupRouter.js'
 import groupMemberRouter from './routers/groupMemberRouter.js'
@@ -15,7 +15,7 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/', Web_sovellus_DB_template1Router); // Database router
+app.use('/', movieAppDb); // Database router
 app.use('/user', userRouter); // User router
 app.use('/groups', groupRouter); // Group router
 app.use('/groupMembers', groupMemberRouter); // Group member router
