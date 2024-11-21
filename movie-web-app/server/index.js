@@ -3,6 +3,7 @@ import cors from 'cors'
 import movieAppDb from './routers/movieAppDb.js'
 import userRouter from './routers/userRouter.js'
 import groupRouter from './routers/groupRouter.js'
+import reviewRouter from './routers/reviewRouter.js'
 import { pool } from './helpers/db.js'
 import { response } from 'express'
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', movieAppDb); // Database router
 app.use('/user', userRouter); // User router
 app.use('/groups', groupRouter); // Group router
+app.use('/reviews', reviewRouter); // Movie review router
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500

@@ -41,7 +41,7 @@ export default function SignIn() {
                 </div>
                 <button class="wide-button" type="submit">Sign In</button>   
             </form></div>                
-            <div className="register-link">
+            <div class="register-link">
                 <Link class="link" to="/signup">Don't have an account?</Link>
             </div>
         </div>

@@ -10,15 +10,12 @@ import SignUp from './pages/signUp';
 import UserProvider from './context/UserProvider';
 import MoviePage from './pages/moviePage';
 import Showtimes from './pages/showtimes';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
-  },
-  {
-    path: "/allgroups",
-    element: <AllGroups />,
   },
   {
     path: "/signin",
@@ -35,6 +32,15 @@ const router = createBrowserRouter([
   {
     path: "/showtimes",
     element: <Showtimes/>,
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/allgroups",
+        element: <AllGroups />,
+      }
+    ]
   }
 ]);
 
