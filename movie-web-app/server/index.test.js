@@ -391,4 +391,3 @@ describe('POST /groupMembers/add', () => {
     });
 
 });
-  
