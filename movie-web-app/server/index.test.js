@@ -339,25 +339,33 @@ describe('DELETE /groups/delete/:groupId', () => {
 // Add Group Member
 
 describe('POST /groupMembers/add', () => {
-    const email = 'groupmember@foo.com'
-    const password = 'password123'
+    const groupMemberEmail = 'groupmember@foo.com'
+    const groupMemberPassword = 'password123'
+    let groupMemberUserId;
+    let memberToken;
+    const groupId = 1; // Join previously created test group
 
     before(async () => {
-        await insertTestUser(email, password)
+        await insertTestUser(groupMemberEmail, groupMemberPassword)
         await new Promise(resolve => setTimeout(resolve, 200))
     
 
-   // Get the user_id of the user
-        const userQueryResponse = await fetch(`${base_url}/users/by-email/${email}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const userQueryData = await userQueryResponse.json();
-        expect(userQueryResponse.status).to.equal(200, userQueryData.error);
-        groupMemberUserId = userQueryData.user_id;
-        console.log("groupMemberUserId: ")(groupMemberUserId)
+   // Log the user in to get the user_id
+   const memberLoginResponse = await fetch(`${base_url}/user/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: groupMemberEmail,
+      password: groupMemberPassword,
+    }),
+  });
+  const memberLoginData = await memberLoginResponse.json();
+  expect(memberLoginResponse.status).to.equal(200, memberLoginData.error);
+  memberToken = memberLoginData.token;
+  groupMemberUserId = memberLoginData.user_id;
+  console.log('Member user_id:', groupMemberUserId);
     
     })
 
