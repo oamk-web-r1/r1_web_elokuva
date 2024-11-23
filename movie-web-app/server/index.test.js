@@ -187,8 +187,6 @@ describe('POST /user/logout', () => {
 })
 
 
-
-
 //Tests for Groups
 
 describe('POST /groups/create', () => {

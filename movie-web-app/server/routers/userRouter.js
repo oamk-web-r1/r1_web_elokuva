@@ -66,7 +66,8 @@ router.post('/login', (req, res, next) => {
                 // Generate a JWT token for the authenticated user
                 const token = sign({ user: req.body.email }, process.env.JWT_SECRET_KEY);
                 console.log('Login successful for user:', user.email); // Log successful login
-
+                //console.log('JWT Token:', token);
+                
                 // Return user_id, email, and token in the response
                 return res.status(200).json({
                     user_id: user.user_id,
