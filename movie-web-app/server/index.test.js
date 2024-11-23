@@ -59,21 +59,6 @@ describe('POST register', () => {
             token = data.token;
         });
     
-        it('should delete the user account successfully', async () => {
-            // Delete user using the token
-            //const test_token = token.split(' ')[1];
-            const response = await fetch(base_url + '/user/delete', {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-    
-            const data = await response.json();
-            expect(response.status).to.equal(200);
-            expect(data.message).to.equal('User deleted successfully');
-        });
-    
         it('should return 401 Unauthorized if no token is provided', async () => {
             const response = await fetch(base_url + '/user/delete', {
                 method: 'DELETE',
@@ -96,6 +81,20 @@ describe('POST register', () => {
             const data = await response.json();
             expect(response.status).to.equal(403);
             expect(data.message).to.equal('Invalid credentials');
+        });
+
+        it('should delete the user account successfully', async () => {
+            // Delete user using the token
+            const response = await fetch(base_url + '/user/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            const data = await response.json();
+            expect(response.status).to.equal(200);
+            expect(data.message).to.equal('User deleted successfully');
         });
     
         
@@ -190,9 +189,28 @@ describe('POST /user/logout', () => {
 //Tests for Groups
 
 describe('POST /groups/create', () => {
-    const owner_id = '1' // Needs to be a real userd_id from Users, 1 because there will always be a user with id 1
-    const name =  'Sample Group'
+    const owner_id = '1' // Needs to be a real user_id from Users, 1 because there will always be a user with id 1
+    const name = 'Sample Group'
     const description = 'A sample group for testing'
+
+    it('should return an error if required fields are missing', async () => { 
+        const response = await fetch(base_url + '/groups/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // Missing owner_id and name
+                description
+            })
+        })
+
+        const data = await response.json()
+        expect(response.status).to.equal(400)
+        expect(data).to.be.an('object')
+        expect(data).to.have.property('error')
+    })
+
 
     it('should register a new group with valid data', async () => {
         const response = await fetch(base_url + '/groups/create', {
@@ -211,21 +229,164 @@ describe('POST /groups/create', () => {
                 expect(response.status).to.equal(200, data.error)
                 expect(data).to.be.an('object')
                 expect(data).to.include.all.keys('group_id', 'owner_id', 'name', 'description') // Expect all keys
-            });
+    })
+    
+
+    it('should return an error if the group name already exists', async () => {
+
+        before(async () => {
+            await new Promise(resolve => setTimeout(resolve, 200)); // Delay for data commit
+        });
+
+        const response = await fetch(base_url + '/groups/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                owner_id,
+                name,
+                description
+            })
+        })
+
+        const data = await response.json()
+        expect(response.status).to.equal(400)
+        expect(data).to.be.an('object')
+        expect(data).to.have.property('error')
+    })
+
+})
+
+// Delete Group Tests
+describe('DELETE /groups/delete/:groupId', () => {
+    const ownerEmail = 'owner@foo.com';
+    const ownerPassword = 'password123';
+    let ownerToken;
+    let ownerUserId;
+    let ownerGroupId;
+  
+    before(async () => {
+      // Insert owner user into the database
+      await insertTestUser(ownerEmail, ownerPassword);
+      await new Promise(resolve => setTimeout(resolve, 200)); // Optional delay for data commit
+  
+      // Log in user to get token and user ID
+      const ownerLoginResponse = await fetch(`${base_url}/user/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: ownerEmail,
+          password: ownerPassword,
+        }),
+      });
+      const ownerLoginData = await ownerLoginResponse.json();
+      expect(ownerLoginResponse.status).to.equal(200, ownerLoginData.error);
+      ownerToken = ownerLoginData.token;
+      ownerUserId = ownerLoginData.user_id;
+  
+      // Insert a new group for the owner
+      const createGroupResponse = await fetch(`${base_url}/groups/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          owner_id: ownerUserId,
+          name: 'Removable Group',
+          description: 'A group that can be removed',
+        }),
+      });
+      const groupData = await createGroupResponse.json();
+      expect(createGroupResponse.status).to.equal(200, groupData.error);
+      ownerGroupId = groupData.group_id;
+    });
+  
+    it('should not allow deletion with an invalid token', async () => {
+      const response = await fetch(`${base_url}/groups/delete/${ownerGroupId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer invalid_token',
+        },
+      });
+  
+      const data = await response.json();
+      expect(response.status).to.equal(403);
+      expect(data).to.be.an('object');
+      expect(data.message).to.equal('Invalid credentials');
+    });
+  
+    it('should allow owner to delete the group', async () => {
+      const response = await fetch(`${base_url}/groups/delete/${ownerGroupId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${ownerToken}`,
+        },
+      });
+  
+      const data = await response.json();
+      expect(response.status).to.equal(200);
+      expect(data).to.be.an('object');
+      expect(data.message).to.equal('Group deleted successfully.');
+    });
+  });
+
+// Group Members Tests
+
+// Add Group Member
+
+describe('POST /groupMembers/add', () => {
+    const groupMemberEmail = 'groupmember@foo.com'
+    const groupMemberPassword = 'password123'
+    let groupMemberUserId;
+    let memberToken;
+    const groupId = 1; // Join previously created test group
+
+    before(async () => {
+        await insertTestUser(groupMemberEmail, groupMemberPassword)
+        await new Promise(resolve => setTimeout(resolve, 200))
+    
+
+   // Log the user in to get the user_id
+   const memberLoginResponse = await fetch(`${base_url}/user/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: groupMemberEmail,
+      password: groupMemberPassword,
+    }),
+  });
+  const memberLoginData = await memberLoginResponse.json();
+  expect(memberLoginResponse.status).to.equal(200, memberLoginData.error);
+  memberToken = memberLoginData.token;
+  groupMemberUserId = memberLoginData.user_id;
+  console.log('Member user_id:', groupMemberUserId);
+    
+    })
+
+    it('should allow the user to request to join a group', async () => {
+        // User requests to join the group
+        const response = await fetch(`${base_url}/groupMembers/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: groupMemberUserId,
+                group_id: groupId,
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).to.equal(200);
+        expect(data).to.be.an('object');
+        expect(data).to.include.all.keys('user_id', 'group_id');
+        expect(data.user_id).to.equal(groupMemberUserId);
+        expect(data.group_id).to.equal(groupId);
     });
 
-  /*  it('should return an error if required fields are missing', (done) => {
-        const incompleteGroupData = {
-            group_name: 'Incomplete Group' // Missing group_id and description
-        };
-
-        chai.request(app)
-            .post('/groups/create')
-            .send(incompleteGroupData)
-            .end((err, res) => {
-                expect(res).to.have.status(400); // Assuming 400 for validation errors
-                expect(res.body).to.have.property('error');
-                done();
-            });
-    }); 
-}); */
+});

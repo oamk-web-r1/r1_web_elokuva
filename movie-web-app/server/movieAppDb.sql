@@ -29,7 +29,6 @@ CREATE TABLE Group_Members (
     group_id INT REFERENCES Groups(group_id) ON DELETE CASCADE,
     role VARCHAR(20) CHECK (role IN ('member', 'admin')) DEFAULT 'member',
     status VARCHAR(20) CHECK (status IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
-    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, group_id)
 );
 
