@@ -69,6 +69,21 @@ export default function MoviePage() {
       console.error('Error posting review:', err)
     }
   }
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await axios.delete(`http://localhost:3001/reviews/${reviewId}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+
+      // Update local reviews after deleting
+      setLocalReviews(prev => prev.filter(review => review.id !== reviewId))
+    } catch (err) {
+      console.error('Error deleting review:', err)
+    }
+  }
   
     return (
         <div class="movie-detail-container">
@@ -117,6 +132,9 @@ export default function MoviePage() {
             <div key={review.id} class="review">
               <p><strong>{review.author}:</strong> {review.content}</p>
               {review.rating && <p><strong>Rating:</strong> {review.rating}</p>}
+              {review.author === user.email && (
+                <button onClick={() => handleDeleteReview(review.id)}>Delete</button>
+              )}
             </div>
           ))
         )}

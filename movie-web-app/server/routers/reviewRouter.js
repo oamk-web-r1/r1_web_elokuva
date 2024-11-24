@@ -52,7 +52,7 @@ reviewRouter.post('/:movieId', auth, async (req, res, next) => {
         )
 
         if (existingReview.rowCount > 0) {
-            // Update existing review
+            // Update existing review (mostly used in testing)
             await pool.query(
                 `UPDATE reviews SET review_text = $1, rating = $2 WHERE user_id = $3 AND imdb_movie_id = $4 RETURNING *`,
                 [review_text, rating, user_id, imdb_movie_id]
@@ -68,6 +68,26 @@ reviewRouter.post('/:movieId', auth, async (req, res, next) => {
     } catch (err) {
       return next(err)
     }
+})
+
+// DELETE review
+reviewRouter.delete('/:reviewId', auth, async (req, res, next) => {
+  const { reviewId } = req.params
+  const email = req.user.email
+
+  try {
+    const userId = await getUserIdByEmail(email)
+    const review = await pool.query('SELECT * FROM Reviews WHERE review_id = $1 AND user_id = $2', [reviewId, userId])
+
+    if (review.rowCount === 0) {
+      return res.status(403).json({ message: 'You are not authorized to delete this review.' })
+    }
+
+    await pool.query('DELETE FROM Reviews WHERE review_id = $1', [reviewId])
+    res.status(200).send()
+  } catch (err) {
+    next(err)
+  }
 })
 
 export default reviewRouter
