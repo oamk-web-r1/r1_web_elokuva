@@ -97,7 +97,7 @@ router.delete('/delete', auth, (req, res, next) => {
 
     try {
         console.log('Auth middleware user:', req.user); // Debug auth data
-        const userEmail = req.user.user;  // This comes from auth middleware
+        const userEmail = req.user.email;  // This comes from auth middleware
         console.log('Attempting to delete user:', userEmail); // Debug user email
 
         // First get user_id from email

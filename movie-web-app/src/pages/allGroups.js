@@ -1,17 +1,20 @@
 import React from 'react';
 import Header from '../components/header';
 import { useState, useEffect } from 'react';
+import { useUser } from '../context/useUser';
 
-const url = 'http://localhost:3001'
+const url = 'http://localhost:3001/groups'
 
 export function AllGroups() {
     const [groups, setGroups] = useState([])
+    const [userGroups, setUserGroups] = useState([])
+    const { user } = useUser()
 
     useEffect(() => {
-        fetch(url + '/groups')
+        fetch(url)
             .then((response) => response.json())
             .then((data) => setGroups(data))
-            .catch((err) => console.error('Error fetching groups:', err))
+            .catch((err) => console.error(err))
     }, [])
 
     return (

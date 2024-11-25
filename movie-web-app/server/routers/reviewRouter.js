@@ -40,7 +40,7 @@ reviewRouter.post('/:movieId', auth, async (req, res, next) => {
     const email = req.user.email
 
     if (!email || !review_text || !imdb_movie_id || !rating) {
-        return res.status(400).json(err)
+        return res.status(400).json({ error: 'Missing required fields' })
     }
 
     try {

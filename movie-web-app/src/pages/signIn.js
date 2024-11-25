@@ -24,7 +24,7 @@ export default function SignIn() {
             <div class="gray-box">
             <form onSubmit={handleSubmit}>
                 <div>
-                <label class="default-text-left">Email</label>
+                <label class="default-text">Email</label>
                 <input
                         type="email"
                         value={user.email}
@@ -32,7 +32,7 @@ export default function SignIn() {
                     />
                 </div>
                 <div>
-                    <label class="default-text-left">Password</label>
+                    <label class="default-text">Password</label>
                     <input
                         type="password"
                         value={user.password}

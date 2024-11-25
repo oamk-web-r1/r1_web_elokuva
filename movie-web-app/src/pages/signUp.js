@@ -24,11 +24,11 @@ export default function SignUp() {
             <div class="gray-box">
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label class="default-text-left">Email</label>
+                    <label class="default-text">Email</label>
                     <input type="email" value={user.email} onChange={e => setUser({ ...user, email: e.target.value })} />
                 </div>
                 <div>
-                    <label class="default-text-left">Password</label>
+                    <label class="default-text">Password</label>
                     <input type="password" value={user.password} onChange={e => setUser({ ...user, password: e.target.value })} />
                 </div>
                 <div>
