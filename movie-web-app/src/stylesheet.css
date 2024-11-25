@@ -1,3 +1,13 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+/*
+  Font Awesome has free icons to use in UI design!!
+  GUIDES:
+    https://fontawesome.com/search?m=free&o=r
+    https://www.w3schools.com/icons/fontawesome_icons_intro.asp
+
+  Install into the movie-web-app folder
+    'npm install @fortawesome/fontawesome-free'
+*/
 
   body {
     background: #0F0F0F;
@@ -263,7 +273,7 @@
   }
 
   .default-big-title-white {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #fff;
   }
 
@@ -272,12 +282,12 @@
     color: #fff;
   }
 
-  .default-text-center {
+  .default-text {
     font-size: 1rem;
     color: #fff;
   }
 
-  .default-text-left {
+  .default-text {
     font-size: 1rem;
     color: #fff;
   }
@@ -288,7 +298,7 @@
   }
 
   .default-button-pink {
-    padding: 11px 17px;
+    padding: 10px 17px;
     border: none;
     border-radius: 20px;
     background-color: #CA2145;
@@ -299,6 +309,187 @@
     margin: 15px;
   }
   
-  .button-button-pink:hover {
+  .default-button-pink:hover {
     background-color: #E23E62;
+  }
+
+  /* MOVIE PAGE */
+  .movie-detail-container {
+    display: flex;
+    gap: 30px;
+    padding: 50px;
+    color: #fff;
+   max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .movie-poster {
+    max-width: 300px;
+    border-radius: 5px;
+  }
+
+  .post-review {
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 610px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-review-title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+  }
+
+  .review-box-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .review-box {
+    flex: 1;
+    background: #242424;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+    resize: none;
+    font-size: 1rem;
+    height: 100px;
+  }
+
+  .post-review-button-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .review-container {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .review {
+    background: #242424;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .delete-button-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .delete-button {
+    background-color: #CA2145;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+
+  .delete-button:hover {
+    background-color: #E23E62;
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    color: #7c7c7c;
+  }
+
+  .review-content {
+    font-size: 1rem;
+    color: #fff;
+  }
+
+  .review-rating {
+    color: #CA2145;
+    font-weight: bold;
+  }
+
+  .review-stars {
+    display: flex;
+    gap: 5px;
+  }
+
+  .review-stars .fa-star {
+    font-size: 1.5rem;
+    color: #242424;
+    cursor: pointer;
+  }
+
+  .review-stars .fa-star.active {
+    color: #ffcc4b;
+  }
+
+  .review-stars .fa-star:hover {
+    color: #ffcc4b;
+  }
+
+  .review-stars .fa-star:hover ~ .fa-star {
+    color: #242424;
+  }
+
+  .movie-rating .fa-star {
+    color: #ffcc4b;
+    margin-left: 5px;
+  }
+  
+  /* SHOWTIMES */
+  .showtime-container {
+    padding: 30px;
+    text-align: center;
+  }
+
+  .filterContainer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .dropdown {
+    background-color: #242424;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+  }
+
+  .resultsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .resultCard {
+    background-color: #242424;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .placeholder {
+    text-align: center;
+    font-size: 1rem;
+    color: #7c7c7c;
   }
