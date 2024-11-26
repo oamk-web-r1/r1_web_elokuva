@@ -13,6 +13,24 @@ groupMemberRouter.get('/', (req, res, next) => {
     });
 });
 
+// Get groups where the user is a member and status is 'accepted'
+groupMemberRouter.get('/user/:user_id', (req, res, next) => {
+    const userId = req.params.user_id;
+    console.log('Fetching memberships for user:', userId);
+
+    const query = 'SELECT * FROM Group_Members WHERE user_id = $1 AND status = $2';
+    const params = [userId, 'accepted'];
+
+    pool.query(query, params, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            return next(error);
+        }
+        console.log('Query results:', results.rows); // Log what is being returned
+        res.status(200).json(results.rows);
+    });
+});
+
 // Add a new member to a group
 
 groupMemberRouter.post('/add', (req, res) => {
