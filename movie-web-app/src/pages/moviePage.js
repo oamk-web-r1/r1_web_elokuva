@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUser } from '../context/useUser';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const MyKey = process.env.REACT_APP_API_KEY
 
@@ -140,7 +141,11 @@ export default function MoviePage() {
     </form>
   </div>
       ) : (
-        <p>You need to be logged in to post a review.</p>
+        <div class="default-text-center">
+          <p>You need to be logged in to post a review.
+            <Link class="link" to="/signin" style={{ marginLeft: '8px' }}>Sign In</Link>
+          </p>
+        </div>
       )}
       
     <div class="review-container">
