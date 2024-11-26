@@ -20,28 +20,29 @@ export default function SignIn() {
 
     return (
         <div>
-            <h2>Sign In</h2>
+            <h3 class="default-big-title-pink">Sign In</h3>
+            <div class="gray-box">
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Email:</label>
-                    <input
+                <label class="default-text">Email</label>
+                <input
                         type="email"
                         value={user.email}
                         onChange={e=> setUser({ ...user, email: e.target.value })}
                     />
                 </div>
                 <div>
-                    <label>Password:</label>
+                    <label class="default-text">Password</label>
                     <input
                         type="password"
                         value={user.password}
                         onChange={e=> setUser({ ...user, password: e.target.value })}
                     />
                 </div>
-                <button class="button" type="submit">Sign In</button>   
-            </form>                
-            <div className="register-link">
-                <Link to="/signup">Don't have an account?</Link>
+                <button class="wide-button" type="submit">Sign In</button>   
+            </form></div>                
+            <div class="register-link">
+                <Link class="link" to="/signup">Don't have an account?</Link>
             </div>
         </div>
     );

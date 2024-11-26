@@ -8,17 +8,16 @@ import { Home } from './pages/home';
 import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
 import UserProvider from './context/UserProvider';
+import MoviePage from './pages/moviePage';
 import Showtimes from './pages/showtimes';
 import MyProfile  from './pages/userProfile';
+import ProtectedRoute from './components/ProtectedRoute';
+import { CreateGroup } from './pages/createGroup';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
-  },
-  {
-    path: "/allgroups",
-    element: <AllGroups />,
   },
   {
     path: "/signin",
@@ -29,12 +28,29 @@ const router = createBrowserRouter([
     element: <SignUp />,
   },
   {
+    path: "/moviepage/:movieId",
+    element: <MoviePage />,
+  },
+  {
     path: "/showtimes",
     element: <Showtimes/>,
   },
   {
-    path: "/userprofile",
-    element: <MyProfile/>,
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/allgroups",
+        element: <AllGroups />,
+      },
+      {
+        path: "/creategroup",
+        element: <CreateGroup />,
+      },
+      {
+        path: "/userProfile",
+        element: <MyProfile/>
+      }
+    ]
   }
 ]);
 

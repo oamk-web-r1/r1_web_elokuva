@@ -10,9 +10,6 @@ export function Home() {
         <>
             <Header setResults={setResults} />
             <Movie movies={results} />
-            <div class="wrapper">
-              <button class="button">Show more</button>
-            </div>
     </>
     )
 }

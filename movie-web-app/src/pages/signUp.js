@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useUser } from '../context/useUser';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function SignUp() {
     const { user, setUser, signUp } = useUser()
@@ -19,20 +20,26 @@ export default function SignUp() {
 
     return (
         <div>
-            <h3>Sign up</h3>
+            <h3 class="default-big-title-pink">Sign up</h3>
+            <div class="gray-box">
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Email</label>
+                    <label class="default-text">Email</label>
                     <input type="email" value={user.email} onChange={e => setUser({ ...user, email: e.target.value })} />
                 </div>
                 <div>
-                    <label>Password</label>
+                    <label class="default-text">Password</label>
                     <input type="password" value={user.password} onChange={e => setUser({ ...user, password: e.target.value })} />
                 </div>
                 <div>
-                    <button class="button" type="submit">Register</button>
+                    <button class="wide-button" type="submit">Register</button>
                 </div>
             </form>
+            
+            </div>
+            <div>
+                <Link class="link" to="/signin">Already have an account?</Link>
+            </div>
         </div>
     );
 }

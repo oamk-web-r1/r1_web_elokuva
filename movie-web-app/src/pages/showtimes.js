@@ -80,17 +80,17 @@ const generateDateOptions = () => {
 return (
     <>
         <Header />
-        <div>
-            <h1>Showtimes</h1>
+        <div class="showtime-container">
+            <h1 class="default-big-title-white">Showtimes</h1>
 
-            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+            <div class="filterContainer">
                 <div>
-                    <label htmlFor="theatre-select">Select Theatre/Area: </label>
+                    <label htmlFor="theatre-select"></label>
                     <select
                         id="theatre-select"
                         value={selectedTheatre}
                         onChange={(e) => setSelectedTheatre(e.target.value)}
-                    >
+                        class="dropdown">
                         <option value="">Select a Theatre</option>
                         {theatres.map((theatre, index) => (
                             <option key={index} value={theatre}>
@@ -101,13 +101,13 @@ return (
                 </div>
 
                 <div>
-                    <label htmlFor="date-select">Select Date: </label>
+                    <label htmlFor="date-select"></label>
                     <select
                         id="date-select"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
                         disabled={!selectedTheatre} // Disable if no theater is selected
-                    >
+                        class="dropdown">
                         <option value="">All Dates</option>
                         {generateDateOptions().map((date, index) => (
                             <option key={index} value={date}>
@@ -119,21 +119,22 @@ return (
             </div>
 
             {!selectedTheatre ? (
-                <p>Please select a theatre to view showtimes.</p>
+                <p class="placeholder">Please select a theatre to view showtimes.</p>
             ) : filteredSchedules.length > 0 ? (
-                <ul>
+                <ul class="resultsContainer">
                     {filteredSchedules.map((schedule, index) => (
-                        <li key={index}>
+                        <div key={index} class="resultCard">
                             <strong>{schedule.title}</strong> <br />
                             Theatre: {schedule.theatre} <br />
                             Start Time: {schedule.startTime}
-                        </li>
+                        </div>
                     ))}
                 </ul>
             ) : (
-                <p>No showtimes available for the selected theatre and date.</p>
+                <p class="placeholder">No showtimes available for the selected theatre and date.</p>
             )}
         </div>
     </>
 );
 }
+
