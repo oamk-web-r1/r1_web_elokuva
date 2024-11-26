@@ -18,19 +18,21 @@
   .movie-container {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 100px;
     gap: 12px;
     justify-content: center;
     padding: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
-  
+
   .movie-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 130px;
+    justify-content: flex-start;
   }
-  
+
   .poster-image {
     width: 100%;
     height: auto;
@@ -78,6 +80,7 @@
     padding: 15px 20px;
     background-color: #242424;
     color: #fff;
+    align-items: center;
   }
   
   .header-content {
@@ -180,7 +183,7 @@
     width: 30px;
     height: auto;
   }
-    
+
   .account-dropdown-menu {
     position: absolute;
     top: 40px;
@@ -191,7 +194,7 @@
     width: 200px;
     padding: 5px 0;
     z-index: 100;
-    display: block;
+    display: none;
   }
     
   .account-dropdown-item {
@@ -325,7 +328,9 @@
 
   .movie-poster {
     max-width: 300px;
+    width: 100%;
     border-radius: 5px;
+    height: auto;
   }
 
   .post-review {
@@ -348,6 +353,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
+    width: 100%;
   }
 
   .review-box {
@@ -455,7 +461,7 @@
     text-align: center;
   }
 
-  .filterContainer {
+  .filter-container {
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -471,14 +477,14 @@
     border-radius: 5px;
   }
 
-  .resultsContainer {
+  .results-container {
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: center;
   }
 
-  .resultCard {
+  .result-card {
     background-color: #242424;
     padding: 15px;
     border-radius: 5px;
@@ -493,3 +499,104 @@
     font-size: 1rem;
     color: #7c7c7c;
   }
+
+  /* MOBILE VERSION */
+  @media (max-width: 768px) {
+
+    .movie-detail-container {
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .movie-poster {
+      max-width: 100%;
+      width: 90%;
+      height: auto;
+    }
+
+    .movie-detail-container > div {
+      text-align: center;
+    }
+
+    .post-review {
+      max-width: 90%;
+      margin: 20px 0;
+    }
+
+    .review-box {
+      width: 100%;
+    }
+
+    .post-review-button-container {
+      display: flex;
+    }
+
+    .review-container {
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .review-header {
+      font-size: 16px;
+    }
+
+    .header-content {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .header-button-container {
+      display: none;
+    }
+  
+    .mobile-menu-icon {
+      display: block;
+      cursor: pointer;
+      color: #fff;
+    }
+  
+    .mobile-menu.open {
+      display: block;
+    }
+
+    .mobile-menu .header-links {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .mobile-menu-toggle {
+      display: block;
+      background-color: transparent;
+      border: none;
+      color: #fff;
+    }
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background-color: transparent;
+  border: none;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu.open {
+  display: block;
+}
+
+.mobile-menu .header-links {
+  display: block;
+  margin: 10px 0;
+}

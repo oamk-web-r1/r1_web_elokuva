@@ -61,7 +61,7 @@ export default function MoviePage() {
       fetch(`http://localhost:3001/reviews/${movieId}`)
         .then(res => res.json())
         .then(json => setLocalReviews(json.reviews))
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
 
       // Clear the form
       setNewReview({ content: '', rating: '' })

@@ -56,6 +56,25 @@ const Header = ({ setResults }) => {
             <Link class="header-links" to="/signin">SIGN IN</Link>
           )}
         </div>
+        <button className="mobile-menu-toggle" onClick={toggleDropdown}>MENU</button>
+        
+        {dropdownOpen && (
+          <div className="mobile-menu open">
+            {user && user.token && (
+              <Link className="header-links" to="/allgroups">GROUPS</Link>
+            )}
+            <Link className="header-links" to="/showtimes">SHOWTIMES</Link>
+
+            {user && user.token ? (
+              <>
+                <Link className="header-links" to="/profile">My Profile</Link>
+                <button className="header-links" onClick={handleSignOut}>Sign Out</button>
+              </>
+              ) : (
+                <Link className="header-links" to="/signin">SIGN IN</Link>
+          )}
+      </div>
+    )}
       </div>
     </div>
   )
