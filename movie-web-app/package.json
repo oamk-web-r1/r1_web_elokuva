@@ -42,6 +42,8 @@
   "devDependencies": {
     "@babel/register": "^7.25.9",
     "chai": "^5.1.2",
-    "mocha": "^10.8.2"
+    "mocha": "^10.8.2",
+    "postcss": "^8.4.49",
+    "postcss-loader": "^8.1.1"
   }
 }
