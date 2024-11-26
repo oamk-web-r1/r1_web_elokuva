@@ -66,7 +66,8 @@ router.post('/login', (req, res, next) => {
                 // Generate a JWT token for the authenticated user
                 const token = sign({ user: req.body.email }, process.env.JWT_SECRET_KEY);
                 console.log('Login successful for user:', user.email); // Log successful login
-
+                //console.log('JWT Token:', token);
+                
                 // Return user_id, email, and token in the response
                 return res.status(200).json({
                     user_id: user.user_id,
@@ -96,7 +97,7 @@ router.delete('/delete', auth, (req, res, next) => {
 
     try {
         console.log('Auth middleware user:', req.user); // Debug auth data
-        const userEmail = req.user.user;  // This comes from auth middleware
+        const userEmail = req.user.email;  // This comes from auth middleware
         console.log('Attempting to delete user:', userEmail); // Debug user email
 
         // First get user_id from email
@@ -134,6 +135,14 @@ router.delete('/delete', auth, (req, res, next) => {
     } catch (error) {
         return next(error);
     }
+});
+
+router.get('/email', auth, (req, res, next) => {
+    try{      
+        return res.status(200).json({ email: req.user.email });
+    } catch (error) {
+        return next(error);
+}
 });
     
 export default router;

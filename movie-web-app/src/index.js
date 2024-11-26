@@ -10,7 +10,9 @@ import SignUp from './pages/signUp';
 import UserProvider from './context/UserProvider';
 import MoviePage from './pages/moviePage';
 import Showtimes from './pages/showtimes';
+import MyProfile  from './pages/userProfile';
 import ProtectedRoute from './components/ProtectedRoute';
+import { CreateGroup } from './pages/createGroup';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: "/allgroups",
         element: <AllGroups />,
+      },
+      {
+        path: "/creategroup",
+        element: <CreateGroup />,
+      },
+      {
+        path: "/userprofile",
+        element: <MyProfile/>,
       }
     ]
   }

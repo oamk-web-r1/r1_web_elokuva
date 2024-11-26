@@ -186,8 +186,7 @@ describe('POST /user/logout', () => {
 })
 
 
-
-// Tests for Groups
+//Tests for Groups
 
 describe('POST /groups/create', () => {
     const owner_id = '1' // Needs to be a real user_id from Users, 1 because there will always be a user with id 1
