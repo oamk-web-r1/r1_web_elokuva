@@ -286,6 +286,7 @@ describe('DELETE /groups/delete/:groupId', () => {
       expect(ownerLoginResponse.status).to.equal(200, ownerLoginData.error);
       ownerToken = ownerLoginData.token;
       ownerUserId = ownerLoginData.user_id;
+
   
       // Insert a new group for the owner
       const createGroupResponse = await fetch(`${base_url}/groups/create`, {
