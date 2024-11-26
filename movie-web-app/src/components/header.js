@@ -56,7 +56,7 @@ const Header = ({ setResults }) => {
             <Link class="header-links" to="/signin">SIGN IN</Link>
           )}
         </div>
-        <button className="mobile-menu-toggle" onClick={toggleDropdown}>MENU</button>
+        <button className="mobile-menu-toggle" onClick={toggleDropdown}><i class="fa-solid fa-bars"></i></button>
         
         {dropdownOpen && (
           <div className="mobile-menu open">
