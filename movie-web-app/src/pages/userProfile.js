@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
+import { useUser} from '../context/useUser';
 
-const url = 'http://localhost:3001/user/email'
+const url = 'http://localhost:3001'
 
 export default function MyProfile() {
     const [email, setEmail] = useState(null);
+    const { user } = useUser()
 
     useEffect(() => {
         console.log("User token:", user.token); // Check the token in the console

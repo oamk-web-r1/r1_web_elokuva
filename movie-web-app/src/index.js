@@ -13,7 +13,6 @@ import Showtimes from './pages/showtimes';
 import MyProfile  from './pages/userProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import { CreateGroup } from './pages/createGroup';
-import MyProfile from './pages/userProfile';
 
 const router = createBrowserRouter([
   {
