@@ -136,5 +136,13 @@ router.delete('/delete', auth, (req, res, next) => {
         return next(error);
     }
 });
+
+router.get('/email', auth, (req, res, next) => {
+    try{      
+        return res.status(200).json({ email: req.user.email });
+    } catch (error) {
+        return next(error);
+}
+});
     
 export default router;

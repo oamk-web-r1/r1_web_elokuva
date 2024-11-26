@@ -60,13 +60,18 @@ groupRouter.post('/create', async (req, res) => {
 // Delete group. Only the group owner can delete the group
 groupRouter.delete('/delete/:groupId', auth, async (req, res) => {
     const { groupId } = req.params;
-    const userEmail = req.user.user; // Extract user email from the decoded token
+    const userEmail = req.user.email; // Extract user email from the decoded token
+
+    console.log('Starting DELETE /groups/delete/:groupId endpoint');
+    console.log('Received groupId:', groupId);
+    console.log('Decoded email from token:', userEmail);
 
     try {
         // First, get the user's ID using their email from the token
         const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail]);
 
         if (userResult.rowCount === 0) {
+
             return res.status(404).json({ message: 'User not found' });
         }
 

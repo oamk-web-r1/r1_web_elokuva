@@ -46,7 +46,7 @@ const Header = ({ setResults }) => {
                 </div>
                 {dropdownOpen && (
                   <div class="account-dropdown-menu">
-                    <Link class="account-dropdown-item" to="/profile">My Profile</Link>
+                    <Link class="account-dropdown-item" to="/userprofile">My Profile</Link>
                     <button class="account-dropdown-item" onClick={handleSignOut}>Sign Out</button>
                     <DeleteAccount />
                   </div>)}
