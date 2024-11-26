@@ -7,29 +7,25 @@ export default function MyProfile() {
     const [email, setEmail] = useState(null);
 
     useEffect(() => {
-        const fetchEmail = async () => {
-            try {
-                const response = await fetch(url , {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setEmail(data.email); // Assuming the response contains an 'email' field
-                } else {
-                    setEmail('Unable to fetch email'); // Fallback message for a failed request
-                }
-            } catch (error) {
-                setEmail('Error fetching email'); // Fallback message for errors
-            }
-        };
-
-        fetchEmail();
-    }, []);
-
+        console.log("User token:", user.token); // Check the token in the console
+        if (user.token) {
+            fetch(url + '/user/email', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                },
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('failed to fetch email');
+                    }
+                    return response.json();
+                })
+                .then((data) => setEmail(data.email))
+                .catch((err) => console.error(err));
+        }
+    }, [user]);
+    
     return (
         <>
             <Header />
