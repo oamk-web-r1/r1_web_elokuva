@@ -9,6 +9,7 @@ import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
 import UserProvider from './context/UserProvider';
 import Showtimes from './pages/showtimes';
+import MyProfile  from './pages/userProfile';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/showtimes",
     element: <Showtimes/>,
+  },
+  {
+    path: "/userprofile",
+    element: <MyProfile/>,
   }
 ]);
 

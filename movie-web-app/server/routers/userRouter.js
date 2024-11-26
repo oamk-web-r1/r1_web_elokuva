@@ -135,5 +135,23 @@ router.delete('/delete', auth, (req, res, next) => {
         return next(error);
     }
 });
+
+
+router.get('/email', auth, (req, res, next) => {
+    const userEmail = req.user.user; // Decoded from the JWT
+
+    pool.query('SELECT email FROM Users WHERE email = $1', [userEmail], (error, result) => {
+        if (error) {
+            console.error('Database error:', error);
+            return next(error);
+        }
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ email: result.rows[0].email });
+    });
+});
     
 export default router;
