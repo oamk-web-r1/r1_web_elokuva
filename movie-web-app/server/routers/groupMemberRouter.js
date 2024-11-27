@@ -63,4 +63,38 @@ groupMemberRouter.delete('/remove', (req, res) => {
     );
 });
 
+// Get pending join requests for a specific group (only for group owner)
+groupMemberRouter.get('/requests/:group_id', (req, res, next) => {
+    const { group_id } = req.params
+
+    pool.query(
+        // Select all group members with the given group_id and 'pending' status
+        'SELECT * FROM Group_Members WHERE group_id = $1 AND status = $2',
+        [group_id, 'pending'],
+        (error, results) => {
+            if (error) {
+                return next(error)
+            }
+            res.status(200).json(results.rows)
+        }
+    )
+})
+
+// Accept a join request
+groupMemberRouter.post('/accept', (req, res) => {
+    const { user_id, group_id } = req.body
+
+    pool.query(
+        // Update the status of a specific group member to 'accepted'
+        'UPDATE Group_Members SET status = $1 WHERE user_id = $2 AND group_id = $3 RETURNING *',
+        ['accepted', user_id, group_id],
+        (error, result) => {
+            if (error) {
+                return res.status(500).json({ error: error.message })
+            }
+            res.status(200).json(result.rows[0])
+        }
+    )
+})
+
 export default groupMemberRouter;
