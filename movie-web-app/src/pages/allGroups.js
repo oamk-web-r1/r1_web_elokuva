@@ -97,10 +97,13 @@ export function AllGroups() {
                 <ul>
                     {ownedGroups.map((group) => (
                         <li key={group.group_id}>
+                            <h3>{group.name}</h3>
+                            <p>{group.description}</p>
+
                             {pendingRequests[group.group_id] &&
                             pendingRequests[group.group_id].length > 0 && (
                                 <>
-                                <h2>Pending Requests:</h2>
+                                <h3>Pending Requests:</h3>
                                 <ul>
                                     {pendingRequests[group.group_id].map(request => (
                                         <li key={request.user_id}>
@@ -111,8 +114,6 @@ export function AllGroups() {
                                 </ul>
                                 </>
                             )}
-                            <h3>{group.name}</h3>
-                            <p>{group.description}</p>
                         </li>
                     ))}
                 </ul>
