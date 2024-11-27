@@ -146,7 +146,7 @@ export function AllGroups() {
                             <p>{group.description}</p>
           
                             {!isMemberOrOwner && (
-                                <button onClick={() => handleJoinRequest(group.group_id)}>Join Group</button>
+                                <button onClick={() => handleJoinRequest(group.group_id)}>JOIN</button>
                                 )}
                             </li>
                         )
