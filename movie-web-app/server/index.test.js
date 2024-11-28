@@ -375,21 +375,46 @@ describe('POST /groupMembers/add', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${memberToken}`
             },
             body: JSON.stringify({
                 user_id: groupMemberUserId,
                 group_id: groupId,
+                role: 'member',
+                status: 'pending'
             }),
         });
 
         const data = await response.json();
         expect(response.status).to.equal(200);
         expect(data).to.be.an('object');
-        expect(data).to.include.all.keys('user_id', 'group_id');
+        expect(data).to.include.all.keys('user_id', 'group_id', 'role', 'status');
         expect(data.user_id).to.equal(groupMemberUserId);
         expect(data.group_id).to.equal(groupId);
-    });
+        expect(data.role).to.equal('member')
+        expect(data.status).to.equal('pending')
+    })
 
+    it('should return an error if the user is already a member', async () => {
+        const response = await fetch(`${base_url}/groupMembers/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${memberToken}`
+            },
+            body: JSON.stringify({
+                user_id: groupMemberUserId,
+                group_id: groupId,
+                role: 'member',
+                status: 'pending'
+            }),
+        })
+
+        const data = await response.json()
+        expect(response.status).to.equal(400)
+        expect(data).to.be.an('object')
+        expect(data.error).to.equal('User is already a member of the group.')
+    })
 });
 
 // Review router test
