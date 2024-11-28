@@ -449,7 +449,7 @@ describe('GET /reviews/:movieId', () => {
         expect(reviews.length).to.equal(0)
     })
 
-    /*it('should return 404 for invalid movie ID format', async () => {
+    it('should return 400 for invalid movie ID format', async () => {
         const invalidMovieId = 'abcd' // Invalid movie ID format
     
         // Make a GET request to retrieve reviews for an invalid movie ID
@@ -460,8 +460,8 @@ describe('GET /reviews/:movieId', () => {
             }
         })
     
-        expect(response.status).to.equal(404) // Expect a 404 Not Found response for invalid format
-    })*/
+        expect(response.status).to.equal(400) // Expect a 400 Not Found response for invalid format
+    })
     })
 
 // Remove Group Member
