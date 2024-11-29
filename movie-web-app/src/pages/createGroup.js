@@ -69,7 +69,7 @@ export function CreateGroup() {
                             required
                         />
                     </div>
-                    <button type="submit" className="default-button">Publish Group</button>
+                    <button type="submit" className="default-button-pink">Publish Group</button>
                 </form>
             </div>
         </div>
