@@ -52,10 +52,10 @@ groupMemberRouter.post('/add', async (req, res) => {
 
         // Add the user to the group if checks pass
         const result = await pool.query(
-            `INSERT INTO Group_Members (user_id, group_id, role, status)
-            VALUES ($1, $2, $3, $4)
+            `INSERT INTO Group_Members (user_id, group_id)
+            VALUES ($1, $2)
             RETURNING *`,
-            [user_id, group_id, role, status]
+            [user_id, group_id]
         )
 
         res.status(200).json(result.rows[0])

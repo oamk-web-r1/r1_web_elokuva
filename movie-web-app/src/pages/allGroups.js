@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../components/header';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 const url = 'http://localhost:3001'
 
@@ -16,7 +16,7 @@ export function AllGroups() {
     useEffect(() => {
         fetch(url + `/groups`)
             .then((response) => response.json())
-            .then((groupsData) => {  
+            .then((groupsData) => {
                 setGroups(groupsData);
 
                 // Filter owned groups
@@ -100,7 +100,7 @@ export function AllGroups() {
                     {ownedGroups.map((group) => (
                         <div className="group-card" key={group.group_id}>
                             <h3 className="group-name">
-                                <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link></h3>
+                                <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link></h3>
                             <p className="group-description">{group.description}</p>
 
                             {pendingRequests[group.group_id] &&
@@ -133,27 +133,31 @@ export function AllGroups() {
                         return (
                             <div className="group-card" key={group.group_id}>
                             <h3 className="group-name">
-                            <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                            <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link>
                             </h3>
                             <p className="group-description">{group.description}</p>
-          
+    
                             {!isMemberOrOwner && (
                                 <button onClick={() => handleJoinRequest(group.group_id)}>JOIN</button>
                                 )}
                             </div>
-                        )
-                    })}
-                </div>
-            ) : (
-                <p className="no-groups-message">No groups available.</p>
-            )}
+                            )
+                        })}
+                    </div>
+                ) : (
+                    <p className="no-groups-message">You are not the owner of any groups.</p>
+                )}
+    <div className='center-item'>
+            <button className="default-button-pink"><Link className="default-link-text" to="/creategroup"> Create New Group </Link> </button>
+            </div>
+            
                 <h2 className="section-title">Groups I'm a Member Of</h2>
                 {memberGroups.length > 0 ? (
                     <div className="group-list">
                         {memberGroups.map((group) => (
                             <div className="group-card" key={group.group_id}>
                                 <h3 className="group-name">
-                                <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                                <Link className="default-link-text"  to={`/grouppage/${group.group_id}`}>{group.name}</Link>
                                 </h3>
                                 <p className="group-description">{group.description}</p>
                             </div>
