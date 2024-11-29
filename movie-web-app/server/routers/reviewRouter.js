@@ -8,6 +8,11 @@ const reviewRouter = Router()
 // GET local reviews
 reviewRouter.get('/:movieId', (req, res, next) => {
   const movieId = req.params.movieId
+  
+  if (!/^\d+$/.test(movieId)) {
+    return res.status(400).json({ error: 'Invalid movie ID. Only numeric values are allowed.' })
+  }
+
   const values = [movieId]
 
   const query = `
