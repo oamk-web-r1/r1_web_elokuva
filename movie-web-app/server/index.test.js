@@ -391,3 +391,105 @@ describe('POST /groupMembers/add', () => {
     });
 
 });
+
+// Remove Group Member
+
+describe('DELETE /groupMembers/remove', () => {
+    const groupMemberEmail = 'removablegroupmember@foo.com'
+    const groupMemberPassword = 'password123'
+    let groupMemberUserId;
+    let memberToken;
+    const groupId = 1; // Join previously created test group
+    const ownerId= 1; // Owner of the group 1
+
+    before(async () => {
+        await insertTestUser(groupMemberEmail, groupMemberPassword)
+        await new Promise(resolve => setTimeout(resolve, 200))
+    
+
+   // Log the user in to get the user_id
+   const memberLoginResponse = await fetch(`${base_url}/user/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: groupMemberEmail,
+      password: groupMemberPassword,
+    }),
+  });
+  const memberLoginData = await memberLoginResponse.json();
+  expect(memberLoginResponse.status).to.equal(200, memberLoginData.error);
+  memberToken = memberLoginData.token;
+  groupMemberUserId = memberLoginData.user_id;
+  console.log('Member user_id:', groupMemberUserId);
+
+  // Add the user to the group
+
+    const addMemberResponse = await fetch(`${base_url}/groupMembers/add`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+        user_id: groupMemberUserId,
+        group_id: groupId,
+        }),
+    });
+
+    // Check that member was added successfully
+
+    const addMemberData = await addMemberResponse.json();
+    expect(addMemberResponse.status).to.equal(200, addMemberData.error);
+    expect(addMemberData).to.be.an('object');
+    expect(addMemberData).to.include.all.keys('user_id', 'group_id');
+    expect(addMemberData.user_id).to.equal(groupMemberUserId);
+    expect(addMemberData.group_id).to.equal(groupId);
+
+    
+    });
+
+    it ('should allow the user to remove themselves from the group', async () => {
+        const removeMemberResponse = await fetch(`${base_url}/groupMembers/remove`, {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${memberToken}`,
+             },
+            body: JSON.stringify({
+            user_id: groupMemberUserId,
+            group_id: groupId,
+            }),
+        });
+
+        const removeMemberData = await removeMemberResponse.json();
+        expect(removeMemberResponse.status).to.equal(200, removeMemberData.error);
+        expect(removeMemberData).to.be.an('object');
+        expect(removeMemberData).to.include.all.keys('message', 'removedMember');
+        expect(removeMemberData.message).to.equal('User removed from the group.');
+        expect(removeMemberData.removedMember).to.be.an('object');
+        expect(removeMemberData.removedMember.user_id).to.equal(groupMemberUserId);
+        expect(removeMemberData.removedMember.group_id).to.equal(groupId);
+
+    })  
+
+    it ('should not allow a user to remove another user from the group', async () => {
+        const removeMemberResponse = await fetch(`${base_url}/groupMembers/remove`, {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${memberToken}`,
+             },
+            body: JSON.stringify({
+            user_id: ownerId,
+            group_id: groupId,
+            }),
+        });
+
+        const removeMemberData = await removeMemberResponse.json();
+        expect(removeMemberResponse.status).to.equal(403, removeMemberData.error);
+        expect(removeMemberData).to.be.an('object');
+        expect(removeMemberData).to.have.property('error', 'You are not authorized to remove this user.');
+    })
+
+})
