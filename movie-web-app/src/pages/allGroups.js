@@ -124,6 +124,26 @@ export function AllGroups() {
                 <p className="no-groups-message">You are not the owner of any groups.</p>
             )}
 
+            <div className='center-item'>
+                 <button className="default-button-pink"><Link className="default-link-text" to="/creategroup"> Create New Group </Link> </button>
+            </div>
+
+            <h2 className="section-title">Groups I'm a Member Of</h2>
+                {memberGroups.length > 0 ? (
+                    <div className="group-list">
+                        {memberGroups.map((group) => (
+                            <div className="group-card" key={group.group_id}>
+                                <h3 className="group-name">
+                                <Link className="default-link-text"  to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                                </h3>
+                                <p className="group-description">{group.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-groups-message">You are not a member of any groups.</p>
+                )}
+
             <h2 className="section-title">All Groups</h2>
             {groups.length > 0 ? (
                 <div className="group-list">
@@ -143,29 +163,13 @@ export function AllGroups() {
                             </div>
                             )
                         })}
-                    </div>
+                </div>
                 ) : (
                     <p className="no-groups-message">You are not the owner of any groups.</p>
                 )}
-    <div className='center-item'>
-            <button className="default-button-pink"><Link className="default-link-text" to="/creategroup"> Create New Group </Link> </button>
-            </div>
+  
             
-                <h2 className="section-title">Groups I'm a Member Of</h2>
-                {memberGroups.length > 0 ? (
-                    <div className="group-list">
-                        {memberGroups.map((group) => (
-                            <div className="group-card" key={group.group_id}>
-                                <h3 className="group-name">
-                                <Link className="default-link-text"  to={`/grouppage/${group.group_id}`}>{group.name}</Link>
-                                </h3>
-                                <p className="group-description">{group.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p className="no-groups-message">You are not a member of any groups.</p>
-                )}
+               
             </div>
         </>
     )
