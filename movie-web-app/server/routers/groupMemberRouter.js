@@ -38,16 +38,6 @@ groupMemberRouter.get('/user/:user_id', (req, res, next) => {
 
 groupMemberRouter.post('/add', async (req, res) => {
     const { user_id, group_id, role, status } = req.body;
-    /*pool.query(
-        'INSERT INTO Group_Members (user_id, group_id) VALUES ($1, $2) RETURNING *',
-        [user_id, group_id],
-        (error, result) => {
-            if (error) {
-                return res.status(500).json({ error: error.message });
-            }
-            res.status(200).json(result.rows[0]);
-        }
-    );*/
 
     try {
         // Check if the user is already a member of the group
