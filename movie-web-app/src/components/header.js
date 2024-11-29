@@ -11,6 +11,8 @@ import DeleteAccount from './deleteAccount';
 const Header = ({ setResults }) => {
   const { user, signOut } = useUser()
   const navigate = useNavigate()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
 
   const handleSignOut = () => {
     signOut()
@@ -18,10 +20,12 @@ const Header = ({ setResults }) => {
 }
   console.log("Current user:", user)
 
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-
   const toggleDropdown = () => {
     setDropdownOpen(prevState => !prevState)
+  }
+
+  const toggleMobileDropdown = () => {
+    setMobileDropdownOpen((prevState) => !prevState);
   }
 
   return (
@@ -30,7 +34,12 @@ const Header = ({ setResults }) => {
       <Link class="logo" to="/">
           <img src={logo} alt="Logo" /></Link>
 
-        <SearchBar setResults={setResults} />
+          <div class="search-outer-container">
+            <button class="mobile-menu-toggle" onClick={toggleMobileDropdown}>
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <SearchBar setResults={setResults} />
+          </div>
 
         <div class="header-button-container">
           {user && user.token && (
@@ -46,8 +55,8 @@ const Header = ({ setResults }) => {
                 </div>
                 {dropdownOpen && (
                   <div class="account-dropdown-menu">
-                    <Link class="account-dropdown-item" to="/userprofile">My Profile</Link>
-                    <button class="account-dropdown-item" onClick={handleSignOut}>Sign Out</button>
+                    <Link class="account-dropdown-item" to="/userprofile">MY PROFILE</Link>
+                    <button class="account-dropdown-item" onClick={handleSignOut}>SIGN OUT</button>
                     <DeleteAccount />
                   </div>)}
               </div>
@@ -56,6 +65,25 @@ const Header = ({ setResults }) => {
             <Link class="header-links" to="/signin">SIGN IN</Link>
           )}
         </div>
+        
+        {mobileDropdownOpen && (
+          <div class="mobile-menu open">
+            {user && user.token && (
+              <Link class="header-links" to="/allgroups">GROUPS</Link>
+            )}
+            <Link class="header-links" to="/showtimes">SHOWTIMES</Link>
+
+            {user && user.token ? (
+              <>
+                <Link class="account-dropdown-item" to="/profile">MY PROFILE</Link>
+                <button class="account-dropdown-item" onClick={handleSignOut}>SIGN OUT</button>
+                <DeleteAccount />
+              </>
+              ) : (
+                <Link class="header-links" to="/signin">SIGN IN</Link>
+          )}
+      </div>
+    )}
       </div>
     </div>
   )

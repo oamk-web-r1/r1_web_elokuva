@@ -13,6 +13,7 @@ import Showtimes from './pages/showtimes';
 import MyProfile  from './pages/userProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import { CreateGroup } from './pages/createGroup';
+import { GroupPage } from './pages/groupPage';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/userprofile",
         element: <MyProfile/>,
+      },
+      {
+        path: "/grouppage/:groupId",
+        element: <GroupPage />,
       }
     ]
   }

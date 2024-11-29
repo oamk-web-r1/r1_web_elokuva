@@ -35,7 +35,8 @@ CREATE TABLE Group_Members (
 -- Favorites Table (Composite Primary Key)
 CREATE TABLE Favorites (
     user_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    imdb_movie_id VARCHAR(20) NOT NULL, -- IMDb movie ID reference
+    -- imdb_movie_id VARCHAR(20) NOT NULL, -- IMDb movie ID reference
+    imdb_movie_id INT NOT NULL,
     PRIMARY KEY (user_id, imdb_movie_id)
 );
 
@@ -43,7 +44,8 @@ CREATE TABLE Favorites (
 CREATE TABLE Reviews (
     review_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    imdb_movie_id VARCHAR(20) NOT NULL, -- IMDb movie ID reference
+    -- imdb_movie_id VARCHAR(20) NOT NULL, -- IMDb movie ID reference
+    imdb_movie_id INT NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5),
     review_text TEXT,
     UNIQUE (user_id, imdb_movie_id) -- Ensures one review per movie per user
