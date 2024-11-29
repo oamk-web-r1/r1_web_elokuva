@@ -23,9 +23,10 @@ export default function SignIn() {
             <h3 class="default-big-title-pink">Sign In</h3>
             <div class="gray-box">
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className="defaul-form-group">
                 <label class="default-text">Email</label>
                 <input
+                        className="default-input"
                         type="email"
                         value={user.email}
                         onChange={e=> setUser({ ...user, email: e.target.value })}
@@ -34,6 +35,7 @@ export default function SignIn() {
                 <div>
                     <label class="default-text">Password</label>
                     <input
+                        className="default-input"
                         type="password"
                         value={user.password}
                         onChange={e=> setUser({ ...user, password: e.target.value })}
