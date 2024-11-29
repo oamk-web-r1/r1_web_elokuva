@@ -741,12 +741,12 @@
 }
 
 html, body, .page-container {
-  height: 100%;           /* Ensures the parent container spans the entire viewport */
-  margin: 0;              /* Removes default body margin */
+    height: 100%;           /* Ensures the parent container spans the entire viewport */
+    margin: 0;              /* Removes default body margin */
 }
 
 .page-container {
-  display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center;    /* Centers vertically */
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;    /* Centers vertically */
 }
