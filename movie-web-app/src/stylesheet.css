@@ -308,6 +308,11 @@
     font-weight: bold;
     margin: 15px;
   }
+
+  .default-link-text{
+    color: #fff;
+    text-decoration: none;
+  }
   
   .default-button-pink:hover {
     background-color: #E23E62;
@@ -578,4 +583,11 @@
 
 .group-button:hover {
   background-color: #E23E62; /* Hover effect for buttons */
+}
+
+
+.center-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

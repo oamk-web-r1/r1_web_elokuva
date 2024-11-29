@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/header';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
+import { Link } from 'react-router-dom'
 
 const url = 'http://localhost:3001/groups'
 
@@ -14,7 +15,7 @@ export function AllGroups() {
     useEffect(() => {
         fetch(url)
             .then((response) => response.json())
-            .then((groupsData) => {  
+            .then((groupsData) => {
                 setGroups(groupsData);
 
                 // Filter owned groups
@@ -54,13 +55,15 @@ export function AllGroups() {
                                 <h3 className="group-name">{group.name}</h3>
                                 <p className="group-description">{group.description}</p>
                             </div>
-
                         ))}
                     </div>
                 ) : (
                     <p className="no-groups-message">You are not the owner of any groups.</p>
                 )}
-
+    <div className='center-item'>
+            <button className="default-button-pink"><Link className="default-link-text" to="/creategroup"> Create New Group </Link> </button>
+            </div>
+            
                 <h2 className="section-title">Groups I'm a Member Of</h2>
                 {memberGroups.length > 0 ? (
                     <div className="group-list">
@@ -74,7 +77,7 @@ export function AllGroups() {
                 ) : (
                     <p className="no-groups-message">You are not a member of any groups.</p>
                 )}
-
+    
                 <h2 className="section-title">All Groups</h2>
                 {groups.length > 0 ? (
                     <div className="group-list">
@@ -90,5 +93,4 @@ export function AllGroups() {
                 )}
             </div>
         </>
-    );
-}
+    )}
