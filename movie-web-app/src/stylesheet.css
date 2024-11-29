@@ -71,7 +71,6 @@
     background-color: #242424;
     color: #fff;
     width: 200px;
-    align-items: center;
   }
 
   /* HEADER */
@@ -681,7 +680,6 @@
   margin-bottom: 30px;
 }
 
-/* Buttons (if added later) */
 .group-button {
   padding: 10px 20px;
   border: none;
@@ -704,4 +702,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+html, body, .page-container {
+  height: 100%;           /* Ensures the parent container spans the entire viewport */
+  margin: 0;              /* Removes default body margin */
+}
+
+.page-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;    /* Centers vertically */
 }

@@ -46,13 +46,14 @@ export function CreateGroup() {
     return (
     <>
         <Header />
+        <div className="page-container">
         <div>
-            <h3 className="default-big-title-pink">Create a group</h3>
-            <div className="gray-box">
+            <h3 className="default-big-title-pink center-item">Create a group</h3>
+            <div className="center-item gray-box">
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label className="default-text">Group name</label>
+                        <label className="default-text center-item">Group name</label>
                         <input
                             type="text"
                             value={groupData.name}
@@ -61,7 +62,7 @@ export function CreateGroup() {
                         />
                     </div>
                     <div>
-                        <label className="default-text">Description</label>
+                        <label className="default-text center-item">Description</label>
                         <input
                             type="text"
                             value={groupData.description}
@@ -69,9 +70,10 @@ export function CreateGroup() {
                             required
                         />
                     </div>
-                    <button type="submit" className="default-button-pink">Publish Group</button>
+                    <button type="submit" className="default-button-pink center-item">Publish Group</button>
                 </form>
             </div>
+        </div>
         </div>
     </>
     );
