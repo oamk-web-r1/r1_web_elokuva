@@ -493,3 +493,89 @@
     font-size: 1rem;
     color: #7c7c7c;
   }
+
+/* Groups Page */
+.groups-page {
+  background: #0F0F0F;
+  color: #fff;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.3rem;
+  color: #ffffff;
+  margin-bottom: 5px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+/* Group list container */
+.group-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.group-card {
+  background-color: #242424;
+  padding: 8px 8px; 
+  width: 700px; 
+  height: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); 
+  display: flex; 
+  flex-direction: column; 
+  align-items: flex-start;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.group-card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7); /* Enhance shadow on hover */
+}
+
+/* Group name */
+.group-name {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+  color: #fff;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Group description */
+.group-description {
+  font-size: 0.9rem; 
+  color: #bbb;
+  text-align: left;
+  margin-top: 0;
+}
+
+/* No groups message */
+.no-groups-message {
+  font-size: 1.1rem; 
+  color: #bbb;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Buttons (if added later) */
+.group-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: #CA2145; /* Match button color */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.2s;
+}
+
+.group-button:hover {
+  background-color: #E23E62; /* Hover effect for buttons */
+}

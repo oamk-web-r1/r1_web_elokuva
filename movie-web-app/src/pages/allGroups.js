@@ -45,47 +45,50 @@ export function AllGroups() {
     return (
         <>
             <Header />
-            <h2>My Groups (Owner)</h2>
-            {ownedGroups.length > 0 ? (
-                <ul>
-                    {ownedGroups.map((group) => (
-                        <li key={group.group_id}>
-                            <h3>{group.name}</h3>
-                            <p>{group.description}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>You are not the owner of any groups.</p>
-            )}
+            <div className="groups-page">
+                <h2 className="section-title">My Groups (Owner)</h2>
+                {ownedGroups.length > 0 ? (
+                    <div className="group-list">
+                        {ownedGroups.map((group) => (
+                            <div className="group-card" key={group.group_id}>
+                                <h3 className="group-name">{group.name}</h3>
+                                <p className="group-description">{group.description}</p>
+                            </div>
 
-            <h2>Groups I'm a Member Of</h2>
-            {memberGroups.length > 0 ? (
-                <ul>
-                    {memberGroups.map((group) => (
-                        <li key={group.group_id}>
-                            <h3>{group.name}</h3>
-                            <p>{group.description}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>You are not a member of any groups.</p>
-            )}
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-groups-message">You are not the owner of any groups.</p>
+                )}
 
-            <h2>All Groups</h2>
-            {groups.length > 0 ? (
-                <ul>
-                    {groups.map((group) => (
-                        <li key={group.group_id}>
-                            <h3>{group.name}</h3>
-                            <p>{group.description}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No groups available.</p>
-            )}
+                <h2 className="section-title">Groups I'm a Member Of</h2>
+                {memberGroups.length > 0 ? (
+                    <div className="group-list">
+                        {memberGroups.map((group) => (
+                            <div className="group-card" key={group.group_id}>
+                                <h3 className="group-name">{group.name}</h3>
+                                <p className="group-description">{group.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-groups-message">You are not a member of any groups.</p>
+                )}
+
+                <h2 className="section-title">All Groups</h2>
+                {groups.length > 0 ? (
+                    <div className="group-list">
+                        {groups.map((group) => (
+                            <div className="group-card" key={group.group_id}>
+                                <h3 className="group-name">{group.name}</h3>
+                                <p className="group-description">{group.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-groups-message">No groups available.</p>
+                )}
+            </div>
         </>
     );
 }

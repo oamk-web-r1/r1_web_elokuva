@@ -1,9 +1,11 @@
-import React from 'react';
+
+import React from "react";
 
 export function CreateGroup() {
     return (
-        <>
-            <h1>Create Group</h1>
-        </>
-    )
+        <div>
+            <h3 >Create Group</h3>
+        </div>
+    );
 }
+    
