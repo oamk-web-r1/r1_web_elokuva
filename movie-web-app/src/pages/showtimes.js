@@ -83,7 +83,7 @@ return (
         <div class="showtime-container">
             <h1 class="default-big-title-white">Showtimes</h1>
 
-            <div class="filterContainer">
+            <div class="filter-container">
                 <div>
                     <label htmlFor="theatre-select"></label>
                     <select
@@ -121,9 +121,9 @@ return (
             {!selectedTheatre ? (
                 <p class="placeholder">Please select a theatre to view showtimes.</p>
             ) : filteredSchedules.length > 0 ? (
-                <ul class="resultsContainer">
+                <ul class="results-container">
                     {filteredSchedules.map((schedule, index) => (
-                        <div key={index} class="resultCard">
+                        <div key={index} class="result-card">
                             <strong>{schedule.title}</strong> <br />
                             Theatre: {schedule.theatre} <br />
                             Start Time: {schedule.startTime}

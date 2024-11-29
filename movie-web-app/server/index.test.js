@@ -1,5 +1,5 @@
 
-import { initializeTestDb, insertTestUser, getToken } from './helpers/test.js';
+import { initializeTestDb, insertTestUser, getToken, insertTestReview } from './helpers/test.js';
 import { expect } from "chai";
 
 const base_url = "http://localhost:3001";
@@ -375,22 +375,119 @@ describe('POST /groupMembers/add', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${memberToken}`
             },
             body: JSON.stringify({
                 user_id: groupMemberUserId,
                 group_id: groupId,
+                role: 'member',
+                status: 'pending'
             }),
         });
 
         const data = await response.json();
         expect(response.status).to.equal(200);
         expect(data).to.be.an('object');
-        expect(data).to.include.all.keys('user_id', 'group_id');
+        expect(data).to.include.all.keys('user_id', 'group_id', 'role', 'status');
         expect(data.user_id).to.equal(groupMemberUserId);
         expect(data.group_id).to.equal(groupId);
-    });
+        expect(data.role).to.equal('member')
+        expect(data.status).to.equal('pending')
+    })
 
+    it('should return an error if the user is already a member', async () => {
+        const response = await fetch(`${base_url}/groupMembers/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${memberToken}`
+            },
+            body: JSON.stringify({
+                user_id: groupMemberUserId,
+                group_id: groupId,
+                role: 'member',
+                status: 'pending'
+            }),
+        })
+
+        const data = await response.json()
+        expect(response.status).to.equal(400)
+        expect(data).to.be.an('object')
+        expect(data.error).to.equal('User is already a member of the group.')
+    })
 });
+
+// Review router test
+describe('GET /reviews/:movieId', () => {
+    let userId
+    const reviewerEmail = 'reviewer@example.com'
+    const reviewerPassword = 'password123'
+    const testMovieId = '533535'
+
+    before(async () => {
+        // Insert a test user into the database and get the user ID
+        const testUser = await insertTestUser(reviewerEmail, reviewerPassword)
+        userId = testUser.user_id
+        // Insert a test review for the given movie and user into the database
+        await insertTestReview(testMovieId, userId, 'Great movie!', 5)
+    })
+
+    it('should return reviews for a valid movie ID', async () => {
+        // Make a GET request to retrieve reviews for the test movie ID
+        const response = await fetch(`${base_url}/reviews/${testMovieId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        expect(response.status).to.equal(200)
+
+        const responseBody = await response.json()
+        const { reviews } = responseBody
+
+        expect(reviews).to.be.an('array')
+        expect(reviews.length).to.be.greaterThan(0)
+        expect(reviews[0]).to.have.all.keys('id', 'author', 'content', 'rating')
+        expect(reviews[0].author).to.equal(reviewerEmail)
+        expect(reviews[0].content).to.equal('Great movie!')
+        expect(reviews[0].rating).to.equal(5)
+    })
+
+    it('should return an empty array for a movie with no reviews', async () => {
+        
+        const nonExistentMovieId = '1234567'
+        // Make a GET request to retrieve reviews for a movie that doesn't exist
+        const response = await fetch(`${base_url}/reviews/${nonExistentMovieId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        expect(response.status).to.equal(200)
+
+        const responseBody = await response.json()
+        const { reviews } = responseBody
+
+        expect(reviews).to.be.an('array')
+        expect(reviews.length).to.equal(0)
+    })
+
+    it('should return 400 for invalid movie ID format', async () => {
+        const invalidMovieId = 'abcd' // Invalid movie ID format
+    
+        // Make a GET request to retrieve reviews for an invalid movie ID
+        const response = await fetch(`${base_url}/reviews/${invalidMovieId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    
+        expect(response.status).to.equal(400) // Expect a 400 Not Found response for invalid format
+    })
+    })
 
 // Remove Group Member
 
@@ -491,5 +588,4 @@ describe('DELETE /groupMembers/remove', () => {
         expect(removeMemberData).to.be.an('object');
         expect(removeMemberData).to.have.property('error', 'You are not authorized to remove this user.');
     })
-
 })
