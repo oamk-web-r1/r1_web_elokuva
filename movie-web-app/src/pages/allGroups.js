@@ -100,7 +100,7 @@ export function AllGroups() {
                     {ownedGroups.map((group) => (
                         <div className="group-card" key={group.group_id}>
                             <h3 className="group-name">
-                                <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link></h3>
+                                <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link></h3>
                             <p className="group-description">{group.description}</p>
 
                             {pendingRequests[group.group_id] &&
@@ -133,7 +133,7 @@ export function AllGroups() {
                         return (
                             <div className="group-card" key={group.group_id}>
                             <h3 className="group-name">
-                            <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                            <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link>
                             </h3>
                             <p className="group-description">{group.description}</p>
     
@@ -157,7 +157,7 @@ export function AllGroups() {
                         {memberGroups.map((group) => (
                             <div className="group-card" key={group.group_id}>
                                 <h3 className="group-name">
-                                <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                                <Link className="default-link-text"  to={`/grouppage/${group.group_id}`}>{group.name}</Link>
                                 </h3>
                                 <p className="group-description">{group.description}</p>
                             </div>
