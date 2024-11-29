@@ -25,6 +25,7 @@ export function GroupPage() {
         <>
             <h2>{group.name}</h2>
             <p>{group.description}</p>
+            <p>Group ID: {group.group_id}</p>
             <p>Owner ID: {group.owner_id}</p>
         </>
     )
