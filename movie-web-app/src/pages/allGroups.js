@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/header';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
+import { Link } from 'react-router-dom';
 
 const url = 'http://localhost:3001'
 
@@ -98,21 +99,22 @@ export function AllGroups() {
                 <div className="group-list">
                     {ownedGroups.map((group) => (
                         <div className="group-card" key={group.group_id}>
-                            <h3 className="group-name">{group.name}</h3>
+                            <h3 className="group-name">
+                                <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link></h3>
                             <p className="group-description">{group.description}</p>
 
                             {pendingRequests[group.group_id] &&
                             pendingRequests[group.group_id].length > 0 && (
                                 <>
                                 <h3>Pending Requests:</h3>
-                                <ul>
+                                <div>
                                     {pendingRequests[group.group_id].map(request => (
                                         <div key={request.user_id}>
                                             User: {request.user_id}
                                             <button onClick={() => handleAcceptRequest(request.user_id, group.group_id)}>Accept</button>
                                         </div>
                                     ))}
-                                </ul>
+                                </div>
                                 </>
                             )}
                         </div>
@@ -124,13 +126,15 @@ export function AllGroups() {
 
             <h2 className="section-title">All Groups</h2>
             {groups.length > 0 ? (
-                <ul className="group-list">
+                <div className="group-list">
                     {groups.map((group) => {
                         const isMemberOrOwner = memberGroups.some(g => g.group_id === group.group_id) || ownedGroups.some(g => g.group_id === group.group_id)
                         
                         return (
                             <div className="group-card" key={group.group_id}>
-                            <h3 className="group-name">{group.name}</h3>
+                            <h3 className="group-name">
+                            <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                            </h3>
                             <p className="group-description">{group.description}</p>
           
                             {!isMemberOrOwner && (
@@ -139,7 +143,7 @@ export function AllGroups() {
                             </div>
                         )
                     })}
-                </ul>
+                </div>
             ) : (
                 <p className="no-groups-message">No groups available.</p>
             )}
@@ -148,7 +152,9 @@ export function AllGroups() {
                     <div className="group-list">
                         {memberGroups.map((group) => (
                             <div className="group-card" key={group.group_id}>
-                                <h3 className="group-name">{group.name}</h3>
+                                <h3 className="group-name">
+                                <Link to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                                </h3>
                                 <p className="group-description">{group.description}</p>
                             </div>
                         ))}

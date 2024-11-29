@@ -104,6 +104,24 @@ groupRouter.delete('/delete/:groupId', auth, async (req, res) => {
     }
 });
 
+groupRouter.get('/:groupId', (req, res, next) => {
+    const groupId = req.params.groupId
+    const value = [groupId]
 
+    const query = 'SELECT * FROM Groups WHERE group_id = $1;'
+
+    pool.query(query, value)
+    .then(result => {
+        if (result.rows.length > 0) {
+            res.json(result.rows)
+        } else {
+            res.status(404).json({ message: 'Group not found' })
+        }
+    })
+    .catch(error => {
+        console.error(error)
+        res.status(500).json(error)
+    })
+})
 
 export default groupRouter;
