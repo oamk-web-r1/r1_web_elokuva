@@ -47,7 +47,35 @@ groupMemberRouter.post('/add', (req, res) => {
             }
             res.status(200).json(result.rows[0]);
         }
+<<<<<<< Updated upstream
     );
+=======
+    );*/
+
+    try {
+        // Check if the user is already a member of the group
+        const existingMembership = await pool.query(
+            `SELECT * FROM Group_Members WHERE user_id = $1 AND group_id = $2`,
+            [user_id, group_id]
+        )
+
+        if (existingMembership.rowCount > 0) {
+            return res.status(400).json({ error: 'User is already a member of the group.' })
+        }
+
+        // Add the user to the group if checks pass
+        const result = await pool.query(
+            `INSERT INTO Group_Members (user_id, group_id)
+            VALUES ($1, $2)
+            RETURNING *`,
+            [user_id, group_id]
+        )
+
+        res.status(200).json(result.rows[0])
+    } catch (error) {
+        res.status(500).json(error)
+    }
+>>>>>>> Stashed changes
 });
 
 // Remove a member from a group. Only the group owner can remove members. All members can remove themselves from a group
