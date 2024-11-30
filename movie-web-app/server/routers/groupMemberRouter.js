@@ -47,7 +47,21 @@ groupMemberRouter.post('/add', async (req, res) => {
         )
 
         if (existingMembership.rowCount > 0) {
-            return res.status(400).json({ error: 'User is already a member of the group.' })
+            const currentStatus = existingMembership.rows[0].status
+
+            if (currentStatus === 'accepted' || currentStatus === 'pending') {
+                return res.status(400).json({ error: 'User is already a member or request is pending.' })
+            }
+
+            if (currentStatus === 'rejected') {
+                // Update status back to 'pending' if previously rejected
+                const updatedRequest = await pool.query(
+                    `UPDATE Group_Members SET status = $1 WHERE user_id = $2 AND group_id = $3 RETURNING *`,
+                    ['pending', user_id, group_id]
+                )
+                return res.status(200).json(updatedRequest.rows[0])
+            }
+            //return res.status(400).json({ error: 'User is already a member of the group.' })
         }
 
         // Add the user to the group if checks pass
@@ -155,6 +169,76 @@ groupMemberRouter.post('/accept', (req, res) => {
             res.status(200).json(result.rows[0])
         }
     )
+})
+
+// Reject a join request
+groupMemberRouter.post('/reject', (req, res) => {
+    const { user_id, group_id } = req.body
+
+    pool.query(
+        // Update the status of a specific group member to 'rejected'
+        'UPDATE Group_Members SET status = $1 WHERE user_id = $2 AND group_id = $3 RETURNING *',
+        ['rejected', user_id, group_id],
+        (error, result) => {
+            if (error) {
+                return res.status(500).json({ error: error.message })
+            }
+            res.status(200).json(result.rows[0])
+        }
+    )
+})
+
+// Fetch users who are not members of the group
+groupMemberRouter.get('/nonmembers/:group_id', async (req, res, next) => {
+    const { group_id } = req.params
+
+     try {
+        const ownerResult = await pool.query(
+            `SELECT owner_id FROM Groups WHERE group_id = $1`,
+            [group_id]
+        )
+        if (ownerResult.rowCount === 0) {
+            return res.status(404).json({ error: 'Group not found' })
+        }
+        const owner_id = ownerResult.rows[0].owner_id
+        const result = await pool.query(
+            `SELECT user_id, email FROM Users WHERE user_id NOT IN (SELECT user_id FROM Group_Members WHERE group_id = $1) AND user_id != $2`,
+            [group_id, owner_id]
+        )
+
+        res.status(200).json(result.rows)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// Fetch all members of a group except the owner
+groupMemberRouter.get('/members/:group_id', async (req, res, next) => {
+    const { group_id } = req.params
+
+    try {
+        const ownerResult = await pool.query(
+            `SELECT owner_id FROM Groups WHERE group_id = $1`,
+            [group_id]
+        )
+
+        if (ownerResult.rowCount === 0) {
+            return res.status(404).json({ error: 'Group not found' })
+        }
+
+        const owner_id = ownerResult.rows[0].owner_id
+
+        const membersResult = await pool.query(
+            `SELECT u.user_id, u.email FROM Users u
+            JOIN Group_Members gm ON u.user_id = gm.user_id
+            WHERE gm.group_id = $1 AND u.user_id != $2`,
+            [group_id, owner_id]
+        )
+
+        res.status(200).json(membersResult.rows)
+    } catch (error) {
+        next(error)
+    }
 })
 
 export default groupMemberRouter;
