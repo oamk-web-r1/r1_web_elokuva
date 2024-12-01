@@ -261,7 +261,7 @@
     display: none;
     z-index: 10;
   }
-    
+  
   .dropdown-menu.visible {
     display: block;
   }

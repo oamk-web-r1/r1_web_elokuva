@@ -153,7 +153,7 @@ export function GroupPage() {
                 </>
             )}
 
-{user.user_id === group.owner_id && (
+            {user.user_id === group.owner_id && (
                 <>
                     <button onClick={handleShowRemoveMembers}>Remove Members</button>
                     {showRemoveMembers && (
