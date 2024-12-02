@@ -14,6 +14,88 @@
     color: #fff;
   }
 
+  /* GROUP PAGE */
+  .center-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .user-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .join-request-box {
+    background-color: #242424;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px;
+  }
+
+  .join-request-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .accept-button, .reject-button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .accept-button {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .accept-button:hover {
+    background-color: #218838;
+  }
+  
+  .reject-button {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .reject-button:hover {
+    background-color: #c82333;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .user-list-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .gray-button {
+    padding: 10px 17px;
+    border: none;
+    border-radius: 20px;
+    background-color: #242424;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 10px;
+  }
+  
+  .gray-button:hover {
+    background-color: #333;
+  }
+  
   /* HOME PAGE SPECIFIC */
   .movie-container {
     display: flex;

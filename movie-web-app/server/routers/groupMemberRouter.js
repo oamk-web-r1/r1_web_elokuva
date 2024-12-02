@@ -37,7 +37,7 @@ groupMemberRouter.get('/user/:user_id', (req, res, next) => {
 // Add a new member to a group
 
 groupMemberRouter.post('/add', async (req, res) => {
-    const { user_id, group_id, role, status } = req.body;
+    const { user_id, group_id } = req.body;
 
     try {
         // Check if the user is already a member of the group
@@ -77,6 +77,66 @@ groupMemberRouter.post('/add', async (req, res) => {
         res.status(500).json(error)
     }
 });
+
+groupMemberRouter.post('/owner/add', auth, async (req, res) => {
+    const { user_id, group_id } = req.body
+    const userEmail = req.user.email
+
+    try {
+        // Verify the requester is the group owner
+        const ownerResult = await pool.query(
+            `SELECT owner_id FROM Groups WHERE group_id = $1`,
+            [group_id]
+        )
+
+        if (ownerResult.rowCount === 0) {
+            return res.status(404).json({ error: 'Group not found.' })
+        }
+
+        const owner_id = ownerResult.rows[0].owner_id;
+        const requesting_user = await pool.query(
+            `SELECT user_id FROM Users WHERE email = $1`,
+            [userEmail]
+        )
+
+        if (requesting_user.rows[0].user_id !== owner_id) {
+            return res.status(403).json({ error: 'Only the group owner can add members directly.' })
+        }
+
+        // Check if the user is already a member
+        const existingMembership = await pool.query(
+            `SELECT * FROM Group_Members WHERE user_id = $1 AND group_id = $2`,
+            [user_id, group_id]
+        )
+
+        if (existingMembership.rowCount > 0) {
+            const currentStatus = existingMembership.rows[0].status
+
+            if (currentStatus === 'accepted') {
+                return res.status(400).json({ error: 'User is already a member.' })
+            }
+            if (currentStatus === 'pending') {
+                await pool.query(
+                    `UPDATE Group_Members SET status = $1 WHERE user_id = $2 AND group_id = $3`,
+                    ['accepted', user_id, group_id]
+                )
+                return res.status(200).json({ message: 'User added successfully.' })
+            }
+        }
+
+        // Directly add the user with 'accepted' status
+        const result = await pool.query(
+            `INSERT INTO Group_Members (user_id, group_id, status)
+             VALUES ($1, $2, $3)
+             RETURNING *`,
+            [user_id, group_id, 'accepted']
+        )
+
+        res.status(200).json(result.rows[0])
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
 
 // Remove a member from a group. Only the group owner can remove members. All members can remove themselves from a group
 
@@ -143,7 +203,11 @@ groupMemberRouter.get('/requests/:group_id', (req, res, next) => {
 
     pool.query(
         // Select all group members with the given group_id and 'pending' status
-        'SELECT * FROM Group_Members WHERE group_id = $1 AND status = $2',
+        `SELECT gm.user_id, u.email, gm.status
+        FROM Group_Members gm JOIN Users u
+        ON gm.user_id = u.user_id 
+        WHERE gm.group_id = $1
+        AND gm.status = $2`,
         [group_id, 'pending'],
         (error, results) => {
             if (error) {
@@ -215,7 +279,7 @@ groupMemberRouter.get('/nonmembers/:group_id', async (req, res, next) => {
 // Fetch all members of a group except the owner
 groupMemberRouter.get('/members/:group_id', async (req, res, next) => {
     const { group_id } = req.params
-
+    
     try {
         const ownerResult = await pool.query(
             `SELECT owner_id FROM Groups WHERE group_id = $1`,
@@ -229,9 +293,11 @@ groupMemberRouter.get('/members/:group_id', async (req, res, next) => {
         const owner_id = ownerResult.rows[0].owner_id
 
         const membersResult = await pool.query(
-            `SELECT u.user_id, u.email FROM Users u
+            `SELECT u.user_id, u.email 
+            FROM Users u
             JOIN Group_Members gm ON u.user_id = gm.user_id
-            WHERE gm.group_id = $1 AND u.user_id != $2`,
+            WHERE gm.group_id = $1 AND u.user_id != $2
+            AND gm.status != 'pending'`,
             [group_id, owner_id]
         )
 
