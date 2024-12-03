@@ -548,6 +548,20 @@
     color: #ffcc4b;
     margin-left: 5px;
   }
+
+  .favorite-heart {
+    font-size: 1.5rem;
+    color: #ff4b5c;
+    cursor: pointer;
+  }
+  
+  .favorite-heart.outline {
+    color: #ff4b5c;
+  }
+  
+  .favorite-heart.active {
+    color: #ff4b5c;
+  }
   
   /* SHOWTIMES */
   .showtime-container {

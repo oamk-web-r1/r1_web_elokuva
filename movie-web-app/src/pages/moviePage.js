@@ -13,6 +13,20 @@ export default function MoviePage() {
   const [tmdbReviews, setTmdbReviews] = useState([])
   const [localReviews, setLocalReviews] = useState([])
   const [newReview, setNewReview] = useState({ content: '', rating: '' })
+  const [isFavorite, setIsFavorite] = useState(false)
+  
+  // Check if the movie is in the user's favorites
+  useEffect(() => {
+    if (user.token) {
+      axios.get('http://localhost:3001/favorites', {
+        headers: { Authorization: `Bearer ${user.token}` }
+      })
+      .then(res => {
+        setIsFavorite(res.data.favorites.includes(movieId))
+      })
+      .catch(err => console.error('Error fetching favorites:', err))
+    }
+  }, [movieId, user.token])
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${MyKey}&language=en-US`)
@@ -71,12 +85,30 @@ export default function MoviePage() {
     }
   }
 
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+          await axios.delete(`http://localhost:3001/favorites/${movieId}`, {
+            headers: { Authorization: `Bearer ${user.token}` }
+        })
+        setIsFavorite(false)
+      } else {
+          await axios.post(`http://localhost:3001/favorites/${movieId}`, {}, {
+            headers: { Authorization: `Bearer ${user.token}` }
+        })
+        setIsFavorite(true)
+      }
+    } catch (err) {
+      console.error('Error toggling favorite:', err)
+    }
+  }
+
   const handleDeleteReview = async (reviewId) => {
     try {
-      await axios.delete(`http://localhost:3001/reviews/${reviewId}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
+        await axios.delete(`http://localhost:3001/reviews/${reviewId}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
       })
 
       // Update local reviews after deleting
@@ -103,6 +135,13 @@ export default function MoviePage() {
           </span></p>
         <p>{movieDetails.overview}</p>
         <p>{movieDetails.release_date}</p>
+        <div onClick={toggleFavorite}>
+            <i className={`fa-heart favorite-heart
+              ${isFavorite ? 'fa-solid active' : 'fa-regular outline'}`}></i>
+                <span>
+                  {isFavorite ? ' Remove from Favorites' : ' Add to Favorites'}
+                </span>
+        </div>
       </div>
       </>
       )}
