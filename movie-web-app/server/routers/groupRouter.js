@@ -198,4 +198,11 @@ groupRouter.get('/:groupId/users', auth, async (req, res) => {
     }
 });
 
+groupRouter.post('/addMovie', auth, async (req, res) => {
+    const { group_id, imdb_movie_id, added_by } = req.body;
+
+   
+    
+});
+
 export default groupRouter;
