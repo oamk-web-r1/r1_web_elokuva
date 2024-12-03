@@ -1,97 +1,94 @@
 import { useState } from "react";
-import '../stylesheet.css'
 import searchicon from "../assets/searchicon.png";
 import { genres } from '../data/genres';
 
-const MyKey = process.env.REACT_APP_API_KEY
-
-function SearchBar({ setResults }) {
-  const [query, setQuery] = useState("")
-  const [, setSelectedGenre] = useState(null)
-  const [, setSelectedYear] = useState(null)
-  const [, setSelectedAgeRating] = useState(null)
+function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) {
+  const [localQuery, setLocalQuery] = useState('')
   const [visibleDropdown, setVisibleDropdown] = useState(null)
 
-  const BASE_URL = 'https://api.themoviedb.org/3'
-  const searchURL = `${BASE_URL}/search/movie?api_key=${MyKey}&query=${query}&include_adult=false&language=en-US&page=1`
-
   const years = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i)
-  const ageRatings = ["G", "PG", "PG-13", "R", "NC-17"]
-  
+  const ageRatings = ['G', 'PG', 'PG-13', 'R', 'NC-17']
+
   const handleSearch = () => {
-    if (query.trim() === "") return
-    fetch(searchURL)
-      .then(res => res.json())
-      .then(json => setResults(json.results || []))
-      .catch(err => console.error(err))
+    setQuery(localQuery)
   }
 
-  const handleDropdownToggle = (dropdownName) => {
-    setVisibleDropdown((current) => (current === dropdownName ? null : dropdownName));
-  }
-
-  const handleGenreSelect = (genre) => {
-    setSelectedGenre(genre.id)
-    setVisibleDropdown(null)
-    fetch(`${BASE_URL}/discover/movie?api_key=${MyKey}&language=en-US&with_genres=${genre.id}`)
-      .then(res => res.json())
-      .then(json => setResults(json.results || []))
-      .catch(err => console.error(err))
-  }
-
-  const handleYearSelect  = (year) => {
-    setSelectedYear(year)
-    setVisibleDropdown(null)
-    fetch(`${BASE_URL}/discover/movie?api_key=${MyKey}&language=en-US&primary_release_year=${year}`)
-      .then(res => res.json())
-      .then(json => setResults(json.results || []))
-      .catch(err => console.error(err))
-  }
-
-  const handleAgeRatingSelect  = (ageRating) => {
-    setSelectedAgeRating(ageRating)
-    setVisibleDropdown(null)
-    fetch(`${BASE_URL}/discover/movie?api_key=${MyKey}&language=en-US&certification_country=US&certification=${ageRating}`)
-      .then(res => res.json())
-      .then(json => setResults(json.results || []))
-      .catch(err => console.error(err))
+  const toggleDropdown = (dropdown) => {
+    //console.log({dropdown})
+    setVisibleDropdown((current) => (current === dropdown ? null : dropdown))
   }
 
   return (
-      <div class="search-container">
-        <button class="search-button" onClick={handleSearch}>
+    <div className="search-container">
+      <button class="search-button" onClick={handleSearch}>
           <img src={searchicon} alt="Search Icon" />
         </button>
-        <input class="search-input"
-          type="text"
-          placeholder="Search..."
-          value={query}
-          onChange={e => setQuery(e.target.value)}/>
-        <button class="filter-button" onClick={() => handleDropdownToggle('genre')}>Genre</button>
-        <div class={`dropdown-menu ${visibleDropdown === 'genre' ? 'visible' : ''}`}>
-          {genres.map((genre) => (
-        <div class="dropdown-item" key={genre.id} onClick={() => handleGenreSelect(genre)}>
-          {genre.name}
+      <input
+        className="search-input"
+        type="text"
+        placeholder="Search..."
+        value={localQuery}
+        onChange={(e) => setLocalQuery(e.target.value)}
+      />
+
+      {/* Genre Filter */}
+      <button className="filter-button" onClick={() => toggleDropdown('genre')}>Genre</button>
+      {visibleDropdown === 'genre' && (
+        <div className={`dropdown-menu ${visibleDropdown === 'genre' ? 'visible' : ''}`}>
+          {genres.map(genre => (
+            <div 
+              key={genre.id}
+              className="dropdown-item"
+              onClick={() => {
+                console.log("Genre button clicked")
+                setSelectedGenre(genre.id)
+                setVisibleDropdown(null)
+              }}
+            >
+              {genre.name}
+            </div>
+          ))}
         </div>
-       ))}
-      </div>
-      <button class="filter-button" onClick={() => handleDropdownToggle('year')}>Year</button>
-      <div class={`dropdown-menu ${visibleDropdown === 'year' ? 'visible' : ''}`}>
-        {years.map((year) => (
-          <div class="dropdown-item" key={year} onClick={() => handleYearSelect(year)}>
-            {year}
-          </div>
-        ))}
-      </div>
-      <button class="filter-button-corner" onClick={() => handleDropdownToggle('ageRating')}>Age Rating</button>
-      <div class={`dropdown-menu ${visibleDropdown === 'ageRating' ? 'visible' : ''}`}>
-        {ageRatings.map((rating) => (
-          <div class="dropdown-item" key={rating} onClick={() => handleAgeRatingSelect(rating)}>
-            {rating}
-          </div>
-        ))}
-      </div>
-      </div>
+      )}
+
+      {/* Year Filter */}
+      <button className="filter-button" onClick={() => toggleDropdown('year')}>Year</button>
+      {visibleDropdown === 'year' && (
+        <div className={`dropdown-menu ${visibleDropdown === 'year' ? 'visible' : ''}`}>
+          {years.map(year => (
+            <div 
+              key={year}
+              className="dropdown-item"
+              onClick={() => {
+                setSelectedYear(year)
+                setVisibleDropdown(null)
+              }}
+            >
+              {year}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Age Rating Filter */}
+      <button className="filter-button-corner" onClick={() => toggleDropdown('ageRating')}>Age Rating</button>
+      {visibleDropdown === 'ageRating' && (
+        <div className={`dropdown-menu ${visibleDropdown === 'ageRating' ? 'visible' : ''}`}>
+          {ageRatings.map(rating => (
+            <div 
+              key={rating}
+              className="dropdown-item"
+              onClick={() => {
+                setSelectedAgeRating(rating)
+                setVisibleDropdown(null)
+              }}
+            >
+              {rating}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 

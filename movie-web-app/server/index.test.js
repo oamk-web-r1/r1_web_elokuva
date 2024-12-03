@@ -413,7 +413,7 @@ describe('POST /groupMembers/add', () => {
         const data = await response.json()
         expect(response.status).to.equal(400)
         expect(data).to.be.an('object')
-        expect(data.error).to.equal('User is already a member of the group.')
+        expect(data.error).to.equal('User is already a member or request is pending.')
     })
 });
 
