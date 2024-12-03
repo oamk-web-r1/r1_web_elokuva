@@ -1,4 +1,5 @@
 -- Drop existing tables
+DROP TABLE IF EXISTS Group_Movies;
 DROP TABLE IF EXISTS Group_Showings;
 DROP TABLE IF EXISTS Showings;
 DROP TABLE IF EXISTS Reviews;
@@ -66,4 +67,12 @@ CREATE TABLE Group_Showings (
     group_id INT REFERENCES Groups(group_id) ON DELETE CASCADE,
     showing_id INT REFERENCES Showings(showing_id) ON DELETE CASCADE,
     PRIMARY KEY (group_id, showing_id)
+);
+
+-- Group_Movies Table (Store movies associated with groups)
+CREATE TABLE Group_Movies (
+    group_id INT REFERENCES Groups(group_id) ON DELETE CASCADE,
+    imdb_movie_id VARCHAR(20) NOT NULL,
+    added_by INT REFERENCES Users(user_id) ON DELETE SET NULL,
+    PRIMARY KEY (group_id, imdb_movie_id)
 );
