@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useUser } from '../context/useUser';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Header from '../components/header';
 
 const MyKey = process.env.REACT_APP_API_KEY
 
@@ -119,6 +120,7 @@ export default function MoviePage() {
   }
     return (
       <>
+          <Header />
         <div class="movie-detail-container">
       {movieDetails && (
         <>

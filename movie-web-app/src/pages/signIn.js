@@ -2,6 +2,7 @@ import { useUser } from "../context/useUser";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Header from "../components/header";
 
 export default function SignIn() {
     const { user, setUser, signIn } = useUser();
@@ -19,13 +20,17 @@ export default function SignIn() {
     };
 
     return (
+    <>
+        <Header />
+        <div className="page-container">
         <div>
-            <h3 class="default-big-title-pink">Sign In</h3>
+            <h3 class="default-big-title-pink default-form-group">Sign In</h3>
             <div class="gray-box">
             <form onSubmit={handleSubmit}>
                 <div>
                 <label class="default-text">Email</label>
                 <input
+                        className="default-input"
                         type="email"
                         value={user.email}
                         onChange={e=> setUser({ ...user, email: e.target.value })}
@@ -34,16 +39,19 @@ export default function SignIn() {
                 <div>
                     <label class="default-text">Password</label>
                     <input
+                        className="default-input"
                         type="password"
                         value={user.password}
                         onChange={e=> setUser({ ...user, password: e.target.value })}
                     />
                 </div>
                 <button class="wide-button" type="submit">Sign In</button>   
-            </form></div>                
+            </form></div>
             <div class="register-link">
                 <Link class="link" to="/signup">Don't have an account?</Link>
             </div>
         </div>
+        </div>
+        </>
     );
 }

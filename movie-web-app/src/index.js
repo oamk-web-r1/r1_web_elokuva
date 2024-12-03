@@ -14,6 +14,7 @@ import MyProfile  from './pages/userProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import { CreateGroup } from './pages/createGroup';
 import { GroupPage } from './pages/groupPage';
+import { AddUsers} from './pages/addUsers';
 
 const router = createBrowserRouter([
   {
@@ -54,7 +55,12 @@ const router = createBrowserRouter([
       {
         path: "/grouppage/:groupId",
         element: <GroupPage />,
+      },
+      {
+        path: "/addusers",
+        element: <AddUsers/>,
       }
+
     ]
   }
 ]);

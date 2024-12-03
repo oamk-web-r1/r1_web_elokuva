@@ -124,4 +124,78 @@ groupRouter.get('/:groupId', (req, res, next) => {
     })
 })
 
+// Fetch all users (for selection)
+groupRouter.get('/users', auth, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT user_id, email FROM Users');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ error: 'An internal error occurred.' });
+    }
+});
+
+// Add users to a group
+groupRouter.post('/:groupId/add-users', auth, async (req, res) => {
+    const { groupId } = req.params;
+    const { userIds } = req.body; // Array of user IDs to be added
+    const userEmail = req.user.email;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+        return res.status(400).json({ error: 'No user IDs provided.' });
+    }
+
+    try {
+        const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail]);
+        if (userResult.rowCount === 0) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        const userId = userResult.rows[0].user_id;
+        const groupResult = await pool.query(
+            'SELECT * FROM Groups WHERE group_id = $1 AND owner_id = $2',
+            [groupId, userId]
+        );
+
+        if (groupResult.rowCount === 0) {
+            return res.status(403).json({ error: 'You are not authorized to add users to this group.' });
+        }
+
+        const values = userIds.map(userId => `(${groupId}, ${userId})`).join(',');
+        const insertQuery = `
+            INSERT INTO GroupMembers (group_id, user_id)
+            VALUES ${values}
+            ON CONFLICT DO NOTHING
+        `;
+
+        await pool.query(insertQuery);
+        res.status(200).json({ message: 'Users added to group successfully!' });
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ error: 'An internal error occurred.' });
+    }
+});
+
+// Fetch users in a specific group
+groupRouter.get('/:groupId/users', auth, async (req, res) => {
+    const { groupId } = req.params;
+
+    try {
+        const result = await pool.query(
+            `
+            SELECT u.user_id, u.email
+            FROM GroupMembers gm
+            JOIN Users u ON gm.user_id = u.user_id
+            WHERE gm.group_id = $1
+            `,
+            [groupId]
+        );
+
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ error: 'An internal error occurred.' });
+    }
+});
+
 export default groupRouter;

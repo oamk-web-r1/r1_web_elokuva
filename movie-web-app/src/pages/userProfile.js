@@ -58,9 +58,11 @@ export default function MyProfile() {
     return (
         <>
             <Header />
-            <h1>My Profile</h1>
-            <p>Email: {email || 'Fetching email...'}</p>
-
+            <h1 className='default-form-group'>My Profile</h1>
+            <div className='default-align'>            
+            <h2>My Information</h2>
+            <p>{email || 'Fetching email...'}</p>
+            
             <h2>My Favorites</h2>
             <div class="movie-container">
                 {favorites.length > 0 ? (
@@ -76,6 +78,7 @@ export default function MyProfile() {
             ) : (
                 <p>No favorites? Tough audience.</p>
                 )}
+            </div>
             </div>
         </>
     );
