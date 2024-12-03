@@ -89,6 +89,7 @@
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
+    width: 200px;
     margin: 10px;
   }
   
@@ -129,6 +130,14 @@
     text-align: center;
   }
 
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 50px;
+  }
+
   /* SIGN IN/SIGN OUT SPECIFIC */
   .wide-button {
     padding: 11px 50px;
@@ -164,6 +173,7 @@
     background-color: #242424;
     color: #fff;
     align-items: center;
+    margin-bottom: 70px;
   }
   
   .header-content {
@@ -223,6 +233,7 @@
     color: #000;
     border-radius: 4px 0 0 4px;
     cursor: pointer;
+    font-size: 1rem;
   }
   
   .search-button:hover {
@@ -258,12 +269,7 @@
     align-items: center;
     height: 100%;
     margin-left: 3px;
-  }
-    
-  .account-icon {
-    display: block;
-    width: 30px;
-    height: auto;
+    font-size: 1.7rem;
   }
 
   .account-dropdown-menu {
@@ -607,7 +613,6 @@
   
   /* SHOWTIMES */
   .showtime-container {
-    padding: 30px;
     text-align: center;
   }
 
@@ -754,7 +759,6 @@
 .groups-page {
   background: #0F0F0F;
   color: #fff;
-  padding: 20px;
   font-family: Arial, sans-serif;
 }
 

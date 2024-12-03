@@ -78,7 +78,8 @@ export function AllGroups() {
             )}
 
             <div className='center-item'>
-                 <button className="default-button-pink"><Link className="default-link-text" to="/creategroup"> Create New Group </Link> </button>
+                 <button className="default-button-pink"><Link className="default-link-text" to="/creategroup">
+                    <i class="fa-solid fa-plus"></i> Create New Group</Link> </button>
             </div>
 
             <h2 className="section-title">Groups I'm a Member Of</h2>

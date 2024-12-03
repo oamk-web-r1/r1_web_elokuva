@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
+import Header from '../components/header';
 
 const url = 'http://localhost:3001'
 
@@ -135,9 +136,12 @@ export function GroupPage() {
     }
 
     return (
+        <>
+        <Header />
+        
         <div className="center-item">
-            <h2>{group.name}</h2>
-            <p>{group.description}</p>
+            <h2 className="default-big-title-white">{group.name}</h2>
+            <p className="default-text">{group.description}</p>
 
             {user.user_id === group.owner_id && pendingRequests.length > 0 && (
                 <>
@@ -193,6 +197,6 @@ export function GroupPage() {
             )}
                 </>
             )}
-        </div>
+        </div></>
     )
 }
