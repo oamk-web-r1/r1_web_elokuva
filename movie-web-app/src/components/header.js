@@ -6,7 +6,7 @@ import { useUser } from '../context/useUser';
 import DeleteAccount from './deleteAccount';
 
 const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) => {
-  const [visibleDropdown, setVisibleDropdown] = useState(null)
+  //const [visibleDropdown, setVisibleDropdown] = useState(null)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { user, signOut } = useUser()
