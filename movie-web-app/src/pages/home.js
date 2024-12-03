@@ -52,11 +52,11 @@ export function Home() {
       />
       <Movie movies={results} />
       <div className="pagination-controls">
-        <button onClick={handlePrevPage} disabled={page === 1}>
+        <button class="control-button" onClick={handlePrevPage} disabled={page === 1}>
           <i class="fa-solid fa-arrow-left"></i>
         </button>
         <span>Page {page}</span>
-        <button onClick={handleNextPage}>
+        <button class="control-button" onClick={handleNextPage}>
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
