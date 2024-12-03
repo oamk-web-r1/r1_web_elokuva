@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser} from '../context/useUser';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
 const url = 'http://localhost:3001'
 const MyKey = process.env.REACT_APP_API_KEY
@@ -9,6 +11,8 @@ export default function MyProfile() {
     const [email, setEmail] = useState(null);
     const { user } = useUser()
     const [favorites, setFavorites] = useState([])
+    const [shareUrl, setShareUrl] = useState('')
+
 
     useEffect(() => {
         console.log("User token:", user.token); // Check the token in the console
@@ -25,7 +29,10 @@ export default function MyProfile() {
                     }
                     return response.json();
                 })
-                .then((data) => setEmail(data.email))
+                .then((data) => {
+                    setEmail(data.email)
+                setShareUrl(`${window.location.origin}/favorites/${data.email}`);
+                })
                 .catch((err) => console.error(err));
         }
     }, [user]);
@@ -54,6 +61,13 @@ export default function MyProfile() {
         .catch((err) => console.error('Error fetching favorites:', err))
     }
   }, [user.token])
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+        alert('Link copied to clipboard!');
+    });
+};
+
     
     return (
         <>
@@ -61,7 +75,7 @@ export default function MyProfile() {
             <h1 className='default-form-group'>My Profile</h1>
             <div className='default-align'>            
             <h2>My Information</h2>
-            <p>{email || 'Fetching email...'}</p>
+            <p className='default-add-space'>{email || 'Fetching email...'}</p>
             
             <h2>My Favorites</h2>
             <div class="movie-container">
@@ -72,13 +86,21 @@ export default function MyProfile() {
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
                             />
-                            <p class="movie-title">{movie.title}</p>
+                            <p class="movie-title  default-add-space">{movie.title}</p>
                         </div>
                     ))
             ) : (
                 <p>No favorites? Tough audience.</p>
                 )}
             </div>
+
+            <div className="share-icon-container default-form-group " onClick={copyToClipboard} title="Copy to Clipboard">
+                    <FontAwesomeIcon
+                        icon={faArrowUpFromBracket}
+                        size="2x"
+                        style={{ cursor: 'pointer', color: '#ffffff' }}
+                    />
+                </div>
             </div>
         </>
     );
