@@ -201,8 +201,24 @@ groupRouter.get('/:groupId/users', auth, async (req, res) => {
 groupRouter.post('/addMovie', auth, async (req, res) => {
     const { group_id, imdb_movie_id, added_by } = req.body;
 
-   
-    
+    console.log('Received request for adding movie to group:', {
+        group_id: typeof group_id,
+        imdb_movie_id: typeof imdb_movie_id,
+        added_by: typeof added_by
+    });
+
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO Group_Movies (group_id, imdb_movie_id, added_by) VALUES ($1, $2, $3) RETURNING *',
+            [(group_id), (imdb_movie_id), (added_by)]
+        );
+
+        res.status(200).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error adding movie to group:', error);
+        res.status(500).json({ error: 'Failed to add movie to group' });
+    }
 });
 
 export default groupRouter;
