@@ -6,9 +6,17 @@ import { auth } from '../helpers/auth.js';
 const groupRouter = Router();
 
 // Fetch all users (for selection)
-groupRouter.get('/users', async (req, res) => {
+groupRouter.get('/users',auth, async (req, res) => {
+    const userEmail = req.user.email
+
     try {
-        const result = await pool.query('SELECT user_id, email FROM Users');
+        const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail]);
+        if (userResult.rowCount === 0) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+        const userId = userResult.rows[0].user_id;
+
+        const result = await pool.query(`SELECT user_id, email FROM Users WHERE user_id != $1`, [userId]);
         res.status(200).json(result.rows);
     } catch (error) {
         console.error('Database error:', error);
