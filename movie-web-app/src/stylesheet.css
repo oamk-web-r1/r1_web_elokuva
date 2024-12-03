@@ -451,13 +451,14 @@
     margin-left: 150px;
     margin-right: 150px;
   }
+  
   /* MOVIE PAGE */
   .movie-detail-container {
     display: flex;
     gap: 30px;
     padding: 50px;
     color: #fff;
-   max-width: 1100px;
+    max-width: 1100px;
     margin: 0 auto;
   }
 
