@@ -15,6 +15,8 @@ export default function MoviePage() {
   const [localReviews, setLocalReviews] = useState([])
   const [newReview, setNewReview] = useState({ content: '', rating: '' })
   const [isFavorite, setIsFavorite] = useState(false)
+  const [userGroups, setUserGroups] = useState([]);
+  const [showGroupDropdown, setShowGroupDropdown] = useState(false);
   
   // Check if the movie is in the user's favorites
   useEffect(() => {
@@ -55,6 +57,74 @@ export default function MoviePage() {
       })
       .catch(err => console.error(err))
   }, [movieId])
+
+  // Add useEffect to fetch user's groups
+  useEffect(() => {
+    if (user.token) {
+        // Fetch groups user is a member of
+        const getMemberGroups = fetch(`http://localhost:3001/groupMembers/user/${user.user_id}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Member groups:', data);
+                return data;
+            });
+        
+        // Fetch groups where user is owner
+        const getOwnedGroups = fetch(`http://localhost:3001/groups`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('All groups:', data);
+                // Filter groups where user is owner
+                return data.filter(group => group.owner_id === user.user_id);
+            });
+
+        // Combine both results
+        Promise.all([getMemberGroups, getOwnedGroups])
+            .then(([memberGroups, ownedGroups]) => {
+                console.log('Combined groups:', { memberGroups, ownedGroups });
+                const allGroups = [...memberGroups, ...ownedGroups];
+                // Remove duplicates based on group_id
+                const uniqueGroups = [...new Map(allGroups.map(group => 
+                    [group.group_id, group])).values()];
+                setUserGroups(uniqueGroups);
+            });
+    }
+}, [user]);
+
+// Add movie to Group handler
+const addMovieToGroup = async (groupId) => {
+  try {
+    console.log('Attempting to add movie:', {
+      groupId,
+      movieId,
+      userId: user.user_id,
+      token: !!user.token // Log if token exists
+  });
+      const response = await fetch('http://localhost:3001/groups/addMovie', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`
+          },
+          body: JSON.stringify({
+            group_id: parseInt(groupId),
+            imdb_movie_id: (movieId), 
+            added_by: parseInt(user.user_id)
+          })
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to add movie to group');
+      }
+
+      const data = await response.json();
+      alert('Movie added to group successfully!');
+      setShowGroupDropdown(false);
+  } catch (error) {
+      console.error('Error adding movie to group:', error);
+      alert('Failed to add movie to group');
+  }
+};
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault()
@@ -144,6 +214,26 @@ export default function MoviePage() {
                   {isFavorite ? ' Remove from Favorites' : ' Add to Favorites'}
                 </span>
         </div>
+         
+<div className="add-to-group">
+    <div onClick={() => setShowGroupDropdown(!showGroupDropdown)}>
+        <i className="fas fa-users"></i>
+        <span> Add to Group</span>
+    </div>
+    {showGroupDropdown && (
+        <div className="group-dropdown">
+            {userGroups.map(group => (
+                <div 
+                    key={group.group_id} 
+                    className="group-option"
+                    onClick={() => addMovieToGroup(group.group_id)}
+                >
+                    {group.name}
+                </div>
+            ))}
+        </div>
+    )}
+</div>
       </div>
       </>
       )}
