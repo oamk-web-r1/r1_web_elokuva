@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from "../context/useUser";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function AddUsers() {
     const { user } = useUser()
@@ -9,6 +9,7 @@ export function AddUsers() {
     const [error, setError] = useState(null);
     const location = useLocation()
     const { groupId } = location.state || {}
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -47,6 +48,7 @@ export function AddUsers() {
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || 'Failed to add users to group');
             alert('Users added successfully!');
+            navigate('/allgroups')
         } catch (error) {
             setError(error.message);
         }
