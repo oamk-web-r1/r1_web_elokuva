@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import SearchBar from './search';
-import { genres } from '../data/genres';
 import logo from '../assets/testlogo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/useUser';
 import DeleteAccount from './deleteAccount';
-import accounticon from '../assets/accounticon.png';
 
 const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) => {
-  const [visibleDropdown, setVisibleDropdown] = useState(null)
+  //const [visibleDropdown, setVisibleDropdown] = useState(null)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { user, signOut } = useUser()
@@ -56,7 +54,7 @@ const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRat
             <>
               <div class="account-menu-container" onClick={toggleAccDropdown}>
                 <div class="account-icon-container">
-                  <img src={accounticon} alt="Account Icon" class="account-icon" />
+                  <i class="fa-solid fa-circle-user"></i>
                 </div>
                 {dropdownOpen && (
                   <div class="account-dropdown-menu">

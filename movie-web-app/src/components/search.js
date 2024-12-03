@@ -1,5 +1,4 @@
 import { useState } from "react";
-import searchicon from "../assets/searchicon.png";
 import { genres } from '../data/genres';
 
 function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) {
@@ -21,8 +20,8 @@ function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAge
   return (
     <div className="search-container">
       <button class="search-button" onClick={handleSearch}>
-          <img src={searchicon} alt="Search Icon" />
-        </button>
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
       <input
         className="search-input"
         type="text"
