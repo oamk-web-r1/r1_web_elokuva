@@ -15,6 +15,7 @@ export function GroupPage() {
     const [members, setMembers] = useState([])
     const [showAddMembers, setShowAddMembers] = useState(false)
     const [showRemoveMembers, setShowRemoveMembers] = useState(false)
+    const [groupShowtimes, setGroupShowtimes] = useState([]);
 
     useEffect(() => {
         // Fetch group info by group id
@@ -37,6 +38,12 @@ export function GroupPage() {
                 .then(response => response.json())
                 .then(data => setNonMembers(data))
                 .catch(err => console.error(err))
+
+            //fetch and display the shared showtimes for a group    
+            fetch(url + `/groups/${groupId}/showtimes`)
+                .then((res) => res.json())
+                .then((data) => setGroupShowtimes(data))
+                .catch((err) => console.error('Error fetching group showtimes:', err));
             }
     }, [groupId, user.user_id])
 
