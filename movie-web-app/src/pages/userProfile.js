@@ -31,8 +31,12 @@ export default function MyProfile() {
     return (
         <>
             <Header />
-            <h1>My Profile</h1>
-            <p>Email: {email || 'Fetching email...'}</p>
+            <h1 className='default-form-group'>My Profile</h1>
+            <div className='default-align'>            
+            <h2>My Information</h2>
+            <p>{email || 'Fetching email...'}</p>
+            </div>
+
         </>
     );
 }
