@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useUser } from "../context/useUser";
 
 export function AddUsers({ groupId }) {
+    const { user } = useUser()
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [error, setError] = useState(null);
@@ -8,8 +10,12 @@ export function AddUsers({ groupId }) {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:3001/users', {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                const response = await fetch('http://localhost:3001/groups/users', {
+                    method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch users');
@@ -27,7 +33,7 @@ export function AddUsers({ groupId }) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({ userIds: selectedUsers })
             });
