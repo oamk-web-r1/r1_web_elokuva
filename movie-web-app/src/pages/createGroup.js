@@ -37,7 +37,7 @@ export function CreateGroup() {
             alert('Group created successfully! You can view your groups at Groups page.');
 
             // Redirect to groups page on success
-            navigate('/allgroups');
+            navigate('/addusers');
         } catch (error) {
             setError(error.message);
         }
@@ -48,7 +48,7 @@ export function CreateGroup() {
         <Header />
         <div className="page-container">
         <div>
-            <h3 className="default-big-title-pink center-item">Create a group</h3>
+            <h3 className="default-big-title-pink default-form-group">Create a group</h3>
             <div className="gray-box">
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit} className="centered-form">
@@ -72,7 +72,7 @@ export function CreateGroup() {
                             required
                         />
                     </div>
-                    <button type="submit" className="default-button-pink center-item">Publish Group</button>
+                    <button type="submit" className="default-button-pink center-item" >Publish Group</button>
                 </form>
             </div>
         </div>
