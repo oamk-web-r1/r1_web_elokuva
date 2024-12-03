@@ -1,35 +1,33 @@
-import React from 'react';
-import '../stylesheet.css'
-import logo from '../assets/testlogo.png';
+import React, { useState } from 'react';
 import SearchBar from './search';
+import logo from '../assets/testlogo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/useUser';
-import accounticon from '../assets/accounticon.png';
-import { useState } from 'react';
 import DeleteAccount from './deleteAccount';
 
-const Header = ({ setResults }) => {
+const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) => {
+  //const [visibleDropdown, setVisibleDropdown] = useState(null)
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const { user, signOut } = useUser()
   const navigate = useNavigate()
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
+  //console.log("Header component rendered")
 
   const handleSignOut = () => {
     signOut()
     navigate('/')
-}
-  console.log("Current user:", user)
+  }
 
-  const toggleDropdown = () => {
+  const toggleAccDropdown = () => {
     setDropdownOpen(prevState => !prevState)
   }
 
   const toggleMobileDropdown = () => {
-    setMobileDropdownOpen((prevState) => !prevState);
+    setMobileDropdownOpen((prevState) => !prevState)
   }
 
   return (
-    <div class="header-container">
+    <div className="header-container">
       <div class="header-content">
       <Link class="logo" to="/">
           <img src={logo} alt="Logo" /></Link>
@@ -38,10 +36,15 @@ const Header = ({ setResults }) => {
             <button class="mobile-menu-toggle" onClick={toggleMobileDropdown}>
               <i class="fa-solid fa-bars"></i>
             </button>
-            <SearchBar setResults={setResults} />
-          </div>
+      
+      <SearchBar
+        setQuery={setQuery}
+        setSelectedGenre={setSelectedGenre}
+        setSelectedYear={setSelectedYear}
+        setSelectedAgeRating={setSelectedAgeRating}
+      />
 
-        <div class="header-button-container">
+      <div class="header-button-container">
           {user && user.token && (
             <Link class="header-links" to="/allgroups">GROUPS</Link>
           )}
@@ -49,9 +52,9 @@ const Header = ({ setResults }) => {
 
           {user && user.token ? (
             <>
-              <div class="account-menu-container" onClick={toggleDropdown}>
+              <div class="account-menu-container" onClick={toggleAccDropdown}>
                 <div class="account-icon-container">
-                  <img src={accounticon} alt="Account Icon" class="account-icon" />
+                  <i class="fa-solid fa-circle-user"></i>
                 </div>
                 {dropdownOpen && (
                   <div class="account-dropdown-menu">
@@ -65,8 +68,9 @@ const Header = ({ setResults }) => {
             <Link class="header-links" to="/signin">SIGN IN</Link>
           )}
         </div>
-        
-        {mobileDropdownOpen && (
+    </div>
+    
+      {mobileDropdownOpen && (
           <div class="mobile-menu open">
             {user && user.token && (
               <Link class="header-links" to="/allgroups">GROUPS</Link>
@@ -84,8 +88,8 @@ const Header = ({ setResults }) => {
           )}
       </div>
     )}
-      </div>
     </div>
+  </div>
   )
 }
 

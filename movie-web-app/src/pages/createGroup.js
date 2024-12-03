@@ -19,6 +19,7 @@ export function CreateGroup() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
                     owner_id: user.user_id,
@@ -37,7 +38,7 @@ export function CreateGroup() {
             alert('Group created successfully! You can view your groups at Groups page.');
 
             // Redirect to groups page on success
-            navigate('/allgroups');
+            navigate('/addusers', { state: { groupId: data.group_id } });
         } catch (error) {
             setError(error.message);
         }
@@ -46,14 +47,16 @@ export function CreateGroup() {
     return (
     <>
         <Header />
+        <div className="page-container">
         <div>
-            <h3 className="default-big-title-pink">Create a group</h3>
+            <h3 className="default-big-title-pink default-form-group">Create a group</h3>
             <div className="gray-box">
                 {error && <div className="error-message">{error}</div>}
-                <form onSubmit={handleSubmit}>
-                    <div>
+                <form onSubmit={handleSubmit} className="centered-form">
+                    <div className="defaul-form-group">
                         <label className="default-text">Group name</label>
                         <input
+                        className="default-input"
                             type="text"
                             value={groupData.name}
                             onChange={e => setGroupData({ ...groupData, name: e.target.value })}
@@ -63,15 +66,17 @@ export function CreateGroup() {
                     <div>
                         <label className="default-text">Description</label>
                         <input
+                            className="default-input"
                             type="text"
                             value={groupData.description}
                             onChange={e => setGroupData({ ...groupData, description: e.target.value })}
                             required
                         />
                     </div>
-                    <button type="submit" className="default-button">Publish Group</button>
+                    <button type="submit" className="default-button-pink center-item" >Publish Group</button>
                 </form>
             </div>
+        </div>
         </div>
     </>
     );

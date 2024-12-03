@@ -14,6 +14,89 @@
     color: #fff;
   }
 
+  /* GROUP PAGE */
+  .center-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .user-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .join-request-box {
+    background-color: #242424;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px;
+  }
+
+  .join-request-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .accept-button, .reject-button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .accept-button {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .accept-button:hover {
+    background-color: #218838;
+  }
+  
+  .reject-button {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .reject-button:hover {
+    background-color: #c82333;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .user-list-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .gray-button {
+    padding: 10px 17px;
+    border: none;
+    border-radius: 20px;
+    background-color: #242424;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 200px;
+    margin: 10px;
+  }
+  
+  .gray-button:hover {
+    background-color: #333;
+  }
+  
   /* HOME PAGE SPECIFIC */
   .movie-container {
     display: flex;
@@ -47,6 +130,30 @@
     text-align: center;
   }
 
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 50px;
+    gap: 15px;
+  }
+
+  .control-button {
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #fff;
+    background-color: #CA2145;
+  }
+
+  .control-button:hover {
+    background-color: #E23E62;
+  }
+
+  .control-button:disabled {
+    opacity: 40%;
+  }
+
   /* SIGN IN/SIGN OUT SPECIFIC */
   .wide-button {
     padding: 11px 50px;
@@ -67,10 +174,11 @@
   .gray-box {
     display: flex;
     justify-content: center;
-    padding: 20px 20px;
+    width: 100%;
+    padding: 20px;
     background-color: #242424;
     color: #fff;
-    width: 200px;
+    border-radius: 8px;
   }
 
   /* HEADER */
@@ -81,6 +189,7 @@
     background-color: #242424;
     color: #fff;
     align-items: center;
+    margin-bottom: 70px;
   }
   
   .header-content {
@@ -140,6 +249,7 @@
     color: #000;
     border-radius: 4px 0 0 4px;
     cursor: pointer;
+    font-size: 1rem;
   }
   
   .search-button:hover {
@@ -147,7 +257,7 @@
   }
 
   .header-links {
-    padding: 8px;
+    padding: 5px;
     font-size: 1rem;
     border: none;
     border-radius: 4px;
@@ -175,12 +285,7 @@
     align-items: center;
     height: 100%;
     margin-left: 3px;
-  }
-    
-  .account-icon {
-    display: block;
-    width: 30px;
-    height: auto;
+    font-size: 1.7rem;
   }
 
   .account-dropdown-menu {
@@ -237,7 +342,7 @@
   .search-outer-container {
     display: flex;
     flex: 1;
-    gap: 5px;
+    gap: 20px;
     align-items: center;
   }
     
@@ -261,7 +366,7 @@
     display: none;
     z-index: 10;
   }
-    
+  
   .dropdown-menu.visible {
     display: block;
   }
@@ -276,6 +381,41 @@
   }
 
   /* DEFAULT COMPONENTS */
+  .default-input {
+    width: 80%;
+    padding: 8px 12px; 
+    margin: 8px 0;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    color: #fff;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .default-input:focus {
+    outline: none;
+    border-color: #CA2145;
+    box-shadow: 0 0 0 2px rgba(202, 33, 69, 0.2);
+  }
+
+  .centered-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .default-form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .default-big-title-pink {
     font-size: 1.5rem;
     color: #CA2145;
@@ -327,14 +467,20 @@
   .default-button-pink:hover {
     background-color: #E23E62;
   }
-
+ 
+  .default-align {
+    margin-top: 50px;
+    margin-left: 150px;
+    margin-right: 150px;
+  }
+  
   /* MOVIE PAGE */
   .movie-detail-container {
     display: flex;
     gap: 30px;
     padding: 50px;
     color: #fff;
-   max-width: 1100px;
+    max-width: 1100px;
     margin: 0 auto;
   }
 
@@ -466,10 +612,23 @@
     color: #ffcc4b;
     margin-left: 5px;
   }
+
+  .favorite-heart {
+    font-size: 1.5rem;
+    color: #ff4b5c;
+    cursor: pointer;
+  }
+  
+  .favorite-heart.outline {
+    color: #ff4b5c;
+  }
+  
+  .favorite-heart.active {
+    color: #ff4b5c;
+  }
   
   /* SHOWTIMES */
   .showtime-container {
-    padding: 30px;
     text-align: center;
   }
 
@@ -616,9 +775,35 @@
 .groups-page {
   background: #0F0F0F;
   color: #fff;
-  padding: 20px;
   font-family: Arial, sans-serif;
 }
+
+/* Add a movie to Group */
+.add-to-group {
+  position: relative;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.group-dropdown {
+  position: absolute;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 8px 0;
+  min-width: 150px;
+  z-index: 1000;
+}
+
+.group-option {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.group-option:hover {
+  background: #242424;
+}
+
 
 /* Section Titles */
 .section-title {
@@ -633,6 +818,8 @@
 .group-list {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column; 
+  align-items: center;
   gap: 10px;
   justify-content: center;
   margin-bottom: 20px;
@@ -680,7 +867,6 @@
   margin-bottom: 30px;
 }
 
-/* Buttons (if added later) */
 .group-button {
   padding: 10px 20px;
   border: none;
@@ -703,4 +889,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+html, body, .page-container {
+    height: 100%;           /* Ensures the parent container spans the entire viewport */
+    margin: 0;              /* Removes default body margin */
+}
+
+.page-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;    /* Centers vertically */
 }

@@ -5,6 +5,7 @@ import userRouter from './routers/userRouter.js'
 import groupRouter from './routers/groupRouter.js'
 import groupMemberRouter from './routers/groupMemberRouter.js'
 import reviewRouter from './routers/reviewRouter.js'
+import favoritesRouter from './routers/favoritesRouter.js'
 import { pool } from './helpers/db.js'
 import { response } from 'express'
 
@@ -19,6 +20,7 @@ app.use('/user', userRouter); // User router
 app.use('/groups', groupRouter); // Group router
 app.use('/groupMembers', groupMemberRouter); // Group member router
 app.use('/reviews', reviewRouter); // Movie review router
+app.use('/favorites', favoritesRouter); // Favorites router
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
