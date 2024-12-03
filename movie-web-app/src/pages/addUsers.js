@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from "../context/useUser";
+import { useLocation } from "react-router-dom";
 
-export function AddUsers({ groupId }) {
+export function AddUsers() {
     const { user } = useUser()
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [error, setError] = useState(null);
+    const location = useLocation()
+    const { groupId } = location.state || {}
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const response = await fetch('http://localhost:3001/groups/users', {
                     method: 'GET',
-                headers: {
+                    headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`
-                }
+                    }
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Failed to fetch users');
@@ -28,8 +31,12 @@ export function AddUsers({ groupId }) {
     }, []);
 
     const handleAddUsers = async () => {
+        if (!groupId) {
+            setError('Group ID is missing');
+            return;
+        }
         try {
-            const response = await fetch(`http://localhost:3001/groups/${groupId}/add-users`, {
+            const response = await fetch(`http://localhost:3001/groups/${groupId}/addusers`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

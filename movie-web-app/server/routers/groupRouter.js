@@ -5,6 +5,17 @@ import { auth } from '../helpers/auth.js';
 
 const groupRouter = Router();
 
+// Fetch all users (for selection)
+groupRouter.get('/users', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT user_id, email FROM Users');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ error: 'An internal error occurred.' });
+    }
+});
+
 // Get all groups
 groupRouter.get('/', (req, res, next) => {
     pool.query('SELECT * FROM Groups', (error, results) => {
@@ -124,19 +135,8 @@ groupRouter.get('/:groupId', (req, res, next) => {
     })
 })
 
-// Fetch all users (for selection)
-groupRouter.get('/users', auth, async (req, res) => {
-    try {
-        const result = await pool.query('SELECT user_id, email FROM Users');
-        res.status(200).json(result.rows);
-    } catch (error) {
-        console.error('Database error:', error);
-        res.status(500).json({ error: 'An internal error occurred.' });
-    }
-});
-
 // Add users to a group
-groupRouter.post('/:groupId/add-users', auth, async (req, res) => {
+groupRouter.post('/:groupId/addusers', auth, async (req, res) => {
     const { groupId } = req.params;
     const { userIds } = req.body; // Array of user IDs to be added
     const userEmail = req.user.email;
@@ -161,9 +161,9 @@ groupRouter.post('/:groupId/add-users', auth, async (req, res) => {
             return res.status(403).json({ error: 'You are not authorized to add users to this group.' });
         }
 
-        const values = userIds.map(userId => `(${groupId}, ${userId})`).join(',');
+        const values = userIds.map(userId => `(${groupId}, ${userId}, 'accepted')` ).join(',');
         const insertQuery = `
-            INSERT INTO GroupMembers (group_id, user_id)
+            INSERT INTO Group_Members (group_id, user_id, status)
             VALUES ${values}
             ON CONFLICT DO NOTHING
         `;
@@ -195,29 +195,6 @@ groupRouter.get('/:groupId/users', auth, async (req, res) => {
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'An internal error occurred.' });
-    }
-});
-
-groupRouter.post('/addMovie', auth, async (req, res) => {
-    const { group_id, imdb_movie_id, added_by } = req.body;
-
-    console.log('Received request for adding movie to group:', {
-        group_id: typeof group_id,
-        imdb_movie_id: typeof imdb_movie_id,
-        added_by: typeof added_by
-    });
-
-
-    try {
-        const result = await pool.query(
-            'INSERT INTO Group_Movies (group_id, imdb_movie_id, added_by) VALUES ($1, $2, $3) RETURNING *',
-            [(group_id), (imdb_movie_id), (added_by)]
-        );
-
-        res.status(200).json(result.rows[0]);
-    } catch (error) {
-        console.error('Error adding movie to group:', error);
-        res.status(500).json({ error: 'Failed to add movie to group' });
     }
 });
 

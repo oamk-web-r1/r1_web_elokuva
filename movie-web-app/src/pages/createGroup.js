@@ -19,6 +19,7 @@ export function CreateGroup() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 },
                 body: JSON.stringify({
                     owner_id: user.user_id,
@@ -37,7 +38,7 @@ export function CreateGroup() {
             alert('Group created successfully! You can view your groups at Groups page.');
 
             // Redirect to groups page on success
-            navigate('/addusers');
+            navigate('/addusers', { state: { groupId: data.group_id } });
         } catch (error) {
             setError(error.message);
         }

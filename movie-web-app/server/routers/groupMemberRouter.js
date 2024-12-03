@@ -78,6 +78,15 @@ groupMemberRouter.post('/add', async (req, res) => {
     }
 });
 
+groupMemberRouter.get('/users', async (req, res, next) => {
+    try {
+        const result = await pool.query('SELECT user_id, email FROM Users');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        next(error);
+    }
+});
+
 groupMemberRouter.post('/owner/add', auth, async (req, res) => {
     const { user_id, group_id } = req.body
     const userEmail = req.user.email
