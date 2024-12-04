@@ -144,5 +144,20 @@ router.get('/email', auth, (req, res, next) => {
         return next(error);
 }
 });
+
+router.get('/favorites/:email', async (req, res) => {
+    const { email } = req.params; // This could be userId or email
+    try {
+        const favorites = await getUserFavorites(email); // Logic in your controller
+        if (!favorites) {
+            return res.status(404).json({ message: 'No favorites available.' });
+        }
+        res.json({ favorites });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching favorites.' });
+    }
+});
+
     
 export default router;
