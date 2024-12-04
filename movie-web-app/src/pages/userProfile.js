@@ -66,7 +66,6 @@ export default function MyProfile() {
         alert('Link copied to clipboard!');
     });
 };
-
     
     return (
         <>
