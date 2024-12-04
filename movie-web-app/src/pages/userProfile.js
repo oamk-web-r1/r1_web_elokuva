@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser} from '../context/useUser';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
 const url = 'http://localhost:3001'
 const MyKey = process.env.REACT_APP_API_KEY
@@ -12,7 +12,6 @@ export default function MyProfile() {
     const { user } = useUser()
     const [favorites, setFavorites] = useState([])
     const [shareUrl, setShareUrl] = useState('')
-
 
     useEffect(() => {
         console.log("User token:", user.token); // Check the token in the console
@@ -95,11 +94,7 @@ export default function MyProfile() {
             </div>
 
             <div className="share-icon-container default-form-group " onClick={copyToClipboard} title="Copy to Clipboard">
-                    <FontAwesomeIcon
-                        icon={faArrowUpFromBracket}
-                        size="2x"
-                        style={{ cursor: 'pointer', color: '#ffffff' }}
-                    />
+                <i class="fa-solid fa-share"></i>
                 </div>
             </div>
         </>
