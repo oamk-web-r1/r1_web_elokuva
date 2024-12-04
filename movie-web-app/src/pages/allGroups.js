@@ -10,7 +10,7 @@ export function AllGroups() {
     const [groups, setGroups] = useState([]);
     const [ownedGroups, setOwnedGroups] = useState([]);
     const [memberGroups, setMemberGroups] = useState([]);
-    const [pendingRequests, setPendingRequests] = useState({})
+    //const [pendingRequests, setPendingRequests] = useState({})
     const { user } = useUser();
 
     useEffect(() => {

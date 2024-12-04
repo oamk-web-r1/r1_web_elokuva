@@ -69,6 +69,13 @@ groupRouter.post('/create', async (req, res) => {
             'INSERT INTO Groups (owner_id, name, description) VALUES ($1, $2, $3) RETURNING *',
             [owner_id, name, description]
         );
+
+        // Add the owner to the Group_Members table as an admin
+        const groupId = result.rows[0].group_id
+        await pool.query(
+            'INSERT INTO Group_Members (user_id, group_id, role, status) VALUES ($1, $2, $3, $4)',
+            [owner_id, groupId, 'admin', 'accepted']
+        )
         return res.status(200).json(result.rows[0]);
     } catch (error) {
         console.error('Database error:', error);
@@ -123,24 +130,39 @@ groupRouter.delete('/delete/:groupId', auth, async (req, res) => {
     }
 });
 
-groupRouter.get('/:groupId', (req, res, next) => {
+groupRouter.get('/:groupId', auth, async (req, res, next) => {
     const groupId = req.params.groupId
-    const value = [groupId]
+    const userEmail = req.user.email
 
-    const query = 'SELECT * FROM Groups WHERE group_id = $1;'
+    //console.log('User Email:', userEmail)
 
-    pool.query(query, value)
-    .then(result => {
-        if (result.rows.length > 0) {
-            res.json(result.rows)
+    try {
+        const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail])
+        if (userResult.rowCount === 0) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+
+        const userId = userResult.rows[0].user_id;
+
+        const membershipCheck = await pool.query(
+            'SELECT * FROM Group_Members WHERE group_id = $1 AND user_id = $2 AND status = $3',
+            [groupId, userId, 'accepted']
+        )
+
+        if (membershipCheck.rowCount === 0) {
+            return res.status(403).json({ message: 'You are not a member of this group' })
+        }
+
+        const groupResult = await pool.query('SELECT * FROM Groups WHERE group_id = $1', [groupId])
+        if (groupResult.rowCount > 0) {
+            res.status(200).json(groupResult.rows[0])
         } else {
             res.status(404).json({ message: 'Group not found' })
         }
-    })
-    .catch(error => {
-        console.error(error)
-        res.status(500).json(error)
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An internal error occurred.' })
+    }
 })
 
 // Add users to a group

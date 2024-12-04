@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import Header from '../components/header';
@@ -15,13 +15,27 @@ export function GroupPage() {
     const [members, setMembers] = useState([])
     const [showAddMembers, setShowAddMembers] = useState(false)
     const [showRemoveMembers, setShowRemoveMembers] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         // Fetch group info by group id
-        fetch(url + `/groups/${groupId}`)
-            .then(response => response.json())
+        fetch(url + `/groups/${groupId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        })
+        .then((response) => {
+            if (response.status === 403) {
+                // If user is not a member, redirect to the unauthorized page
+                navigate('/unauthorized', { replace: true })
+            } else {
+                return response.json()
+            }
+        })
             .then(json => {
-                setGroup(json[0])
+                console.log(json)
+                setGroup(json)
             })
             .catch(err => console.error(err))
             
@@ -38,7 +52,7 @@ export function GroupPage() {
                 .then(data => setNonMembers(data))
                 .catch(err => console.error(err))
             }
-    }, [groupId, user.user_id])
+    }, [groupId, user.user_id, navigate])
 
     const handleAcceptRequest = (user_id) => {
         fetch(url + `/groupMembers/accept`, {
@@ -130,6 +144,23 @@ export function GroupPage() {
         })
         .catch(err => console.error(err))
     }
+
+    const handleDeleteGroup = () => {
+        if (window.confirm('Are you sure you want to delete this group? This action cannot be undone.')) {
+            fetch(url + `/groups/delete/${groupId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Failed to delete group: ${response.status}`)
+                    alert('Group deleted successfully.')
+                    navigate('/allgroups')
+                })
+                .catch(err => alert('Failed to delete group. ' + err.message))
+        }
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -195,6 +226,7 @@ export function GroupPage() {
                     ))}
                 </div>
             )}
+            <button className="danger-button" onClick={handleDeleteGroup}>Delete Group</button>
                 </>
             )}
         </div></>
