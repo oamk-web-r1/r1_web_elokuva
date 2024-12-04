@@ -5,6 +5,7 @@ import { useUser } from '../context/useUser';
 import Header from '../components/header';
 
 const url = 'http://localhost:3001'
+const MyKey = process.env.REACT_APP_API_KEY
 
 export function GroupPage() {
     const { user } = useUser()
@@ -15,6 +16,7 @@ export function GroupPage() {
     const [members, setMembers] = useState([])
     const [showAddMembers, setShowAddMembers] = useState(false)
     const [showRemoveMembers, setShowRemoveMembers] = useState(false)
+    const [favorites, setFavorites] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -53,6 +55,32 @@ export function GroupPage() {
                 .catch(err => console.error(err))
             }
     }, [groupId, user.user_id, navigate])
+
+    useEffect(() => {
+        // Fetch favorite movies for the group
+        fetch(url + `/groups/favorites/${groupId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (Array.isArray(data.favorites)) {
+                //console.log(data.favorites)
+                const favoriteMovieIds = data.favorites.map(item => item.imdb_movie_id)
+                const moviePromises = favoriteMovieIds.map((id) =>
+                    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${MyKey}&language=en-US`)
+                    .then((res) => res.json())
+                )
+                Promise.all(moviePromises).then(setFavorites)
+            } else {
+                console.error("Favorites data is not in the expected format:", data.favorites)
+                setFavorites([])
+            }
+        })
+        .catch((err) => console.error('Error fetching favorites:', err))
+    }, [groupId])
 
     const handleAcceptRequest = (user_id) => {
         fetch(url + `/groupMembers/accept`, {
@@ -193,6 +221,20 @@ export function GroupPage() {
             )}
 
             <h2>Favorites</h2>
+            <div class="movie-container">
+                {favorites.length > 0 ? (
+                    favorites.map((movie) => (
+                        <div class="movie-card" key={movie.id}>
+                            <img class="poster-image"
+                                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                                alt={movie.title}
+                            />
+                            <p class="movie-title">{movie.title}</p>
+                        </div>
+                    ))
+            ) : (
+                <p>No favorites? Tough audience.</p>
+            )}</div>
 
             <h2>Showtimes</h2>
 

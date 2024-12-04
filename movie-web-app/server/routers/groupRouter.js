@@ -237,7 +237,6 @@ groupRouter.post('/addMovie', auth, async (req, res) => {
         added_by: typeof added_by
     });
 
-
     try {
         const result = await pool.query(
             'INSERT INTO Group_Movies (group_id, imdb_movie_id, added_by) VALUES ($1, $2, $3) RETURNING *',
@@ -250,5 +249,19 @@ groupRouter.post('/addMovie', auth, async (req, res) => {
         res.status(500).json({ error: 'Failed to add movie to group' });
     }
 });
+
+groupRouter.get('/favorites/:group_id', auth, async (req, res) => {
+    const { group_id } = req.params
+
+    try {
+        const result = await pool.query(
+            'SELECT imdb_movie_id FROM Group_Movies WHERE group_id = $1', [group_id]
+        )
+        res.status(200).json({ favorites: result.rows })
+    } catch (error) {
+        console.error('Error fetching group favorite movies:', error)
+        res.status(500).json({ error: 'Failed to fetch favorite movies' })
+    }
+})
 
 export default groupRouter;

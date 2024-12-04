@@ -772,6 +772,19 @@
 }
 
 /* Groups Page */
+.join-button {
+  padding: 5px;
+  font-size: 1rem;
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+  
+.join-button:hover {
+  background-color: #242424;
+  color: #CA2145;
+}
 .groups-page {
   background: #0F0F0F;
   color: #fff;
@@ -804,7 +817,6 @@
   background: #242424;
 }
 
-
 /* Section Titles */
 .section-title {
   font-size: 1.3rem;
@@ -827,13 +839,13 @@
 
 .group-card {
   background-color: #242424;
-  padding: 8px 8px; 
+  padding: 8px 8px;
+  justify-content: space-between; 
   width: 700px; 
   height: auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); 
-  display: flex; 
-  flex-direction: column; 
-  align-items: flex-start;
+  display: flex;
+  align-items: center;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -844,6 +856,7 @@
 
 /* Group name */
 .group-name {
+  flex: 1;
   font-size: 1.1rem;
   margin-bottom: 2px;
   color: #fff;
@@ -853,6 +866,7 @@
 
 /* Group description */
 .group-description {
+  flex: 2;
   font-size: 0.9rem; 
   color: #bbb;
   text-align: left;
@@ -892,12 +906,12 @@
 }
 
 html, body, .page-container {
-    height: 100%;           /* Ensures the parent container spans the entire viewport */
-    margin: 0;              /* Removes default body margin */
+    height: 100%;
+    margin: 0;
 }
 
 .page-container {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;    /* Centers vertically */
+    justify-content: center;
+    align-items: center;
 }
