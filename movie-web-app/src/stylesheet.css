@@ -469,11 +469,15 @@
   }
  
   .default-align {
-    margin-top: 50px;
+    margin-top: 100px;
     margin-left: 150px;
     margin-right: 150px;
   }
   
+  .default-add-space {
+    margin-bottom: 80px;
+  }
+
   /* MOVIE PAGE */
   .movie-detail-container {
     display: flex;

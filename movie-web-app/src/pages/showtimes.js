@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
+import { useUser } from '../context/useUser';
+import { useNavigate } from 'react-router-dom';
 
 export default function Showtimes() {
     const [schedules, setSchedules] = useState([]);
     const [selectedTheatre, setSelectedTheatre] = useState(''); 
     const [selectedDate, setSelectedDate] = useState('');
     const [filteredSchedules, setFilteredSchedules] = useState([]);
-
+    const [groups, setGroups] = useState([]);
+    const { user } = useUser();
+    const navigate = useNavigate();
 
     const getFinnkinoSchedules = (xml) => {
         const parser = new DOMParser();
@@ -62,6 +66,18 @@ export default function Showtimes() {
     setFilteredSchedules(filtered);
 }, [selectedTheatre, selectedDate, schedules]);
 
+    // Fetch groups that the user belongs to
+    useEffect(() => {
+        if (user.user_id) {
+            fetch(`http://localhost:3001/groups/`)
+                .then((response) => response.json())
+                .then((json) => {
+                    setGroups(json);
+                })
+                .catch((error) => console.error('Error fetching groups:', error));
+        }
+    }, [user.user_id]);
+
 // theatres for dropdown
 const theatres = [...new Set(schedules.map((schedule) => schedule.theatre))];
 
@@ -75,6 +91,36 @@ const generateDateOptions = () => {
         dates.push(date.toISOString().split('T')[0]);
     }
     return dates;
+};
+
+// Handle the action of sharing the movie to a group
+const handleShareToGroup = (schedule) => {
+    // Prompt user to select a group
+    const groupId = prompt('Enter group ID to share this showtime to:');
+    if (groupId && groups.some(group => group.group_id === parseInt(groupId))) {
+        fetch('http://localhost:3001/groupMembers/addMovie', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`,
+            },
+            body: JSON.stringify({
+                group_id: groupId,
+                imdb_movie_id: 'some_imdb_id', // You should fetch this based on the movie title
+                added_by: user.user_id,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert('Showtime shared to group!');
+            })
+            .catch((error) => {
+                console.error('Error sharing showtime to group:', error);
+                alert('Error sharing showtime.');
+            });
+    } else {
+        alert('Invalid group ID.');
+    }
 };
 
 return (
@@ -126,7 +172,13 @@ return (
                         <div key={index} class="result-card">
                             <strong>{schedule.title}</strong> <br />
                             Theatre: {schedule.theatre} <br />
-                            Start Time: {schedule.startTime}
+                            Start Time: {schedule.startTime}<br />
+                                <button
+                                    className="share-button"
+                                    onClick={() => handleShareToGroup(schedule)}
+                                >
+                                    Share to Group
+                                </button>
                         </div>
                     ))}
                 </ul>

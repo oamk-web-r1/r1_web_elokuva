@@ -264,4 +264,20 @@ groupRouter.get('/favorites/:group_id', auth, async (req, res) => {
     }
 })
 
+groupRouter.post('/:groupId/addShowtime', auth, async (req, res) => {
+    const { groupId } = req.params;
+    const { title, theatre, startTime, addedBy } = req.body;
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO Group_Showtimes (group_id, title, theatre, start_time, added_by) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [groupId, title, theatre, startTime, addedBy]
+        );
+        res.status(200).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error sharing showtime:', error);
+        res.status(500).json({ error: 'Failed to share showtime to group' });
+    }
+});
+
 export default groupRouter;
