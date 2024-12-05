@@ -61,6 +61,23 @@ export default function MyProfile() {
     }
   }, [user.token])
 
+  const handleDelete = (movieId) => {
+    fetch(url + `/favorites/${movieId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${user.token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to remove movie from favorites');
+        }
+        // Remove the movie from the local state
+        setFavorites(favorites.filter((movie) => movie.id !== movieId));
+      })
+      .catch((err) => console.error('Error deleting movie:', err));
+  }
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl).then(() => {
         alert('Link copied to clipboard!');
@@ -84,7 +101,10 @@ export default function MyProfile() {
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
                             />
-                            <p class="movie-title  default-add-space">{movie.title}</p>
+                            <p class="movie-title">{movie.title}</p>
+                            <button onClick={() => handleDelete(movie.id)} className="delete-button" title="Remove from favorites">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                         </div>
                     ))
             ) : (
