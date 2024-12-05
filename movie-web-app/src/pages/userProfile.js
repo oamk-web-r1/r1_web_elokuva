@@ -61,21 +61,26 @@ export default function MyProfile() {
     }
   }, [user.token])
 
+
   const handleDelete = (movieId) => {
-    fetch(url + `/favorites/${movieId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${user.token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to remove movie from favorites');
-        }
-        // Remove the movie from the local state
-        setFavorites(favorites.filter((movie) => movie.id !== movieId));
+    if (window.confirm('Are you sure you want to remove this movie from your favorites?')) {
+      fetch(url + `/favorites/${movieId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+        },
       })
-      .catch((err) => console.error('Error deleting movie:', err));
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to remove movie from favorites')
+          }
+          setFavorites(favorites.filter((movie) => movie.id !== movieId))
+          alert('Movie removed from favorites!')
+        })
+        .catch((err) => {
+          console.error('Error deleting movie:', err);
+        })
+    }
   }
 
   const copyToClipboard = () => {

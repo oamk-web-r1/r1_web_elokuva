@@ -196,6 +196,30 @@ export function GroupPage() {
                 .catch(err => alert('Failed to delete group. ' + err.message))
         }
     }
+
+    const handleDeleteFavorite = (movieId) => {
+        console.log('User Token:', user.token); 
+        if (window.confirm('Are you sure you want to remove this movie from the group favorites?')) {
+            fetch(url + `/groups/${groupId}/favorites/${movieId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Movie removed from group favorites') {
+                    setFavorites(favorites.filter(movie => movie.id !== movieId))
+                    alert('Movie removed from group favorites')
+                } else {
+                    alert('Failed to remove movie')
+                }
+            })
+            .catch(err => {
+                alert('Error deleting movie')
+            })
+        }
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -237,6 +261,13 @@ export function GroupPage() {
                                 alt={movie.title}
                             />
                             <p class="movie-title">{movie.title}</p>
+                            <button
+                                    className="delete-favorite-btn"
+                                    onClick={() => handleDeleteFavorite(movie.id)}
+                                    title="Remove from favorites"
+                                >
+                                    <i className="fa-solid fa-trash"></i>
+                                </button>
                         </div>
                     ))
             ) : (

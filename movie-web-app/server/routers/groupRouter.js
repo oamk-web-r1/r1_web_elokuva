@@ -2,6 +2,7 @@ import { pool } from '../helpers/db.js';
 import { Router } from 'express';
 import { emptyORows } from '../helpers/utils.js';
 import { auth } from '../helpers/auth.js';
+import { getUserIdByEmail } from '../helpers/userUtils.js';
 
 const groupRouter = Router();
 
@@ -279,5 +280,55 @@ groupRouter.post('/:groupId/addShowtime', auth, async (req, res) => {
         res.status(500).json({ error: 'Failed to share showtime to group' });
     }
 });
+
+// DELETE movie from group favorites
+groupRouter.delete('/:groupId/favorites/:movieId', auth, async (req, res) => {
+    console.log('Request Params:', req.params)
+    const { groupId, movieId } = req.params
+    let userId = req.user?.user_id
+
+    if (!userId) {
+        const email = req.user?.email
+        if (!email) {
+            return res.status(403).json({ error: 'Email not found in token' })
+        }
+
+        try {
+            userId = await getUserIdByEmail(email)
+            if (!userId) {
+                return res.status(404).json({ error: 'User not found in the database' })
+            }
+        } catch (err) {
+            return res.status(500).json({ error: 'Failed to retrieve user ID from database' })
+        }
+    }
+
+    //console.log(`User ID: ${userId}, Group ID: ${groupId}, Movie ID: ${movieId}`)
+
+    try {
+        // Check if the user is a member of the group
+        const groupMemberQuery = 'SELECT user_id FROM Group_Members WHERE group_id = $1 AND user_id = $2'
+        const groupMemberResult = await pool.query(groupMemberQuery, [groupId, userId])
+
+        if (groupMemberResult.rowCount === 0) {
+            console.error(`User ID ${userId} is not a member of group ${groupId}`)
+            return res.status(403).json({ error: 'User is not a member of the group' })
+        }
+
+        const deleteMovieQuery = 'DELETE FROM Group_Movies WHERE group_id = $1 AND imdb_movie_id = $2'
+        const deleteMovieResult = await pool.query(deleteMovieQuery, [groupId, movieId])
+
+        if (deleteMovieResult.rowCount === 0) {
+            console.error(`Movie ${movieId} not found in group ${groupId} favorites`)
+            return res.status(404).json({ error: 'Movie not found in group favorites' })
+        }
+
+        console.log(`Movie ${movieId} successfully removed from group ${groupId} favorites`)
+
+        return res.status(200).json({ message: 'Movie removed from group favorites' })
+    } catch (err) {
+        return res.status(500).json({ error: 'Error during movie deletion' })
+    }
+})
 
 export default groupRouter;
