@@ -52,6 +52,7 @@ export function CreateGroup() {
             <h3 className="default-big-title-pink default-form-group">Create a group</h3>
             <div className="gray-box">
                 {error && <div className="error-message">{error}</div>}
+                <div class="gray-box-inside">
                 <form onSubmit={handleSubmit} className="centered-form">
                     <div className="defaul-form-group">
                         <label className="default-text">Group name</label>
@@ -73,8 +74,10 @@ export function CreateGroup() {
                             required
                         />
                     </div>
-                    <button type="submit" className="default-button-pink center-item" >Publish Group</button>
-                </form>
+                    <div class="center-item">
+                        <button type="submit" className="wide-button">Publish Group</button>
+                    </div>
+                </form></div>
             </div>
         </div>
         </div>

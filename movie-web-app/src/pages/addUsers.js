@@ -66,13 +66,14 @@ export function AddUsers() {
     }
 
     return (
-        <div>
-            <h3>Select Users to Add to Group</h3>
+        <div class="select-users-page">
+        <div className="page-container">
+            <h3 class="default-big-title-pink default-form-group">Select Users to Add to Group</h3>
             {error && <div className="error-message">{error}</div>}
-            <ul>
+            <div>
                 {users.map(user => (
                     <div key={user.user_id}>
-                        <label>
+                        <label class="checkbox">
                             <input
                                 type="checkbox"
                                 value={user.user_id}
@@ -82,9 +83,12 @@ export function AddUsers() {
                         </label>
                     </div>
                 ))}
-            </ul>
-            <button onClick={handleAddUsers}>Add Selected Users</button>
-            <button onClick={handleSkip}>Skip</button>
+            </div>
+            <div>
+                <button class="default-button-pink" onClick={handleAddUsers}>Add Selected Users</button>
+                <button class="default-button-pink" onClick={handleSkip}>Skip</button>
+            </div>
+        </div>
         </div>
     );
 }

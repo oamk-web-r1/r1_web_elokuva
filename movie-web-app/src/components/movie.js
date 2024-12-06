@@ -31,7 +31,6 @@ function Movie({ movies }) {
           <Link to={`/moviepage/${movie.id}`}> 
           <img class="poster-image" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
           </Link>
-          <p class="movie-title">{movie.title}</p>
         </div>
       ))}
     </div>

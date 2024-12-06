@@ -21,6 +21,6 @@ export default function DeleteAccount() {
     }
     
     return (
-        <button onClick={handleDelete} class="account-dropdown-item">DELETE ACCOUNT</button>
+        <div onClick={handleDelete} class="account-dropdown-item">DELETE ACCOUNT</div>
     )
 }

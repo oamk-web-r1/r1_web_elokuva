@@ -125,10 +125,9 @@ const handleShareToGroup = (schedule) => {
 
 return (
     <>
-        <Header />
+        <Header/>
         <div class="showtime-container">
             <h1 class="default-big-title-white">Showtimes</h1>
-
             <div class="filter-container">
                 <div>
                     <label htmlFor="theatre-select"></label>
@@ -167,7 +166,7 @@ return (
             {!selectedTheatre ? (
                 <p class="placeholder">Please select a theatre to view showtimes.</p>
             ) : filteredSchedules.length > 0 ? (
-                <ul class="results-container">
+                <div class="results-container">
                     {filteredSchedules.map((schedule, index) => (
                         <div key={index} class="result-card">
                             <strong>{schedule.title}</strong> <br />
@@ -181,7 +180,7 @@ return (
                                 </button>
                         </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p class="placeholder">No showtimes available for the selected theatre and date.</p>
             )}

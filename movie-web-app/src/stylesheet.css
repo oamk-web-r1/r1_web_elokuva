@@ -35,7 +35,7 @@
     background-color: #242424;
     color: #fff;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 6px;
     margin: 20px;
   }
 
@@ -47,7 +47,7 @@
 
   .accept-button, .reject-button {
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
   }
@@ -101,6 +101,7 @@
   .movie-container {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 12px;
     justify-content: center;
     padding: 10px;
@@ -120,7 +121,7 @@
     width: 100%;
     height: auto;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 6px;
   }
   
   .movie-title {
@@ -164,7 +165,7 @@
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
-    margin: 15px;
+    margin-top: 20px;
   }
 
   .wide-button:hover {
@@ -174,11 +175,10 @@
   .gray-box {
     display: flex;
     justify-content: center;
-    width: 100%;
-    padding: 20px;
     background-color: #242424;
     color: #fff;
-    border-radius: 8px;
+    border-radius: 6px;
+    margin: 10px;
   }
 
   /* HEADER */
@@ -226,7 +226,7 @@
   }
 
   .filter-button-corner {
-    padding: 8px 12px;
+    padding-right: 13px;
     border: none;
     background-color: #fff;
     color: #000;
@@ -294,7 +294,7 @@
     right: 0;
     background-color: #242424;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    border-radius: 6px;
     width: 200px;
     padding: 5px 0;
     z-index: 100;
@@ -305,26 +305,13 @@
     display: block;
     padding: 10px;
     text-decoration: none;
-    font-size: 1rem;
     color: #fff;
     text-align: left;
+    font-size: 1rem;
   }
     
   .account-dropdown-item:hover {
-    background-color: #242424;
-  }
-    
-  button.account-dropdown-item {
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-    
-  button.account-dropdown-item:hover {
-    background-color: #242424;
+    background-color: #303030;
   }
     
   .account-dropdown-menu {
@@ -359,7 +346,7 @@
     background: #fff;
     color: #000;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
     width: 100%;
     max-height: 150px;
     overflow-y: auto;
@@ -382,30 +369,20 @@
 
   /* DEFAULT COMPONENTS */
   .default-input {
-    width: 80%;
-    padding: 8px 12px; 
-    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
     border: 1px solid #444;
-    border-radius: 4px;
+    border-radius: 6px;
     background-color: #1a1a1a;
     color: #fff;
     font-size: 1rem;
-    text-align: center;
   }
   
   .default-input:focus {
     outline: none;
     border-color: #CA2145;
     box-shadow: 0 0 0 2px rgba(202, 33, 69, 0.2);
-  }
-
-  .centered-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
   }
   
   .default-form-group {
@@ -417,12 +394,12 @@
   }
 
   .default-big-title-pink {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     color: #CA2145;
   }
 
   .default-big-title-white {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     color: #fff;
   }
 
@@ -478,6 +455,10 @@
     margin-bottom: 80px;
   }
 
+  .gray-box-inside {
+    margin: 30px 20px;
+  }
+
   /* MOVIE PAGE */
   .movie-detail-container {
     display: flex;
@@ -491,12 +472,12 @@
   .movie-poster {
     max-width: 300px;
     width: 100%;
-    border-radius: 5px;
+    border-radius: 6px;
     height: auto;
   }
 
   .post-review {
-    border-radius: 5px;
+    border-radius: 6px;
     padding: 20px;
     max-width: 610px;
     margin: auto;
@@ -523,7 +504,7 @@
     background: #242424;
     color: #fff;
     border: 1px solid #444;
-    border-radius: 5px;
+    border-radius: 6px;
     padding: 10px;
     resize: none;
     font-size: 1rem;
@@ -546,7 +527,7 @@
     background: #242424;
     color: #fff;
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 6px;
     position: relative;
     margin-bottom: 20px;
   }
@@ -563,7 +544,7 @@
     padding: 5px 10px;
     border: none;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     cursor: pointer;
   }
 
@@ -633,7 +614,10 @@
   
   /* SHOWTIMES */
   .showtime-container {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .filter-container {
@@ -649,24 +633,21 @@
     border: none;
     padding: 10px 15px;
     font-size: 1rem;
-    border-radius: 5px;
+    border-radius: 6px;
   }
 
   .results-container {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    align-items: center;
   }
 
   .result-card {
     background-color: #242424;
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 6px;
     text-align: center;
-    max-width: 400px;
-    width: 100%;
-    margin: 0 auto;
+    max-width: 500px;
   }
 
   .placeholder {
@@ -789,13 +770,14 @@
   background-color: #242424;
   color: #CA2145;
 }
+
 .groups-page {
+  display: flex;
+  flex-direction: column;
   background: #0F0F0F;
   color: #fff;
-  font-family: Arial, sans-serif;
 }
 
-/* Add a movie to Group */
 .add-to-group {
   position: relative;
   cursor: pointer;
@@ -806,7 +788,7 @@
   position: absolute;
   background: #1a1a1a;
   border: 1px solid #444;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 8px 0;
   min-width: 150px;
   z-index: 1000;
@@ -821,44 +803,34 @@
   background: #242424;
 }
 
-/* Section Titles */
-.section-title {
-  font-size: 1.3rem;
-  color: #ffffff;
-  margin-bottom: 5px;
-  text-align: center;
-  padding-bottom: 10px;
+.group-card {
+  background-color: #242424;
+  border-radius: 6px;
+  padding: 8px 22px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 60%;
 }
 
-/* Group list container */
 .group-list {
+  border-radius: 6px;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column; 
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
-  justify-content: center;
   margin-bottom: 20px;
 }
 
-.group-card {
-  background-color: #242424;
-  padding: 8px 8px;
-  justify-content: space-between; 
-  width: 700px; 
-  height: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); 
-  display: flex;
-  align-items: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
 .group-card:hover {
-  transform: translateY(-5px); /* Slight lift effect on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7); /* Enhance shadow on hover */
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
 }
 
-/* Group name */
 .group-name {
   flex: 1;
   font-size: 1.1rem;
@@ -868,18 +840,16 @@
   text-align: left;
 }
 
-/* Group description */
 .group-description {
   flex: 2;
-  font-size: 0.9rem; 
+  font-size: 1rem; 
   color: #bbb;
   text-align: left;
   margin-top: 0;
 }
 
-/* No groups message */
 .no-groups-message {
-  font-size: 1.1rem; 
+  font-size: 1rem; 
   color: #bbb;
   text-align: center;
   margin-bottom: 30px;
@@ -889,7 +859,7 @@
   padding: 10px 20px;
   border: none;
   border-radius: 20px;
-  background-color: #CA2145; /* Match button color */
+  background-color: #CA2145;
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
@@ -899,23 +869,44 @@
 }
 
 .group-button:hover {
-  background-color: #E23E62; /* Hover effect for buttons */
-}
-
-
-.center-item{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-html, body, .page-container {
-    height: 100%;
-    margin: 0;
+  background-color: #E23E62;
 }
 
 .page-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.select-users-page {
+  margin-top: 70px;
+}
+
+.checkbox input[type="checkbox"] {
+  accent-color: #E23E62;
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.checkbox {
+  display: flex;
+  gap: 10px;
+  margin: 20px;
+  cursor: pointer;
+}
+
+.x-mark {
+  display: flex;
+  margin-top: 10px;
+  margin: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: #CA2145;
+  color: #fff;
+  padding: 3px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
 }

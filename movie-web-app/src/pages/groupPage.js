@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import Header from '../components/header';
+import { Link } from 'react-router-dom';
 
 const url = 'http://localhost:3001'
 const MyKey = process.env.REACT_APP_API_KEY
@@ -120,7 +121,10 @@ export function GroupPage() {
     const handleShowNonMembers = () => {
         fetch(url + `/groupMembers/nonmembers/${groupId}`)
             .then(response => response.json())
-            .then(data => setNonMembers(data))
+            .then(data => {
+                console.log('Non-members (including rejected):', data);  // Add this log to check the data
+                setNonMembers(data);
+            })
             .catch(err => console.error(err))
         setShowAddMembers(prevState => !prevState)
         setShowRemoveMembers(false)
@@ -256,12 +260,12 @@ export function GroupPage() {
                 {favorites.length > 0 ? (
                     favorites.map((movie) => (
                         <div class="movie-card" key={movie.id}>
+                            <Link to={`/moviepage/${movie.id}`}>
                             <img class="poster-image"
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
-                            />
-                            <p class="movie-title">{movie.title}</p>
-                            <button className="delete-button" onClick={() => handleDeleteFavorite(movie.id)}>
+                            /></Link>
+                            <button className="x-mark" onClick={() => handleDeleteFavorite(movie.id)}>
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
