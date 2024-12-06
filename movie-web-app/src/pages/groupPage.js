@@ -261,13 +261,9 @@ export function GroupPage() {
                                 alt={movie.title}
                             />
                             <p class="movie-title">{movie.title}</p>
-                            <button
-                                    className="delete-favorite-btn"
-                                    onClick={() => handleDeleteFavorite(movie.id)}
-                                    title="Remove from favorites"
-                                >
-                                    <i className="fa-solid fa-trash"></i>
-                                </button>
+                            <button className="delete-button" onClick={() => handleDeleteFavorite(movie.id)}>
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                         </div>
                     ))
             ) : (
