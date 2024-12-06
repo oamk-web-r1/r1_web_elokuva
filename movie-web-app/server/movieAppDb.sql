@@ -72,7 +72,8 @@ CREATE TABLE Group_Showings (
 -- Group_Movies Table (Store movies associated with groups)
 CREATE TABLE Group_Movies (
     group_id INT REFERENCES Groups(group_id) ON DELETE CASCADE,
-    imdb_movie_id VARCHAR(20) NOT NULL,
+    --- imdb_movie_id VARCHAR(20) NOT NULL,
+    imdb_movie_id INT NOT NULL,
     added_by INT REFERENCES Users(user_id) ON DELETE SET NULL,
     PRIMARY KEY (group_id, imdb_movie_id)
 );

@@ -1,10 +1,11 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import Header from '../components/header';
 
 const url = 'http://localhost:3001'
+const MyKey = process.env.REACT_APP_API_KEY
 
 export function GroupPage() {
     const { user } = useUser()
@@ -15,14 +16,29 @@ export function GroupPage() {
     const [members, setMembers] = useState([])
     const [showAddMembers, setShowAddMembers] = useState(false)
     const [showRemoveMembers, setShowRemoveMembers] = useState(false)
+    const [favorites, setFavorites] = useState([])
+    const navigate = useNavigate()
     const [groupShowtimes, setGroupShowtimes] = useState([]);
 
     useEffect(() => {
         // Fetch group info by group id
-        fetch(url + `/groups/${groupId}`)
-            .then(response => response.json())
+        fetch(url + `/groups/${groupId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        })
+        .then((response) => {
+            if (response.status === 403) {
+                // If user is not a member, redirect to the unauthorized page
+                navigate('/unauthorized', { replace: true })
+            } else {
+                return response.json()
+            }
+        })
             .then(json => {
-                setGroup(json[0])
+                console.log(json)
+                setGroup(json)
             })
             .catch(err => console.error(err))
             
@@ -45,7 +61,33 @@ export function GroupPage() {
                 .then((data) => setGroupShowtimes(data))
                 .catch((err) => console.error('Error fetching group showtimes:', err));
             }
-    }, [groupId, user.user_id])
+    }, [groupId, user.user_id, navigate])
+
+    useEffect(() => {
+        // Fetch favorite movies for the group
+        fetch(url + `/groups/favorites/${groupId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (Array.isArray(data.favorites)) {
+                //console.log(data.favorites)
+                const favoriteMovieIds = data.favorites.map(item => item.imdb_movie_id)
+                const moviePromises = favoriteMovieIds.map((id) =>
+                    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${MyKey}&language=en-US`)
+                    .then((res) => res.json())
+                )
+                Promise.all(moviePromises).then(setFavorites)
+            } else {
+                console.error("Favorites data is not in the expected format:", data.favorites)
+                setFavorites([])
+            }
+        })
+        .catch((err) => console.error('Error fetching favorites:', err))
+    }, [groupId])
 
     const handleAcceptRequest = (user_id) => {
         fetch(url + `/groupMembers/accept`, {
@@ -137,6 +179,47 @@ export function GroupPage() {
         })
         .catch(err => console.error(err))
     }
+
+    const handleDeleteGroup = () => {
+        if (window.confirm('Are you sure you want to delete this group? This action cannot be undone.')) {
+            fetch(url + `/groups/delete/${groupId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Failed to delete group: ${response.status}`)
+                    alert('Group deleted successfully.')
+                    navigate('/allgroups')
+                })
+                .catch(err => alert('Failed to delete group. ' + err.message))
+        }
+    }
+
+    const handleDeleteFavorite = (movieId) => {
+        console.log('User Token:', user.token); 
+        if (window.confirm('Are you sure you want to remove this movie from the group favorites?')) {
+            fetch(url + `/groups/${groupId}/favorites/${movieId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Movie removed from group favorites') {
+                    setFavorites(favorites.filter(movie => movie.id !== movieId))
+                    alert('Movie removed from group favorites')
+                } else {
+                    alert('Failed to remove movie')
+                }
+            })
+            .catch(err => {
+                alert('Error deleting movie')
+            })
+        }
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -169,6 +252,23 @@ export function GroupPage() {
             )}
 
             <h2>Favorites</h2>
+            <div class="movie-container">
+                {favorites.length > 0 ? (
+                    favorites.map((movie) => (
+                        <div class="movie-card" key={movie.id}>
+                            <img class="poster-image"
+                                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                                alt={movie.title}
+                            />
+                            <p class="movie-title">{movie.title}</p>
+                            <button className="delete-button" onClick={() => handleDeleteFavorite(movie.id)}>
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    ))
+            ) : (
+                <p>No favorites? Tough audience.</p>
+            )}</div>
 
             <h2>Showtimes</h2>
 
@@ -202,6 +302,7 @@ export function GroupPage() {
                     ))}
                 </div>
             )}
+            <button className="danger-button" onClick={handleDeleteGroup}>Delete Group</button>
                 </>
             )}
         </div></>

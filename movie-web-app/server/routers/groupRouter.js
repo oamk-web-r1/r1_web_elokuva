@@ -2,6 +2,7 @@ import { pool } from '../helpers/db.js';
 import { Router } from 'express';
 import { emptyORows } from '../helpers/utils.js';
 import { auth } from '../helpers/auth.js';
+import { getUserIdByEmail } from '../helpers/userUtils.js';
 
 const groupRouter = Router();
 
@@ -69,6 +70,13 @@ groupRouter.post('/create', async (req, res) => {
             'INSERT INTO Groups (owner_id, name, description) VALUES ($1, $2, $3) RETURNING *',
             [owner_id, name, description]
         );
+
+        // Add the owner to the Group_Members table as an admin
+        const groupId = result.rows[0].group_id
+        await pool.query(
+            'INSERT INTO Group_Members (user_id, group_id, role, status) VALUES ($1, $2, $3, $4)',
+            [owner_id, groupId, 'admin', 'accepted']
+        )
         return res.status(200).json(result.rows[0]);
     } catch (error) {
         console.error('Database error:', error);
@@ -123,24 +131,39 @@ groupRouter.delete('/delete/:groupId', auth, async (req, res) => {
     }
 });
 
-groupRouter.get('/:groupId', (req, res, next) => {
+groupRouter.get('/:groupId', auth, async (req, res, next) => {
     const groupId = req.params.groupId
-    const value = [groupId]
+    const userEmail = req.user.email
 
-    const query = 'SELECT * FROM Groups WHERE group_id = $1;'
+    //console.log('User Email:', userEmail)
 
-    pool.query(query, value)
-    .then(result => {
-        if (result.rows.length > 0) {
-            res.json(result.rows)
+    try {
+        const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail])
+        if (userResult.rowCount === 0) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+
+        const userId = userResult.rows[0].user_id;
+
+        const membershipCheck = await pool.query(
+            'SELECT * FROM Group_Members WHERE group_id = $1 AND user_id = $2 AND status = $3',
+            [groupId, userId, 'accepted']
+        )
+
+        if (membershipCheck.rowCount === 0) {
+            return res.status(403).json({ message: 'You are not a member of this group' })
+        }
+
+        const groupResult = await pool.query('SELECT * FROM Groups WHERE group_id = $1', [groupId])
+        if (groupResult.rowCount > 0) {
+            res.status(200).json(groupResult.rows[0])
         } else {
             res.status(404).json({ message: 'Group not found' })
         }
-    })
-    .catch(error => {
-        console.error(error)
-        res.status(500).json(error)
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An internal error occurred.' })
+    }
 })
 
 // Add users to a group
@@ -215,7 +238,6 @@ groupRouter.post('/addMovie', auth, async (req, res) => {
         added_by: typeof added_by
     });
 
-
     try {
         const result = await pool.query(
             'INSERT INTO Group_Movies (group_id, imdb_movie_id, added_by) VALUES ($1, $2, $3) RETURNING *',
@@ -228,6 +250,20 @@ groupRouter.post('/addMovie', auth, async (req, res) => {
         res.status(500).json({ error: 'Failed to add movie to group' });
     }
 });
+
+groupRouter.get('/favorites/:group_id', auth, async (req, res) => {
+    const { group_id } = req.params
+
+    try {
+        const result = await pool.query(
+            'SELECT imdb_movie_id FROM Group_Movies WHERE group_id = $1', [group_id]
+        )
+        res.status(200).json({ favorites: result.rows })
+    } catch (error) {
+        console.error('Error fetching group favorite movies:', error)
+        res.status(500).json({ error: 'Failed to fetch favorite movies' })
+    }
+})
 
 groupRouter.post('/:groupId/addShowtime', auth, async (req, res) => {
     const { groupId } = req.params;
@@ -245,5 +281,54 @@ groupRouter.post('/:groupId/addShowtime', auth, async (req, res) => {
     }
 });
 
+// DELETE movie from group favorites
+groupRouter.delete('/:groupId/favorites/:movieId', auth, async (req, res) => {
+    console.log('Request Params:', req.params)
+    const { groupId, movieId } = req.params
+    let userId = req.user?.user_id
+
+    if (!userId) {
+        const email = req.user?.email
+        if (!email) {
+            return res.status(403).json({ error: 'Email not found in token' })
+        }
+
+        try {
+            userId = await getUserIdByEmail(email)
+            if (!userId) {
+                return res.status(404).json({ error: 'User not found in the database' })
+            }
+        } catch (err) {
+            return res.status(500).json({ error: 'Failed to retrieve user ID from database' })
+        }
+    }
+
+    //console.log(`User ID: ${userId}, Group ID: ${groupId}, Movie ID: ${movieId}`)
+
+    try {
+        // Check if the user is a member of the group
+        const groupMemberQuery = 'SELECT user_id FROM Group_Members WHERE group_id = $1 AND user_id = $2'
+        const groupMemberResult = await pool.query(groupMemberQuery, [groupId, userId])
+
+        if (groupMemberResult.rowCount === 0) {
+            console.error(`User ID ${userId} is not a member of group ${groupId}`)
+            return res.status(403).json({ error: 'User is not a member of the group' })
+        }
+
+        const deleteMovieQuery = 'DELETE FROM Group_Movies WHERE group_id = $1 AND imdb_movie_id = $2'
+        const deleteMovieResult = await pool.query(deleteMovieQuery, [groupId, movieId])
+
+        if (deleteMovieResult.rowCount === 0) {
+            console.error(`Movie ${movieId} not found in group ${groupId} favorites`)
+            return res.status(404).json({ error: 'Movie not found in group favorites' })
+        }
+
+        console.log(`Movie ${movieId} successfully removed from group ${groupId} favorites`)
+
+        return res.status(200).json({ message: 'Movie removed from group favorites' })
+    } catch (err) {
+        return res.status(500).json({ error: 'Error during movie deletion' })
+    }
+})
 
 export default groupRouter;

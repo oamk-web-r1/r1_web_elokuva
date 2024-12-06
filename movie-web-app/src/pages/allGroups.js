@@ -10,7 +10,7 @@ export function AllGroups() {
     const [groups, setGroups] = useState([]);
     const [ownedGroups, setOwnedGroups] = useState([]);
     const [memberGroups, setMemberGroups] = useState([]);
-    const [pendingRequests, setPendingRequests] = useState({})
+    //const [pendingRequests, setPendingRequests] = useState({})
     const { user } = useUser();
 
     useEffect(() => {
@@ -67,9 +67,11 @@ export function AllGroups() {
                 <div className="group-list">
                     {ownedGroups.map((group) => (
                         <div className="group-card" key={group.group_id}>
+                            <div>
                             <h3 className="group-name">
                                 <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link></h3>
                             <p className="group-description">{group.description}</p>
+                        </div>
                         </div>
                     ))}
                 </div>
@@ -87,10 +89,12 @@ export function AllGroups() {
                     <div className="group-list">
                         {memberGroups.map((group) => (
                             <div className="group-card" key={group.group_id}>
+                                <div>
                                 <h3 className="group-name">
                                 <Link className="default-link-text"  to={`/grouppage/${group.group_id}`}>{group.name}</Link>
                                 </h3>
                                 <p className="group-description">{group.description}</p>
+                            </div>
                             </div>
                         ))}
                     </div>
@@ -106,14 +110,17 @@ export function AllGroups() {
                         
                         return (
                             <div className="group-card" key={group.group_id}>
-                            <h3 className="group-name">
-                            <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link>
-                            </h3>
-                            <p className="group-description">{group.description}</p>
-    
-                            {!isMemberOrOwner && (
-                                <button onClick={() => handleJoinRequest(group.group_id)}>JOIN</button>
-                                )}
+                            <div>
+                                <h3 className="group-name">
+                                    <Link className="default-link-text" to={`/grouppage/${group.group_id}`}>{group.name}</Link>
+                                </h3>
+                                <p className="group-description">{group.description}</p>
+                            </div>
+                                <div>
+                                    {!isMemberOrOwner && (
+                                        <button className="join-button" onClick={() => handleJoinRequest(group.group_id)}>JOIN</button>
+                                    )}
+                                </div>
                             </div>
                             )
                         })}

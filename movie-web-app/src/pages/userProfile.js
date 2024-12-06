@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser} from '../context/useUser';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
 const url = 'http://localhost:3001'
 const MyKey = process.env.REACT_APP_API_KEY
@@ -12,7 +12,6 @@ export default function MyProfile() {
     const { user } = useUser()
     const [favorites, setFavorites] = useState([])
     const [shareUrl, setShareUrl] = useState('')
-
 
     useEffect(() => {
         console.log("User token:", user.token); // Check the token in the console
@@ -62,12 +61,33 @@ export default function MyProfile() {
     }
   }, [user.token])
 
+
+  const handleDelete = (movieId) => {
+    if (window.confirm('Are you sure you want to remove this movie from your favorites?')) {
+      fetch(url + `/favorites/${movieId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to remove movie from favorites')
+          }
+          setFavorites(favorites.filter((movie) => movie.id !== movieId))
+          alert('Movie removed from favorites!')
+        })
+        .catch((err) => {
+          console.error('Error deleting movie:', err);
+        })
+    }
+  }
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl).then(() => {
         alert('Link copied to clipboard!');
     });
 };
-
     
     return (
         <>
@@ -86,7 +106,10 @@ export default function MyProfile() {
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
                             />
-                            <p class="movie-title  default-add-space">{movie.title}</p>
+                            <p class="movie-title">{movie.title}</p>
+                            <button onClick={() => handleDelete(movie.id)} className="delete-button" title="Remove from favorites">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                         </div>
                     ))
             ) : (
@@ -95,11 +118,7 @@ export default function MyProfile() {
             </div>
 
             <div className="share-icon-container default-form-group " onClick={copyToClipboard} title="Copy to Clipboard">
-                    <FontAwesomeIcon
-                        icon={faArrowUpFromBracket}
-                        size="2x"
-                        style={{ cursor: 'pointer', color: '#ffffff' }}
-                    />
+                <i class="fa-solid fa-share"></i>
                 </div>
             </div>
         </>

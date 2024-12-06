@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { CreateGroup } from './pages/createGroup';
 import { GroupPage } from './pages/groupPage';
 import { AddUsers} from './pages/addUsers';
+import { Unauthorized } from './pages/unauthorized';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/showtimes",
     element: <Showtimes/>,
+  },
+  {
+    path: "/unauthorized",
+    element: <Unauthorized />,
   },
   {
     element: <ProtectedRoute />,
@@ -60,7 +65,6 @@ const router = createBrowserRouter([
         path: "/addusers",
         element: <AddUsers/>,
       }
-
     ]
   }
 ]);

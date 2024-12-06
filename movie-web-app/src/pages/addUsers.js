@@ -60,13 +60,18 @@ export function AddUsers() {
         );
     };
 
+    const handleSkip = () => {
+        // Skip addusers page
+        navigate('/allgroups')
+    }
+
     return (
         <div>
             <h3>Select Users to Add to Group</h3>
             {error && <div className="error-message">{error}</div>}
             <ul>
                 {users.map(user => (
-                    <li key={user.user_id}>
+                    <div key={user.user_id}>
                         <label>
                             <input
                                 type="checkbox"
@@ -75,10 +80,11 @@ export function AddUsers() {
                             />
                             {user.email}
                         </label>
-                    </li>
+                    </div>
                 ))}
             </ul>
             <button onClick={handleAddUsers}>Add Selected Users</button>
+            <button onClick={handleSkip}>Skip</button>
         </div>
     );
 }
