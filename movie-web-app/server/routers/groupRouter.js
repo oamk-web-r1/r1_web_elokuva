@@ -331,4 +331,71 @@ groupRouter.delete('/:groupId/favorites/:movieId', auth, async (req, res) => {
     }
 })
 
+// Transfer group ownership to another user
+groupRouter.post('/:groupId/transferownership', auth, async (req, res) => {
+    const { groupId } = req.params
+    const { newOwnerId } = req.body
+    const userEmail = req.user.email
+
+    try {
+        const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail])
+        if (userResult.rowCount === 0) {
+            return res.status(404).json({ error: 'User not found.' })
+        }
+
+        const currentOwnerId = userResult.rows[0].user_id
+
+        const groupResult = await pool.query('SELECT owner_id FROM Groups WHERE group_id = $1', [groupId])
+        if (groupResult.rowCount === 0) {
+            return res.status(404).json({ error: 'Group not found.' })
+        }
+
+        const currentGroupOwnerId = groupResult.rows[0].owner_id
+
+        if (currentOwnerId !== currentGroupOwnerId) {
+            return res.status(403).json({ error: 'You are not the owner of this group.' })
+        }
+
+        // Check if the new owner is a member of the group with accepted status
+        const memberCheck = await pool.query(
+            'SELECT * FROM Group_Members WHERE group_id = $1 AND user_id = $2 AND status = $3',
+            [groupId, newOwnerId, 'accepted']
+        )
+
+        if (memberCheck.rowCount === 0) {
+            return res.status(400).json({ error: 'The new owner must be an accepted member of the group.' })
+        }
+        await pool.query('BEGIN')
+
+        // Update the owner of the group
+        const updateOwnerResult = await pool.query(
+            'UPDATE Groups SET owner_id = $1 WHERE group_id = $2 RETURNING *',
+            [newOwnerId, groupId]
+        )
+
+        if (updateOwnerResult.rowCount === 0) {
+            await pool.query('ROLLBACK');
+            return res.status(500).json({ error: 'Failed to transfer group ownership.' })
+        }
+
+        // Update the roles of the users (current owner becomes member, new owner becomes admin)
+        await pool.query(
+            'UPDATE Group_Members SET role = $1 WHERE user_id = $2 AND group_id = $3',
+            ['admin', newOwnerId, groupId]
+        )
+
+        await pool.query(
+            'UPDATE Group_Members SET role = $1 WHERE user_id = $2 AND group_id = $3',
+            ['member', currentOwnerId, groupId]
+        )
+        await pool.query('COMMIT')
+
+        res.status(200).json({ message: 'Ownership successfully transferred to the new owner.' })
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('Error transferring ownership:', error)
+        res.status(500).json({ error: 'An internal error occurred while transferring ownership.' })
+    }
+})
+
 export default groupRouter;

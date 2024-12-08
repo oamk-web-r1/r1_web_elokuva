@@ -19,6 +19,7 @@ export function GroupPage() {
     const [showRemoveMembers, setShowRemoveMembers] = useState(false)
     const [favorites, setFavorites] = useState([])
     const navigate = useNavigate()
+    const [showTransferOwnership, setShowTransferOwnership] = useState(false)
     const [groupShowtimes, setGroupShowtimes] = useState([]);
 
     useEffect(() => {
@@ -249,7 +250,36 @@ export function GroupPage() {
                 alert('Error leaving group: ' + err.message)
             })
         }
-    }    
+    }
+
+    const handleTransferOwnership = (newOwnerId) => {
+        if (window.confirm('Do you want to transfer ownership to this user?')) {
+          fetch(url + `/groups/${groupId}/transferownership`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
+            },
+            body: JSON.stringify({ newOwnerId }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+              alert('Ownership successfully transferred!')
+              setShowTransferOwnership(false)
+            })
+            .catch((err) => {
+              console.error(err)
+            })
+        }
+    }
+    
+    const handleShowTransferOwnership = () => {
+        fetch(url + `/groupMembers/members/${groupId}`)
+            .then(response => response.json())
+            .then(data => setMembers(data))
+            .catch(err => console.error(err))
+        setShowTransferOwnership(prevState => !prevState)
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -258,7 +288,6 @@ export function GroupPage() {
     return (
         <>
         <Header />
-        
         <div className="center-item">
             <h2 className="default-big-title-white">{group.name}</h2>
             <p className="default-text">{group.description}</p>
@@ -268,17 +297,35 @@ export function GroupPage() {
                     <div>
                         {pendingRequests.map(request => (
                             <div key={request.user_id} className="join-request-box">
-                                <p>{request.email} wants to join</p>
+                                <div class="join-request-box-inside">
+                                <p class="join-text">{request.email} wants to join</p>
                                 <div className="join-request-buttons">
                                 <button className="accept-button" onClick={() => handleAcceptRequest(request.user_id)}>
                                     <i class="fa-solid fa-check"></i></button>
                                 <button className="reject-button" onClick={() => handleRejectRequest(request.user_id)}>
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div></div>
+                                    <i class="fa-solid fa-xmark"></i></button>
+                            </div></div></div>
                         ))}
                     </div>
                 </>
+            )}
+
+            {user.user_id === group.owner_id && (
+                <div>
+                    <button onClick={handleShowTransferOwnership} className="gray-button">Transfer Ownership</button>
+
+                {showTransferOwnership && (
+                    <div className="user-list">
+                        {members.map((member) => (
+                            <div key={member.user_id} className="user-list-item">
+                                <p>{member.email}</p>
+                                <button className="default-button-pink" onClick={() => handleTransferOwnership(member.user_id)}>
+                                <i class="fa-solid fa-user-tie"></i></button>
+                            </div>
+                ))}
+                    </div>
+                )}
+                </div>
             )}
 
             <h2>Favorites</h2>
@@ -332,12 +379,16 @@ export function GroupPage() {
                     ))}
                 </div>
             )}
-            <button className="danger-button" onClick={handleDeleteGroup}>Delete Group</button>
+            <button className="danger-button" onClick={handleDeleteGroup}>
+                <i class="fa-solid fa-trash"></i> Delete Group
+            </button>
                 </>
             )}
 
             {user.user_id !== group.owner_id && (
-                <button className="danger-button" onClick={handleLeaveGroup}>Leave Group</button>
+                <button className="danger-button" onClick={handleLeaveGroup}>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Leave Group
+                </button>
             )}
         </div></>
     )

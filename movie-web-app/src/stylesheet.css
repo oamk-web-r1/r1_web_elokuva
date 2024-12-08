@@ -23,6 +23,19 @@
     text-align: center;
   }
 
+  .danger-button {
+    padding: 10px 17px;
+    border: none;
+    border-radius: 20px;
+    background-color: #CA2145;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+
   .user-list {
     display: flex;
     align-items: center;
@@ -33,6 +46,9 @@
   }
 
   .join-request-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #242424;
     color: #fff;
     padding: 15px;
@@ -40,10 +56,22 @@
     margin: 20px;
   }
 
+  .join-request-box-inside {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .join-request-buttons {
     display: flex;
     gap: 10px;
     justify-content: center;
+  }
+
+  .join-text {
+    text-align: right;
+    margin: 8px;
+    flex: 1;
   }
 
   .accept-button, .reject-button {
