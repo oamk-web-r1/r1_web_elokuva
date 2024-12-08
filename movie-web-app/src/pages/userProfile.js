@@ -91,13 +91,15 @@ export default function MyProfile() {
     
     return (
         <>
-            <Header />
-            <h1 className='default-form-group'>My Profile</h1>
-            <div className='default-align'>            
-            <h2>My Information</h2>
-            <p className='default-add-space'>{email || 'Fetching email...'}</p>
-            
-            <h2>My Favorites</h2>
+            <Header/>
+            <div class="center-item">
+            <h1 class="default-big-title-white">My Profile</h1>
+            <div>            
+            <h2 class="default-medium-title">My Information</h2>
+            <p class="default-text">{email || 'Fetching email...'}</p>
+            </div>
+            <div>
+            <h2 class="default-medium-title">My Favorites</h2>
             <div class="movie-container">
                 {favorites.length > 0 ? (
                     favorites.map((movie) => (
@@ -106,15 +108,15 @@ export default function MyProfile() {
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
                             />
-                            <p class="movie-title">{movie.title}</p>
-                            <button onClick={() => handleDelete(movie.id)} className="delete-button" title="Remove from favorites">
+                            <button onClick={() => handleDelete(movie.id)} className="x-mark" title="Remove from favorites">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
                     ))
             ) : (
-                <p>No favorites? Tough audience.</p>
+                <p class="default-text">No favorites? Tough audience.</p>
                 )}
+            </div>
             </div>
 
             <div className="share-icon-container default-form-group " onClick={copyToClipboard} title="Copy to Clipboard">

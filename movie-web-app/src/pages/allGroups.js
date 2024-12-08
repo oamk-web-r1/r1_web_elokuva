@@ -60,9 +60,11 @@ export function AllGroups() {
 
     return (
         <>
-            <Header />
+            <Header/>
             <div className="groups-page">
-            <h2 className="section-title">My Groups (Owner)</h2>
+            <div class="center-item">
+                <h2 className="default-medium-title">My Groups (Owner)</h2>
+            </div>
             {ownedGroups.length > 0 ? (
                 <div className="group-list">
                     {ownedGroups.map((group) => (
@@ -79,12 +81,14 @@ export function AllGroups() {
                 <p className="no-groups-message">You are not the owner of any groups.</p>
             )}
 
-            <div className='center-item'>
+            <div className="center-item">
                  <button className="default-button-pink"><Link className="default-link-text" to="/creategroup">
                     <i class="fa-solid fa-plus"></i> Create New Group</Link> </button>
             </div>
 
-            <h2 className="section-title">Groups I'm a Member Of</h2>
+            <div class="center-item">
+            <h2 className="default-medium-title">Groups I'm a Member Of</h2>
+                </div>
                 {memberGroups.length > 0 ? (
                     <div className="group-list">
                         {memberGroups.map((group) => (
@@ -101,8 +105,9 @@ export function AllGroups() {
                 ) : (
                     <p className="no-groups-message">You are not a member of any groups.</p>
                 )}
-
-            <h2 className="section-title">All Groups</h2>
+            <div class="center-item">
+                <h2 className="default-medium-title">All Groups</h2>
+            </div>
             {groups.length > 0 ? (
                 <div className="group-list">
                     {groups.map((group) => {
@@ -116,11 +121,9 @@ export function AllGroups() {
                                 </h3>
                                 <p className="group-description">{group.description}</p>
                             </div>
-                                <div>
                                     {!isMemberOrOwner && (
                                         <button className="join-button" onClick={() => handleJoinRequest(group.group_id)}>JOIN</button>
                                     )}
-                                </div>
                             </div>
                             )
                         })}

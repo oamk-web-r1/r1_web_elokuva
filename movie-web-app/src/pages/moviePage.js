@@ -53,7 +53,10 @@ export default function MoviePage() {
     fetch(`http://localhost:3001/reviews/${movieId}`)
       .then(res => res.json())
       .then(json => {
-        setLocalReviews(json.reviews)
+        setLocalReviews(json.reviews.map(review => ({
+          ...review,
+          createdAt: new Date(review.createdAt).toLocaleString()
+        })))
       })
       .catch(err => console.error(err))
   }, [movieId])
@@ -190,7 +193,7 @@ const addMovieToGroup = async (groupId) => {
   }
     return (
       <>
-          <Header />
+        <Header/>
         <div class="movie-detail-container">
       {movieDetails && (
         <>
@@ -200,17 +203,17 @@ const addMovieToGroup = async (groupId) => {
       />
       <div>
         <h1 class="default-big-title-white">{movieDetails.title}</h1>
-        <p>{movieDetails.genres.map(genre => genre.name).join(', ')}</p>
-        <p><strong>Rating:</strong>
+        <p class="default-text">{movieDetails.genres.map(genre => genre.name).join(', ')}</p>
+        <p class="default-text"><strong>Rating:</strong>
         <span class="movie-rating">
           <i class="fa fa-star"></i> {movieDetails.vote_average}
           </span></p>
-        <p>{movieDetails.overview}</p>
-        <p>{movieDetails.release_date}</p>
-        <div onClick={toggleFavorite}>
+        <p class="default-text">{movieDetails.overview}</p>
+        <p class="default-text">{movieDetails.release_date}</p>
+        <div onClick={toggleFavorite} className={user.token ? '' : 'disabled'}>
             <i className={`fa-heart favorite-heart
               ${isFavorite ? 'fa-solid active' : 'fa-regular outline'}`}></i>
-                <span>
+                <span class="default-text">
                   {isFavorite ? ' Remove from Favorites' : ' Add to Favorites'}
                 </span>
         </div>
@@ -218,9 +221,9 @@ const addMovieToGroup = async (groupId) => {
 <div className="add-to-group">
     <div onClick={() => setShowGroupDropdown(!showGroupDropdown)}>
         <i className="fas fa-users"></i>
-        <span> Add to Group</span>
+        <span class="default-text"> Add to Group</span>
     </div>
-    {showGroupDropdown && (
+    {showGroupDropdown && user.token && (
         <div className="group-dropdown">
             {userGroups.map(group => (
                 <div 
@@ -286,9 +289,10 @@ const addMovieToGroup = async (groupId) => {
             <div key={review.id} class="review">
               <div class="review-header">
                 <strong>{review.author}</strong>
-                <span>{review.rating && `⭐ ${review.rating}`}</span>
+                <span>{review.rating && `${review.rating} ⭐`}</span>
             </div>
             <p class="default-text">{review.content}</p>
+            <span class="review-date">{review.createdAt}</span>
             {review.author === user.email && (
               <div class="delete-button-container">
                 <button class="delete-button"

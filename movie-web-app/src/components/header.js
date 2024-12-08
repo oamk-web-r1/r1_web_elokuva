@@ -59,7 +59,7 @@ const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRat
                 {dropdownOpen && (
                   <div class="account-dropdown-menu">
                     <Link class="account-dropdown-item" to="/userprofile">MY PROFILE</Link>
-                    <button class="account-dropdown-item" onClick={handleSignOut}>SIGN OUT</button>
+                    <div class="account-dropdown-item" onClick={handleSignOut}>SIGN OUT</div>
                     <DeleteAccount />
                   </div>)}
               </div>
@@ -73,18 +73,18 @@ const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRat
       {mobileDropdownOpen && (
           <div class="mobile-menu open">
             {user && user.token && (
-              <Link class="header-links" to="/allgroups">GROUPS</Link>
+              <Link class="account-dropdown-item" to="/allgroups">GROUPS</Link>
             )}
-            <Link class="header-links" to="/showtimes">SHOWTIMES</Link>
+            <Link class="account-dropdown-item" to="/showtimes">SHOWTIMES</Link>
 
             {user && user.token ? (
               <>
-                <Link class="account-dropdown-item" to="/profile">MY PROFILE</Link>
-                <button class="account-dropdown-item" onClick={handleSignOut}>SIGN OUT</button>
-                <DeleteAccount />
+                <Link class="account-dropdown-item" to="/userprofile">MY PROFILE</Link>
+                <div class="account-dropdown-item" onClick={handleSignOut}>SIGN OUT</div>
+                <DeleteAccount/>
               </>
               ) : (
-                <Link class="header-links" to="/signin">SIGN IN</Link>
+                <Link class="account-dropdown-item" to="/signin">SIGN IN</Link>
           )}
       </div>
     )}

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import Header from '../components/header';
+import { Link } from 'react-router-dom';
 
 const url = 'http://localhost:3001'
 const MyKey = process.env.REACT_APP_API_KEY
@@ -18,6 +19,7 @@ export function GroupPage() {
     const [showRemoveMembers, setShowRemoveMembers] = useState(false)
     const [favorites, setFavorites] = useState([])
     const navigate = useNavigate()
+    const [showTransferOwnership, setShowTransferOwnership] = useState(false)
     const [groupShowtimes, setGroupShowtimes] = useState([]);
 
     useEffect(() => {
@@ -120,7 +122,10 @@ export function GroupPage() {
     const handleShowNonMembers = () => {
         fetch(url + `/groupMembers/nonmembers/${groupId}`)
             .then(response => response.json())
-            .then(data => setNonMembers(data))
+            .then(data => {
+                console.log('Non-members (including rejected):', data);  // Add this log to check the data
+                setNonMembers(data);
+            })
             .catch(err => console.error(err))
         setShowAddMembers(prevState => !prevState)
         setShowRemoveMembers(false)
@@ -220,6 +225,61 @@ export function GroupPage() {
             })
         }
     }
+
+    const handleLeaveGroup = () => {
+        if (window.confirm('Are you sure you want to leave this group?')) {
+            fetch(url + `/groupMembers/leave`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ group_id: groupId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to leave the group.')
+                }
+                return response.json()
+            })
+            .then(data => {
+                alert(data.message)
+                navigate('/allgroups')
+            })
+            .catch(err => {
+                alert('Error leaving group: ' + err.message)
+            })
+        }
+    }
+
+    const handleTransferOwnership = (newOwnerId) => {
+        if (window.confirm('Do you want to transfer ownership to this user?')) {
+          fetch(url + `/groups/${groupId}/transferownership`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
+            },
+            body: JSON.stringify({ newOwnerId }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+              alert('Ownership successfully transferred!')
+              setShowTransferOwnership(false)
+            })
+            .catch((err) => {
+              console.error(err)
+            })
+        }
+    }
+    
+    const handleShowTransferOwnership = () => {
+        fetch(url + `/groupMembers/members/${groupId}`)
+            .then(response => response.json())
+            .then(data => setMembers(data))
+            .catch(err => console.error(err))
+        setShowTransferOwnership(prevState => !prevState)
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -228,7 +288,6 @@ export function GroupPage() {
     return (
         <>
         <Header />
-        
         <div className="center-item">
             <h2 className="default-big-title-white">{group.name}</h2>
             <p className="default-text">{group.description}</p>
@@ -238,17 +297,35 @@ export function GroupPage() {
                     <div>
                         {pendingRequests.map(request => (
                             <div key={request.user_id} className="join-request-box">
-                                <p>{request.email} wants to join</p>
+                                <div class="join-request-box-inside">
+                                <p class="join-text">{request.email} wants to join</p>
                                 <div className="join-request-buttons">
                                 <button className="accept-button" onClick={() => handleAcceptRequest(request.user_id)}>
                                     <i class="fa-solid fa-check"></i></button>
                                 <button className="reject-button" onClick={() => handleRejectRequest(request.user_id)}>
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div></div>
+                                    <i class="fa-solid fa-xmark"></i></button>
+                            </div></div></div>
                         ))}
                     </div>
                 </>
+            )}
+
+            {user.user_id === group.owner_id && (
+                <div>
+                    <button onClick={handleShowTransferOwnership} className="gray-button">Transfer Ownership</button>
+
+                {showTransferOwnership && (
+                    <div className="user-list">
+                        {members.map((member) => (
+                            <div key={member.user_id} className="user-list-item">
+                                <p>{member.email}</p>
+                                <button className="default-button-pink" onClick={() => handleTransferOwnership(member.user_id)}>
+                                <i class="fa-solid fa-user-tie"></i></button>
+                            </div>
+                ))}
+                    </div>
+                )}
+                </div>
             )}
 
             <h2>Favorites</h2>
@@ -256,12 +333,12 @@ export function GroupPage() {
                 {favorites.length > 0 ? (
                     favorites.map((movie) => (
                         <div class="movie-card" key={movie.id}>
+                            <Link to={`/moviepage/${movie.id}`}>
                             <img class="poster-image"
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
-                            />
-                            <p class="movie-title">{movie.title}</p>
-                            <button className="delete-button" onClick={() => handleDeleteFavorite(movie.id)}>
+                            /></Link>
+                            <button className="x-mark" onClick={() => handleDeleteFavorite(movie.id)}>
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
@@ -302,8 +379,16 @@ export function GroupPage() {
                     ))}
                 </div>
             )}
-            <button className="danger-button" onClick={handleDeleteGroup}>Delete Group</button>
+            <button className="danger-button" onClick={handleDeleteGroup}>
+                <i class="fa-solid fa-trash"></i> Delete Group
+            </button>
                 </>
+            )}
+
+            {user.user_id !== group.owner_id && (
+                <button className="danger-button" onClick={handleLeaveGroup}>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Leave Group
+                </button>
             )}
         </div></>
     )

@@ -21,7 +21,12 @@ groupMemberRouter.get('/user/:user_id', (req, res, next) => {
     const userId = req.params.user_id;
     console.log('Fetching memberships for user:', userId);
 
-    const query = 'SELECT * FROM Group_Members WHERE user_id = $1 AND status = $2';
+    const query = `
+        SELECT gm.group_id, g.name, g.owner_id, g.description
+        FROM Group_Members gm
+        INNER JOIN Groups g ON gm.group_id = g.group_id
+        WHERE gm.user_id = $1 AND gm.status = $2
+    `;
     const params = [userId, 'accepted'];
 
     pool.query(query, params, (error, results) => {
@@ -102,7 +107,8 @@ groupMemberRouter.post('/owner/add', auth, async (req, res) => {
             return res.status(404).json({ error: 'Group not found.' })
         }
 
-        const owner_id = ownerResult.rows[0].owner_id;
+        const owner_id = ownerResult.rows[0].owner_id
+
         const requesting_user = await pool.query(
             `SELECT user_id FROM Users WHERE email = $1`,
             [userEmail]
@@ -124,7 +130,7 @@ groupMemberRouter.post('/owner/add', auth, async (req, res) => {
             if (currentStatus === 'accepted') {
                 return res.status(400).json({ error: 'User is already a member.' })
             }
-            if (currentStatus === 'pending') {
+            if (currentStatus === 'pending' || currentStatus === 'rejected') {
                 await pool.query(
                     `UPDATE Group_Members SET status = $1 WHERE user_id = $2 AND group_id = $3`,
                     ['accepted', user_id, group_id]
@@ -263,19 +269,27 @@ groupMemberRouter.post('/reject', (req, res) => {
 
 // Fetch users who are not members of the group
 groupMemberRouter.get('/nonmembers/:group_id', async (req, res, next) => {
-    const { group_id } = req.params
+    const { group_id } = req.params;
 
-     try {
+    try {
         const ownerResult = await pool.query(
             `SELECT owner_id FROM Groups WHERE group_id = $1`,
             [group_id]
         )
+
         if (ownerResult.rowCount === 0) {
             return res.status(404).json({ error: 'Group not found' })
         }
+
         const owner_id = ownerResult.rows[0].owner_id
+
         const result = await pool.query(
-            `SELECT user_id, email FROM Users WHERE user_id NOT IN (SELECT user_id FROM Group_Members WHERE group_id = $1) AND user_id != $2`,
+            `SELECT user_id, email
+            FROM Users
+            WHERE user_id != $2 AND user_id NOT IN (
+            SELECT user_id 
+            FROM Group_Members
+            WHERE group_id = $1 AND (status = 'accepted' OR status = 'pending'))`,
             [group_id, owner_id]
         )
 
@@ -302,17 +316,57 @@ groupMemberRouter.get('/members/:group_id', async (req, res, next) => {
         const owner_id = ownerResult.rows[0].owner_id
 
         const membersResult = await pool.query(
-            `SELECT u.user_id, u.email 
-            FROM Users u
-            JOIN Group_Members gm ON u.user_id = gm.user_id
-            WHERE gm.group_id = $1 AND u.user_id != $2
-            AND gm.status != 'pending'`,
+            `SELECT gm.user_id, u.email, gm.status
+            FROM Group_Members gm
+            JOIN Users u ON gm.user_id = u.user_id
+            WHERE gm.group_id = $1 AND gm.status = 'accepted' AND gm.user_id != $2`,
             [group_id, owner_id]
         )
 
         res.status(200).json(membersResult.rows)
     } catch (error) {
         next(error)
+    }
+})
+
+// Allow a user to leave a group
+groupMemberRouter.post('/leave', auth, async (req, res) => {
+    const { group_id } = req.body
+    const userEmail = req.user.email
+
+    try {
+        // Get the user's ID using their email
+        const userResult = await pool.query('SELECT user_id FROM Users WHERE email = $1', [userEmail])
+
+        if (userResult.rowCount === 0) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+
+        const user_id = userResult.rows[0].user_id
+
+        // Check if the user is a member of the group
+        const membershipResult = await pool.query(
+            'SELECT * FROM Group_Members WHERE user_id = $1 AND group_id = $2',
+            [user_id, group_id]
+        )
+
+        if (membershipResult.rowCount === 0) {
+            return res.status(404).json({ error: 'You are not a member of this group.' })
+        }
+
+        // Remove the user from the group
+        const deleteResult = await pool.query(
+            'DELETE FROM Group_Members WHERE user_id = $1 AND group_id = $2 RETURNING *',
+            [user_id, group_id]
+        )
+
+        if (deleteResult.rowCount === 0) {
+            return res.status(500).json({ error: 'Unable to leave the group.' })
+        }
+
+        res.status(200).json({ message: 'You have successfully left the group.' })
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 })
 

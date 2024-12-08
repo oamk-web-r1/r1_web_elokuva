@@ -50,7 +50,9 @@ export function Home() {
         setSelectedYear={setSelectedYear}
         setSelectedAgeRating={setSelectedAgeRating}
       />
-      <Movie movies={results} />
+      <div class="center-item">
+        <Movie movies={results}/>
+      </div>
       <div className="pagination-controls">
         <button class="control-button" onClick={handlePrevPage} disabled={page === 1}>
           <i class="fa-solid fa-arrow-left"></i>

@@ -16,7 +16,7 @@ reviewRouter.get('/:movieId', (req, res, next) => {
   const values = [movieId]
 
   const query = `
-    SELECT r.review_id, r.review_text, r.rating, u.email AS author
+    SELECT r.review_id, r.review_text, r.rating, u.email AS author, r.created_at
     FROM Reviews r
     JOIN Users u ON r.user_id = u.user_id
     WHERE r.imdb_movie_id = $1;`
@@ -29,7 +29,8 @@ reviewRouter.get('/:movieId', (req, res, next) => {
           id: row.review_id,
           author: row.author,
           content: row.review_text,
-          rating: row.rating
+          rating: row.rating,
+          createdAt: row.created_at
         }))
       })
     })

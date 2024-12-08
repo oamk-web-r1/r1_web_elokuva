@@ -26,7 +26,7 @@ export default function SignIn() {
         <div>
             <h3 class="default-big-title-pink default-form-group">Sign In</h3>
             <div class="gray-box">
-            <form onSubmit={handleSubmit}>
+            <div class="gray-box-inside"><form onSubmit={handleSubmit}>
                 <div>
                 <label class="default-text">Email</label>
                 <input
@@ -45,9 +45,11 @@ export default function SignIn() {
                         onChange={e=> setUser({ ...user, password: e.target.value })}
                     />
                 </div>
-                <button class="wide-button" type="submit">Sign In</button>   
-            </form></div>
-            <div class="register-link">
+                <div class="center-item">
+                    <button class="wide-button" type="submit">Sign In</button>
+                </div>
+            </form></div></div>
+            <div class="center-item">
                 <Link class="link" to="/signup">Don't have an account?</Link>
             </div>
         </div>

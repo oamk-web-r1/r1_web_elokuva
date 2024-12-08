@@ -448,10 +448,11 @@ describe('GET /reviews/:movieId', () => {
 
         expect(reviews).to.be.an('array')
         expect(reviews.length).to.be.greaterThan(0)
-        expect(reviews[0]).to.have.all.keys('id', 'author', 'content', 'rating')
+        expect(reviews[0]).to.have.all.keys('id', 'author', 'content', 'rating', 'createdAt')
         expect(reviews[0].author).to.equal(reviewerEmail)
         expect(reviews[0].content).to.equal('Great movie!')
         expect(reviews[0].rating).to.equal(5)
+        expect(reviews[0].createdAt).to.be.a('string')
     })
 
     it('should return an empty array for a movie with no reviews', async () => {
