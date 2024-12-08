@@ -53,7 +53,10 @@ export default function MoviePage() {
     fetch(`http://localhost:3001/reviews/${movieId}`)
       .then(res => res.json())
       .then(json => {
-        setLocalReviews(json.reviews)
+        setLocalReviews(json.reviews.map(review => ({
+          ...review,
+          createdAt: new Date(review.createdAt).toLocaleString()
+        })))
       })
       .catch(err => console.error(err))
   }, [movieId])
@@ -286,9 +289,10 @@ const addMovieToGroup = async (groupId) => {
             <div key={review.id} class="review">
               <div class="review-header">
                 <strong>{review.author}</strong>
-                <span>{review.rating && `⭐ ${review.rating}`}</span>
+                <span>{review.rating && `${review.rating} ⭐`}</span>
             </div>
             <p class="default-text">{review.content}</p>
+            <span class="review-date">{review.createdAt}</span>
             {review.author === user.email && (
               <div class="delete-button-container">
                 <button class="delete-button"

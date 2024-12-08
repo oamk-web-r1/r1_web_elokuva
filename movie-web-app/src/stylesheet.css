@@ -523,6 +523,10 @@
     flex-direction: column;
   }
 
+  .review-date {
+    color: #7c7c7c;
+  }  
+
   .review {
     background: #242424;
     color: #fff;

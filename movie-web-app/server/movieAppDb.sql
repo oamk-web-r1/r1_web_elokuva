@@ -49,6 +49,7 @@ CREATE TABLE Reviews (
     imdb_movie_id INT NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5),
     review_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Track creation time
     UNIQUE (user_id, imdb_movie_id) -- Ensures one review per movie per user
 );
 
