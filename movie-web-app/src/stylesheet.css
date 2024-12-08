@@ -29,6 +29,7 @@
     justify-content: center;
     flex-direction: column;
     text-align: center;
+    margin-left: 15px;
   }
 
   .join-request-box {
@@ -372,6 +373,8 @@
     display: flex;
     flex-direction: column;
     padding: 8px 12px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     border: 1px solid #444;
     border-radius: 6px;
     background-color: #1a1a1a;
