@@ -47,9 +47,13 @@
   }
 
   .accept-button, .reject-button {
-    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 11px;
+    border-style: none;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     cursor: pointer;
   }
   
@@ -143,7 +147,13 @@
 
   .control-button {
     cursor: pointer;
-    padding: 5px 10px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border-style: none;
+    padding: 7px 12px;
     color: #fff;
     background-color: #CA2145;
   }
