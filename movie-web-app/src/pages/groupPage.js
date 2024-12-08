@@ -224,6 +224,32 @@ export function GroupPage() {
             })
         }
     }
+
+    const handleLeaveGroup = () => {
+        if (window.confirm('Are you sure you want to leave this group?')) {
+            fetch(url + `/groupMembers/leave`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                },
+                body: JSON.stringify({ group_id: groupId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to leave the group.')
+                }
+                return response.json()
+            })
+            .then(data => {
+                alert(data.message)
+                navigate('/allgroups')
+            })
+            .catch(err => {
+                alert('Error leaving group: ' + err.message)
+            })
+        }
+    }    
     
     if (!group) {
         return <p>Loading...</p>
@@ -308,6 +334,10 @@ export function GroupPage() {
             )}
             <button className="danger-button" onClick={handleDeleteGroup}>Delete Group</button>
                 </>
+            )}
+
+            {user.user_id !== group.owner_id && (
+                <button className="danger-button" onClick={handleLeaveGroup}>Leave Group</button>
             )}
         </div></>
     )
