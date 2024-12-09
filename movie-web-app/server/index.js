@@ -6,8 +6,8 @@ import groupRouter from './routers/groupRouter.js'
 import groupMemberRouter from './routers/groupMemberRouter.js'
 import reviewRouter from './routers/reviewRouter.js'
 import favoritesRouter from './routers/favoritesRouter.js'
-import { pool } from './helpers/db.js'
-import { response } from 'express'
+//import { pool } from './helpers/db.js'
+//import { response } from 'express'
 
 const app = express();
 const port = process.env.PORT || 3001;

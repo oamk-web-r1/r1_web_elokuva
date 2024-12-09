@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import { Link } from 'react-router-dom'
 
-const url = 'http://localhost:3001'
+const url = process.env.REACT_APP_BACKEND_CONNECTION
 
 export function AllGroups() {
     const [groups, setGroups] = useState([]);

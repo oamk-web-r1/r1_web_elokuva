@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Header from '../components/header';
 
+const url = process.env.REACT_APP_BACKEND_CONNECTION
 const MyKey = process.env.REACT_APP_API_KEY
 
 export default function MoviePage() {
@@ -21,7 +22,7 @@ export default function MoviePage() {
   // Check if the movie is in the user's favorites
   useEffect(() => {
     if (user.token) {
-      axios.get('http://localhost:3001/favorites', {
+      axios.get(url + '/favorites', {
         headers: { Authorization: `Bearer ${user.token}` }
       })
       .then(res => {
@@ -50,7 +51,7 @@ export default function MoviePage() {
   }, [movieId])
 
   useEffect(() => {
-    fetch(`http://localhost:3001/reviews/${movieId}`)
+    fetch(url + `/reviews/${movieId}`)
       .then(res => res.json())
       .then(json => {
         setLocalReviews(json.reviews.map(review => ({
@@ -65,7 +66,7 @@ export default function MoviePage() {
   useEffect(() => {
     if (user.token) {
         // Fetch groups user is a member of
-        const getMemberGroups = fetch(`http://localhost:3001/groupMembers/user/${user.user_id}`)
+        const getMemberGroups = fetch(url + `/groupMembers/user/${user.user_id}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Member groups:', data);
@@ -73,7 +74,7 @@ export default function MoviePage() {
             });
         
         // Fetch groups where user is owner
-        const getOwnedGroups = fetch(`http://localhost:3001/groups`)
+        const getOwnedGroups = fetch(url + `/groups`)
             .then(response => response.json())
             .then(data => {
                 console.log('All groups:', data);
@@ -103,7 +104,7 @@ const addMovieToGroup = async (groupId) => {
       userId: user.user_id,
       token: !!user.token // Log if token exists
   });
-      const response = await fetch('http://localhost:3001/groups/addMovie', {
+      const response = await fetch(url + '/groups/addMovie', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -144,10 +145,10 @@ const addMovieToGroup = async (groupId) => {
           'Content-Type': 'application/json',
         },
       }
-      await axios.post(`http://localhost:3001/reviews/${movieId}`, payload, headers)
+      await axios.post(url + `/reviews/${movieId}`, payload, headers)
 
       // Fetch updated reviews after posting
-      fetch(`http://localhost:3001/reviews/${movieId}`)
+      fetch(url + `/reviews/${movieId}`)
         .then(res => res.json())
         .then(json => setLocalReviews(json.reviews))
         .catch(err => console.error(err))
@@ -162,12 +163,12 @@ const addMovieToGroup = async (groupId) => {
   const toggleFavorite = async () => {
     try {
       if (isFavorite) {
-          await axios.delete(`http://localhost:3001/favorites/${movieId}`, {
+          await axios.delete(url + `/favorites/${movieId}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         setIsFavorite(false)
       } else {
-          await axios.post(`http://localhost:3001/favorites/${movieId}`, {}, {
+          await axios.post(url + `/favorites/${movieId}`, {}, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         setIsFavorite(true)
@@ -179,7 +180,7 @@ const addMovieToGroup = async (groupId) => {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-        await axios.delete(`http://localhost:3001/reviews/${reviewId}`, {
+        await axios.delete(url + `/reviews/${reviewId}`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },

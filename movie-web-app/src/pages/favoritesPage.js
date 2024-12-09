@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const url = 'http://localhost:3001'
+const url = process.env.REACT_APP_BACKEND_CONNECTION
 const MyKey = process.env.REACT_APP_API_KEY
 
 export default function FavoritesPage() {

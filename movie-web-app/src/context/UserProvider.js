@@ -2,7 +2,7 @@ import { useState } from "react";
 import { UserContext } from "./UserContext.js";
 import axios from "axios";
 
-const url = 'http://localhost:3001'
+const url = process.env.REACT_APP_BACKEND_CONNECTION
 
 export default function UserProvider({children}) {
     const userFromSessionStorage = sessionStorage.getItem('user')
