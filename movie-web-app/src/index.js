@@ -16,6 +16,7 @@ import { CreateGroup } from './pages/createGroup';
 import { GroupPage } from './pages/groupPage';
 import { AddUsers} from './pages/addUsers';
 import { Unauthorized } from './pages/unauthorized';
+import FavoritesPage from './pages/favoritesPage';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/unauthorized",
     element: <Unauthorized />,
+  },
+  {
+    path: "/favorites/:email",
+    element: <FavoritesPage/>,
   },
   {
     element: <ProtectedRoute />,
