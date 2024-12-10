@@ -239,6 +239,12 @@
     gap: 15px;
   }
   
+  .search-container.disabled {
+    opacity: 0.5;
+    pointer-events: all;
+    cursor: not-allowed;
+  }
+  
   .logo {
     display: flex;
     align-items: center;
