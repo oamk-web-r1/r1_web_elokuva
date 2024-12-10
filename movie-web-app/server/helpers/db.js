@@ -12,11 +12,23 @@ const openDb = () => {
       host: process.env.DB_HOST,
       database: environment === 'development' ? process.env.DB_NAME : process.env.TEST_DB_NAME,
       password: process.env.DB_PASSWORD,
-      port : process.env.DB_PORT
+      port : process.env.DB_PORT,
+      ssl: {
+        rejectUnauthorized: false,  // Disable SSL certificate verification for connection
+      }
     })
     return pool
   }
 
   const pool = openDb()
+
+  pool.on('connect', () => {
+    console.log('Connected to Render database!')
+  })
+  
+  pool.on('error', (err) => {
+    console.error(err)
+    process.exit(-1)
+  })
 
   export { pool }

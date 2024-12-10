@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from '../context/useUser'; 
 import Header from '../components/header';
 
+const url = process.env.REACT_APP_BACKEND_CONNECTION
+
 export function CreateGroup() {
     const navigate = useNavigate();
     const { user } = useUser();
@@ -15,7 +17,7 @@ export function CreateGroup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3001/groups/create', {
+            const response = await fetch(url + '/groups/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

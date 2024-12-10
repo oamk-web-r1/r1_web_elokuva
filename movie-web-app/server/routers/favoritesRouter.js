@@ -82,4 +82,28 @@ favoritesRouter.delete('/:movieId', auth, async (req, res, next) => {
     }
 })
 
+favoritesRouter.get('/:email', async (req, res) => {
+  const { email } = req.params
+  
+  try {
+      const userIdQuery = 'SELECT user_id FROM Users WHERE email = $1'
+      const userResult = await pool.query(userIdQuery, [email])
+
+      if (userResult.rowCount === 0) {
+          return res.status(404).json({ error: 'User not found' })
+      }
+
+      const userId = userResult.rows[0].user_id
+
+      const selectQuery = 'SELECT imdb_movie_id FROM Favorites WHERE user_id = $1'
+      const result = await pool.query(selectQuery, [userId])
+
+      return res.status(200).json({
+          favorites: result.rows.map(row => row.imdb_movie_id),
+      })
+  } catch (err) {
+      return next(err)
+  }
+})
+
 export default favoritesRouter

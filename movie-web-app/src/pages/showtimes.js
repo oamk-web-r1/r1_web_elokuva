@@ -3,6 +3,8 @@ import Header from '../components/header';
 import { useUser } from '../context/useUser';
 import { useNavigate } from 'react-router-dom';
 
+const url = process.env.REACT_APP_BACKEND_CONNECTION
+
 export default function Showtimes() {
     const [schedules, setSchedules] = useState([]);
     const [selectedTheatre, setSelectedTheatre] = useState(''); 
@@ -69,7 +71,7 @@ export default function Showtimes() {
     // Fetch groups that the user belongs to
     useEffect(() => {
         if (user.user_id) {
-            fetch(`http://localhost:3001/groups/`)
+            fetch(url + `/groups/`)
                 .then((response) => response.json())
                 .then((json) => {
                     setGroups(json);
@@ -98,7 +100,7 @@ const handleShareToGroup = (schedule) => {
     // Prompt user to select a group
     const groupId = prompt('Enter group ID to share this showtime to:');
     if (groupId && groups.some(group => group.group_id === parseInt(groupId))) {
-        fetch('http://localhost:3001/groupMembers/addMovie', {
+        fetch(url + '/groupMembers/addMovie', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

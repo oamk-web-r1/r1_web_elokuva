@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "../context/useUser";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const url = process.env.REACT_APP_BACKEND_CONNECTION
+
 export function AddUsers() {
     const { user } = useUser()
     const [users, setUsers] = useState([]);
@@ -14,7 +16,7 @@ export function AddUsers() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:3001/groups/users', {
+                const response = await fetch(url + '/groups/users', {
                     method: 'GET',
                     headers: {
                     'Content-Type': 'application/json',
@@ -37,7 +39,7 @@ export function AddUsers() {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3001/groups/${groupId}/addusers`, {
+            const response = await fetch(url + `/groups/${groupId}/addusers`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
