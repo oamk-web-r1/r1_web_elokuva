@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import SearchBar from './search';
 import logo from '../assets/testlogo.png';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/useUser';
 import DeleteAccount from './deleteAccount';
 
 const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) => {
+  //const [visibleDropdown, setVisibleDropdown] = useState(null)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { user, signOut } = useUser()
   const navigate = useNavigate()
-  const location = useLocation()
   //console.log("Header component rendered")
-
-  const isHomePage = location.pathname === '/'
 
   const handleSignOut = () => {
     signOut()
@@ -38,15 +36,13 @@ const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRat
             <button class="mobile-menu-toggle" onClick={toggleMobileDropdown}>
               <i class="fa-solid fa-bars"></i>
             </button>
-
-      <div>
+      
       <SearchBar
         setQuery={setQuery}
         setSelectedGenre={setSelectedGenre}
         setSelectedYear={setSelectedYear}
         setSelectedAgeRating={setSelectedAgeRating}
-        isDisabled={!isHomePage}
-      /></div>
+      />
 
       <div class="header-button-container">
           {user && user.token && (

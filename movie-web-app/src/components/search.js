@@ -1,34 +1,39 @@
 import { useState } from "react";
 import { genres } from '../data/genres';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating, isDisabled }) {
+function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) {
   const [localQuery, setLocalQuery] = useState('')
   const [visibleDropdown, setVisibleDropdown] = useState(null)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const years = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i)
   const ageRatings = ['G', 'PG', 'PG-13', 'R', 'NC-17']
 
+  const handleInteraction = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      alert('Redirecting to the home page to use the search bar');
+    }
+  }
+
   const handleSearch = () => {
-    if (!isDisabled) {
+    if (location.pathname === '/') {
       setQuery(localQuery)
     }
   }
 
   const toggleDropdown = (dropdown) => {
-    if (!isDisabled) {
+    if (location.pathname === '/') {
       setVisibleDropdown((current) => (current === dropdown ? null : dropdown))
-    }
-  }
-
-  const handleContainerClick = () => {
-    if (isDisabled) {
-      alert('You can only use the search bar on the home page!')
+    } else {
+      handleInteraction()
     }
   }
 
   return (
-    <div className={`search-container ${isDisabled ? 'disabled' : ''}`}
-    onClick={handleContainerClick}>
+    <div className="search-container" onClick={handleInteraction}>
       <button class="search-button" onClick={handleSearch}>
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
@@ -38,11 +43,10 @@ function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAge
         placeholder="Search..."
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
-        disabled={isDisabled}
       />
 
       {/* Genre Filter */}
-      <button className="filter-button" onClick={() => toggleDropdown('genre')} disabled={isDisabled}>Genre</button>
+      <button className="filter-button" onClick={() => toggleDropdown('genre')}>Genre</button>
       {visibleDropdown === 'genre' && (
         <div className={`dropdown-menu ${visibleDropdown === 'genre' ? 'visible' : ''}`}>
           {genres.map(genre => (
@@ -62,7 +66,7 @@ function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAge
       )}
 
       {/* Year Filter */}
-      <button className="filter-button" onClick={() => toggleDropdown('year')} disabled={isDisabled}>Year</button>
+      <button className="filter-button" onClick={() => toggleDropdown('year')}>Year</button>
       {visibleDropdown === 'year' && (
         <div className={`dropdown-menu ${visibleDropdown === 'year' ? 'visible' : ''}`}>
           {years.map(year => (
@@ -81,7 +85,7 @@ function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAge
       )}
 
       {/* Age Rating Filter */}
-      <button className="filter-button-corner" onClick={() => toggleDropdown('ageRating')} disabled={isDisabled}>Age Rating</button>
+      <button className="filter-button-corner" onClick={() => toggleDropdown('ageRating')}>Age Rating</button>
       {visibleDropdown === 'ageRating' && (
         <div className={`dropdown-menu ${visibleDropdown === 'ageRating' ? 'visible' : ''}`}>
           {ageRatings.map(rating => (
