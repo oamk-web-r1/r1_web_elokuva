@@ -15,6 +15,9 @@ export default function Showtimes() {
     const navigate = useNavigate();
     const [showGroupDropdown, setShowGroupDropdown] = useState(false);
     const [userGroups, setUserGroups] = useState([]);
+    const [dropdownVisible, setDropdownVisible] = useState(null);
+    const [groupId, setSelectedGroupId] = useState(null);
+    const [showtime, setShowtime] = useState(null);
 
     const getFinnkinoSchedules = (xml) => {
         const parser = new DOMParser();
@@ -73,7 +76,7 @@ export default function Showtimes() {
 useEffect(() => {
     if (user.token) {
         // Fetch groups user is a member of
-        const getMemberGroups = fetch(`http://localhost:3001/groupMembers/user/${user.user_id}`)
+        const getMemberGroups = fetch(url + `/groupMembers/user/${user.user_id}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Member groups:', data);
@@ -81,7 +84,7 @@ useEffect(() => {
             });
         
         // Fetch groups where user is owner
-        const getOwnedGroups = fetch(`http://localhost:3001/groups`)
+        const getOwnedGroups = fetch(url + `/groups`)
             .then(response => response.json())
             .then(data => {
                 console.log('All groups:', data);
@@ -117,46 +120,60 @@ const generateDateOptions = () => {
     return dates;
 };
 
-const addShowtimeToGroup = async (groupId) => {
+const handleShareShowtime = async (schedule) => {
+    console.log('User token:', user.token);
     try {
-        const response = await fetch('http://localhost:3001/groups/addShowtime', {
+        const response = await fetch(`${url}/groups/addShowtime`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}`
             },
             body: JSON.stringify({
-              group_id: parseInt(groupId),
-              added_by: parseInt(user.user_id)
+                groupId,
+                title: schedule.title,
+                theatre_name: schedule.theatre,
+                startTime: schedule.startTime
             })
+            
         });
-  
+
+        
+        const textResponse = await response.text(); // Get raw text response
+        console.log('Response:', textResponse); // Log the response
         if (!response.ok) {
-            throw new Error('Failed to add a showtime to group');
+            throw new Error(`Error: ${textResponse}`);
         }
-  
+        const data = JSON.parse(textResponse);
+        alert('Showtime shared successfully!');
+
+       /* if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error: ${errorData.message || response.statusText}`);
+        }
+
         const data = await response.json();
-        alert('Showtime added to group successfully!');
-        setShowGroupDropdown(false);
+        alert('Showtime shared successfully!');*/
     } catch (error) {
-        console.error('Error adding showtime to group:', error);
-        alert('Failed to add showtime to group');
+        console.error('Error sharing showtime:', error);
+        alert(`Failed to share showtime: ${error.message}`);
     }
-  };
-  
-return (
+};
+
+  return (
     <>
-        <Header/>
-        <div class="showtime-container">
-            <h1 class="default-big-title-white">Showtimes</h1>
-            <div class="filter-container">
+        <Header />
+        <div className="showtime-container">
+            <h1 className="default-big-title-white">Showtimes</h1>
+            <div className="filter-container">
                 <div>
                     <label htmlFor="theatre-select"></label>
                     <select
                         id="theatre-select"
                         value={selectedTheatre}
                         onChange={(e) => setSelectedTheatre(e.target.value)}
-                        class="dropdown">
+                        className="dropdown"
+                    >
                         <option value="">Select a Theatre</option>
                         {theatres.map((theatre, index) => (
                             <option key={index} value={theatre}>
@@ -173,7 +190,8 @@ return (
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
                         disabled={!selectedTheatre} // Disable if no theater is selected
-                        class="dropdown">
+                        className="dropdown"
+                    >
                         <option value="">All Dates</option>
                         {generateDateOptions().map((date, index) => (
                             <option key={index} value={date}>
@@ -185,42 +203,35 @@ return (
             </div>
 
             {!selectedTheatre ? (
-                <p class="placeholder">Please select a theatre to view showtimes.</p>
+                <p className="placeholder">Please select a theatre to view showtimes.</p>
             ) : filteredSchedules.length > 0 ? (
-                <div class="results-container">
+                <div className="results-container">
                     {filteredSchedules.map((schedule, index) => (
-                        <div key={index} class="result-card">
+                        <div key={index} className="result-card">
                             <strong>{schedule.title}</strong> <br />
                             Theatre: {schedule.theatre} <br />
-                            Start Time: {schedule.startTime}<br />
+                            Start Time: {schedule.startTime} <br />
 
-                                <div className="add-to-group">
-                                <div onClick={() => setShowGroupDropdown(!showGroupDropdown)}>
-                                    <i className="fas fa-users"></i>
-                                    <span class="default-text"> Share to Group</span>
-                                </div>
-                                {showGroupDropdown && user.token && (
-                                    <div className="group-dropdown">
-                                        {userGroups.map(group => (
-                                            <div 
-                                                key={group.group_id} 
-                                                className="group-option"
-                                                onClick={() => addShowtimeToGroup(group.group_id)}
-                                            >
-                                                {group.name}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                            <select
+                value={groupId}
+                onChange={(e) => setSelectedGroupId(e.target.value)}
+                className="dropdown"
+            >
+                <option value="">Select a group</option>
+                {userGroups.map((group) => (
+                    <option key={group.group_id} value={group.group_id}>{group.name}</option>
+                ))}
+            </select>
+            <button className="default-button-pink" onClick={() => handleShareShowtime({ ...schedule, groupId })}>
+    Share to Group
+</button>
+
                         </div>
                     ))}
                 </div>
             ) : (
-                <p class="placeholder">No showtimes available for the selected theatre and date.</p>
+                <p className="placeholder">No showtimes available for the selected theatre and date.</p>
             )}
         </div>
     </>
-);
-}
-
+)}
