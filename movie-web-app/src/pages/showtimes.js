@@ -11,6 +11,8 @@ export default function Showtimes() {
     const [groups, setGroups] = useState([]);
     const { user } = useUser();
     const navigate = useNavigate();
+    const [showGroupDropdown, setShowGroupDropdown] = useState(false);
+    const [userGroups, setUserGroups] = useState([]);
 
     const getFinnkinoSchedules = (xml) => {
         const parser = new DOMParser();
@@ -66,17 +68,37 @@ export default function Showtimes() {
     setFilteredSchedules(filtered);
 }, [selectedTheatre, selectedDate, schedules]);
 
-    // Fetch groups that the user belongs to
-    useEffect(() => {
-        if (user.user_id) {
-            fetch(`http://localhost:3001/groups/`)
-                .then((response) => response.json())
-                .then((json) => {
-                    setGroups(json);
-                })
-                .catch((error) => console.error('Error fetching groups:', error));
-        }
-    }, [user.user_id]);
+useEffect(() => {
+    if (user.token) {
+        // Fetch groups user is a member of
+        const getMemberGroups = fetch(`http://localhost:3001/groupMembers/user/${user.user_id}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Member groups:', data);
+                return data;
+            });
+        
+        // Fetch groups where user is owner
+        const getOwnedGroups = fetch(`http://localhost:3001/groups`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('All groups:', data);
+                // Filter groups where user is owner
+                return data.filter(group => group.owner_id === user.user_id);
+            });
+
+        // Combine both results
+        Promise.all([getMemberGroups, getOwnedGroups])
+            .then(([memberGroups, ownedGroups]) => {
+                console.log('Combined groups:', { memberGroups, ownedGroups });
+                const allGroups = [...memberGroups, ...ownedGroups];
+                // Remove duplicates based on group_id
+                const uniqueGroups = [...new Map(allGroups.map(group => 
+                    [group.group_id, group])).values()];
+                setUserGroups(uniqueGroups);
+            });
+    }
+}, [user]);
 
 // theatres for dropdown
 const theatres = [...new Set(schedules.map((schedule) => schedule.theatre))];
@@ -93,36 +115,33 @@ const generateDateOptions = () => {
     return dates;
 };
 
-// Handle the action of sharing the movie to a group
-const handleShareToGroup = (schedule) => {
-    // Prompt user to select a group
-    const groupId = prompt('Enter group ID to share this showtime to:');
-    if (groupId && groups.some(group => group.group_id === parseInt(groupId))) {
-        fetch('http://localhost:3001/groupMembers/addMovie', {
+const addShowtimeToGroup = async (groupId) => {
+    try {
+        const response = await fetch('http://localhost:3001/groups/addShowtime', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`,
+                'Authorization': `Bearer ${user.token}`
             },
             body: JSON.stringify({
-                group_id: groupId,
-                imdb_movie_id: 'some_imdb_id', // You should fetch this based on the movie title
-                added_by: user.user_id,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                alert('Showtime shared to group!');
+              group_id: parseInt(groupId),
+              added_by: parseInt(user.user_id)
             })
-            .catch((error) => {
-                console.error('Error sharing showtime to group:', error);
-                alert('Error sharing showtime.');
-            });
-    } else {
-        alert('Invalid group ID.');
+        });
+  
+        if (!response.ok) {
+            throw new Error('Failed to add a showtime to group');
+        }
+  
+        const data = await response.json();
+        alert('Showtime added to group successfully!');
+        setShowGroupDropdown(false);
+    } catch (error) {
+        console.error('Error adding showtime to group:', error);
+        alert('Failed to add showtime to group');
     }
-};
-
+  };
+  
 return (
     <>
         <Header/>
@@ -172,12 +191,26 @@ return (
                             <strong>{schedule.title}</strong> <br />
                             Theatre: {schedule.theatre} <br />
                             Start Time: {schedule.startTime}<br />
-                                <button
-                                    className="share-button"
-                                    onClick={() => handleShareToGroup(schedule)}
-                                >
-                                    Share to Group
-                                </button>
+
+                                <div className="add-to-group">
+                                <div onClick={() => setShowGroupDropdown(!showGroupDropdown)}>
+                                    <i className="fas fa-users"></i>
+                                    <span class="default-text"> Share to Group</span>
+                                </div>
+                                {showGroupDropdown && user.token && (
+                                    <div className="group-dropdown">
+                                        {userGroups.map(group => (
+                                            <div 
+                                                key={group.group_id} 
+                                                className="group-option"
+                                                onClick={() => addShowtimeToGroup(group.group_id)}
+                                            >
+                                                {group.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ))}
                 </div>

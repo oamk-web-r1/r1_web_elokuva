@@ -265,14 +265,15 @@ groupRouter.get('/favorites/:group_id', auth, async (req, res) => {
     }
 })
 
+//share showtimes to group
 groupRouter.post('/:groupId/addShowtime', auth, async (req, res) => {
     const { groupId } = req.params;
-    const { title, theatre, startTime, addedBy } = req.body;
+    const { title, theatre_name, startTime } = req.body;
 
     try {
         const result = await pool.query(
-            'INSERT INTO Group_Showtimes (group_id, title, theatre, start_time, added_by) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [groupId, title, theatre, startTime, addedBy]
+            'INSERT INTO Group_Showings (group_id, title, theater_name, show_time) VALUES ($1, $2, $3, $4,) RETURNING *',
+            [groupId, title, theatre_name, startTime]
         );
         res.status(200).json(result.rows[0]);
     } catch (error) {
