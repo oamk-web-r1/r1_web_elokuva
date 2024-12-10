@@ -29,7 +29,6 @@ router.post('/register',(req, res, next) => {
 })
 })
 
-
 router.post('/login', (req, res, next) => {
     const invalid_message = 'Invalid credentials';
     
@@ -145,7 +144,7 @@ router.get('/email', auth, (req, res, next) => {
 }
 });
 
-router.get('/favorites/:email', async (req, res) => {
+/*router.get('/favorites/:email', async (req, res) => {
     const { email } = req.params; // This could be userId or email
     try {
         const favorites = await getUserFavorites(email); // Logic in your controller
@@ -157,7 +156,6 @@ router.get('/favorites/:email', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Error fetching favorites.' });
     }
-});
+});*/
 
-    
 export default router;

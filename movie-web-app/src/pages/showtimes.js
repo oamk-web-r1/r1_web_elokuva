@@ -3,6 +3,8 @@ import Header from '../components/header';
 import { useUser } from '../context/useUser';
 import { useNavigate } from 'react-router-dom';
 
+const url = process.env.REACT_APP_BACKEND_CONNECTION
+
 export default function Showtimes() {
     const [schedules, setSchedules] = useState([]);
     const [selectedTheatre, setSelectedTheatre] = useState(''); 
