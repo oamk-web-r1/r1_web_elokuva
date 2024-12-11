@@ -91,6 +91,30 @@ export function GroupPage() {
         .catch((err) => console.error('Error fetching favorites:', err))
     }, [groupId])
 
+
+    const handleShareShowtime = (groupId, showtime) => {
+        fetch(url + `/groups/${groupId}/shareShowtime`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({
+                group_id: groupId,
+                title: showtime.title,
+                theatre_name: showtime.theatre,
+                show_time: showtime.startTime
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Showtime shared successfully!')
+            setGroupShowtimes(prev => [...prev, data])
+        })
+        .catch(err => console.error(err))
+    }
+
+    
     const handleAcceptRequest = (user_id) => {
         fetch(url + `/groupMembers/accept`, {
             method: 'POST',

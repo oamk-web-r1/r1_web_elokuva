@@ -265,21 +265,41 @@ groupRouter.get('/favorites/:group_id', auth, async (req, res) => {
     }
 })
 
-groupRouter.post('/:groupId/addShowtime', auth, async (req, res) => {
-    const { groupId } = req.params;
-    const { title, theatre, startTime, addedBy } = req.body;
+groupRouter.get('/groupShowtimes/:group_id', auth, async (req, res) => {
+    const { group_id } = req.params
 
     try {
         const result = await pool.query(
-            'INSERT INTO Group_Showtimes (group_id, title, theatre, start_time, added_by) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [groupId, title, theatre, startTime, addedBy]
+            'SELECT * FROM Group_Showings WHERE group_id = $1', [group_id]
+        )
+        res.status(200).json({ favorites: result.rows })
+    } catch (error) {
+        console.error('Error fetching group showtimes:', error)
+        res.status(500).json({ error: 'Failed to fetch group showtimes' })
+    }
+})
+
+
+// Share showtimes to group
+groupRouter.post('/addShowtime', auth, async (req, res) => {
+    const { groupId, title, theatre_name, startTime, additional_info, added_by } = req.body;
+
+    try {
+        const parsedAdditionalInfo = additional_info ? JSON.stringify(additional_info) : null;
+
+        const groupShowingsResult = await pool.query(
+            'INSERT INTO Group_Showings (group_id, title, theater_name, show_time, additional_info, added_by) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [groupId, title, theatre_name, startTime, parsedAdditionalInfo, added_by]
         );
-        res.status(200).json(result.rows[0]);
+
+        res.status(200).json(groupShowingsResult.rows[0]);
     } catch (error) {
         console.error('Error sharing showtime:', error);
         res.status(500).json({ error: 'Failed to share showtime to group' });
     }
 });
+
+
 
 // DELETE movie from group favorites
 groupRouter.delete('/:groupId/favorites/:movieId', auth, async (req, res) => {
