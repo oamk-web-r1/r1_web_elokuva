@@ -56,12 +56,6 @@ export function GroupPage() {
                 .then(response => response.json())
                 .then(data => setNonMembers(data))
                 .catch(err => console.error(err))
-
-            //fetch and display the shared showtimes for a group    
-            fetch(url + `/groups/${groupId}/showtimes`)
-                .then((res) => res.json())
-                .then((data) => setGroupShowtimes(data))
-                .catch((err) => console.error('Error fetching group showtimes:', err));
             }
     }, [groupId, user.user_id, navigate])
 
@@ -91,29 +85,21 @@ export function GroupPage() {
         .catch((err) => console.error('Error fetching favorites:', err))
     }, [groupId])
 
-
-    const handleShareShowtime = (groupId, showtime) => {
-        fetch(url + `/groups/${groupId}/shareShowtime`, {
-            method: 'POST',
+    useEffect(() => {
+        // Fetch showtimes for the group
+        fetch(url + `/groups/groupShowtimes/${groupId}`, {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}`
-            },
-            body: JSON.stringify({
-                group_id: groupId,
-                title: showtime.title,
-                theatre_name: showtime.theatre,
-                show_time: showtime.startTime
-            })
+            }
         })
-        .then(response => response.json())
-        .then(data => {
-            alert('Showtime shared successfully!')
-            setGroupShowtimes(prev => [...prev, data])
-        })
-        .catch(err => console.error(err))
-    }
-
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Fetched showtimes:', data);
+            setGroupShowtimes(data.showings);
+        })        
+        .catch(err => console.error('Error fetching showtimes:', err))
+    }, [groupId, user.token])    
     
     const handleAcceptRequest = (user_id) => {
         fetch(url + `/groupMembers/accept`, {
@@ -372,6 +358,19 @@ export function GroupPage() {
             )}</div>
 
             <h2>Showtimes</h2>
+            <div className="results-container">
+                {groupShowtimes.length > 0 ? (
+                    groupShowtimes.map((showtime) => (
+                    <div className="result-card" key={showtime.id}>
+                        <strong>{showtime.title}</strong>
+                        <p>Theatre: {showtime.theater_name}</p>
+                        <p>Start time: {showtime.show_time}</p>
+                    </div>
+                    ))
+                ) : (
+                    <p>No showtimes available for this group.</p>
+                )}
+            </div>
 
             {user.user_id === group.owner_id && (
                 <>

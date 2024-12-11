@@ -1,24 +1,39 @@
 import { useState } from "react";
 import { genres } from '../data/genres';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function SearchBar({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) {
   const [localQuery, setLocalQuery] = useState('')
   const [visibleDropdown, setVisibleDropdown] = useState(null)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const years = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i)
   const ageRatings = ['G', 'PG', 'PG-13', 'R', 'NC-17']
 
+  const handleInteraction = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      alert('Redirecting to the home page to use the search bar');
+    }
+  }
+
   const handleSearch = () => {
-    setQuery(localQuery)
+    if (location.pathname === '/') {
+      setQuery(localQuery)
+    }
   }
 
   const toggleDropdown = (dropdown) => {
-    //console.log({dropdown})
-    setVisibleDropdown((current) => (current === dropdown ? null : dropdown))
+    if (location.pathname === '/') {
+      setVisibleDropdown((current) => (current === dropdown ? null : dropdown))
+    } else {
+      handleInteraction()
+    }
   }
 
   return (
-    <div className="search-container">
+    <div className="search-container" onClick={handleInteraction}>
       <button class="search-button" onClick={handleSearch}>
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
