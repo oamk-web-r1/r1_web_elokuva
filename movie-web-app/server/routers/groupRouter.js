@@ -279,13 +279,12 @@ groupRouter.get('/groupShowtimes/:group_id', auth, async (req, res) => {
     }
 })
 
-//share showtimes to group
+
+// Share showtimes to group
 groupRouter.post('/addShowtime', auth, async (req, res) => {
- 
     const { groupId, title, theatre_name, startTime, additional_info, added_by } = req.body;
 
     try {
-        // Parse additional_info to ensure it is valid JSON or set to null
         const parsedAdditionalInfo = additional_info ? JSON.stringify(additional_info) : null;
 
         const groupShowingsResult = await pool.query(

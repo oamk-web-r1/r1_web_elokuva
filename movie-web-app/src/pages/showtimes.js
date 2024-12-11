@@ -121,8 +121,14 @@ const generateDateOptions = () => {
 };
 
 const handleShareShowtime = async (schedule) => {
-    console.log('User token:', user.token);
+    console.log('User  token:', user.token);
     try {
+        // Ensure groupId is set before making the request
+        if (!groupId) {
+            alert('Please select a group to share the showtime.');
+            return;
+        }
+
         const response = await fetch(`${url}/groups/addShowtime`, {
             method: 'POST',
             headers: {
@@ -130,30 +136,29 @@ const handleShareShowtime = async (schedule) => {
                 'Authorization': `Bearer ${user.token}`
             },
             body: JSON.stringify({
-                groupId,
+                groupId: groupId, // Ensure groupId is included
                 title: schedule.title,
                 theatre_name: schedule.theatre,
-                startTime: schedule.startTime
+                startTime: schedule.startTime,
+                additional_info: schedule.additional_info || null, // Include additional_info if available
+                added_by: user.user_id // Assuming you want to track who added the showtime
             })
-            
         });
 
-        
-        const textResponse = await response.text(); // Get raw text response
-        console.log('Response:', textResponse); // Log the response
+        // Log the raw response text for debugging
+        const textResponse = await response.text();
+        console.log('Raw response:', textResponse); // Log the raw response
+
+        // Check if the response is OK
         if (!response.ok) {
             throw new Error(`Error: ${textResponse}`);
         }
+
+        // Parse the JSON response
         const data = JSON.parse(textResponse);
         alert('Showtime shared successfully!');
+        console.log('Shared showtime data:', data); // Log the response data for debugging
 
-       /* if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Error: ${errorData.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        alert('Showtime shared successfully!');*/
     } catch (error) {
         console.error('Error sharing showtime:', error);
         alert(`Failed to share showtime: ${error.message}`);
