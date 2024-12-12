@@ -17,39 +17,9 @@ import { GroupPage } from './pages/groupPage';
 import { AddUsers} from './pages/addUsers';
 import { Unauthorized } from './pages/unauthorized';
 import FavoritesPage from './pages/favoritesPage';
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/signin",
-    element: <SignIn />,
-  },
-  {
-    path: "/signup",
-    element: <SignUp />,
-  },
-  {
-    path: "/moviepage/:movieId",
-    element: <MoviePage />,
-  },
-  {
-    path: "/showtimes",
-    element: <Showtimes/>,
-  },
-  {
-    path: "/unauthorized",
-    element: <Unauthorized />,
-  },
-  {
-    path: "/favorites/:email",
-    element: <FavoritesPage/>,
-  },
-  {
-    element: <ProtectedRoute />,
-    children: [
 const AnimatedRoutes = () => {
   const location = useLocation(); // Tracks the current route
 
