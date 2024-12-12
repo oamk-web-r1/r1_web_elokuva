@@ -301,6 +301,32 @@ groupRouter.post('/addShowtime', auth, async (req, res) => {
     }
 });
 
+groupRouter.delete('/deleteShowtime/:showtimeId', auth, async (req, res) => {
+    const { showtimeId } = req.params;
+    console.log('Received showtimeId:', showtimeId);  // Debugging line
+
+    if (!showtimeId) {
+        return res.status(400).json({ error: 'Showtime ID is required' });
+    }
+
+    try {
+        const result = await pool.query(
+            'DELETE FROM Group_Showings WHERE showing_id = $1 RETURNING *',
+            [showtimeId]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Showtime not found or already deleted.' });
+        }
+
+        res.status(200).json({ message: 'Showtime deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting showtime:', error);
+        res.status(500).json({ error: 'Failed to delete showtime' });
+    }
+});
+
+
 // DELETE movie from group favorites
 groupRouter.delete('/:groupId/favorites/:movieId', auth, async (req, res) => {
     console.log('Request Params:', req.params)

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser } from '../context/useUser';
-import { useNavigate } from 'react-router-dom';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 
@@ -199,11 +198,12 @@ const handleShareShowtime = async (schedule) => {
             ) : filteredSchedules.length > 0 ? (
                 <div className="results-container">
                     {filteredSchedules.map((schedule, index) => (
-                        <div key={index} className="result-card">
-                            <strong>{schedule.title}</strong> <br />
-                            Theatre: {schedule.theatre} <br />
-                            Start Time: {schedule.startTime} <br />
-                            <select onChange={(e) => setSelectedGroupId(e.target.value)}>
+                        <div key={index} className="result-card default-text-center">
+                            <strong>{schedule.title}</strong>
+                            <p>Theatre: {schedule.theatre}</p>
+                            <p>Start Time: {schedule.startTime}</p>
+                            <div class="share-showtime">
+                            <select class="dropdown-dark" onChange={(e) => setSelectedGroupId(e.target.value)}>
                                 <option value="">Select a group</option>
                                 {userGroups.map(group => (
                                 <option key={group.group_id} value={group.group_id}>{group.name}</option>
@@ -212,7 +212,7 @@ const handleShareShowtime = async (schedule) => {
                         <button className="default-button-pink" onClick={() => handleShareShowtime({ ...schedule, groupId })}>
                             Share to Group
                         </button>
-
+                        </div>
                         </div>
                     ))}
                 </div>

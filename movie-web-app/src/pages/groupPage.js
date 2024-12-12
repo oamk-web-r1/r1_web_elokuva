@@ -133,7 +133,7 @@ export function GroupPage() {
         fetch(url + `/groupMembers/nonmembers/${groupId}`)
             .then(response => response.json())
             .then(data => {
-                console.log('Non-members (including rejected):', data);  // Add this log to check the data
+                console.log('Non-members (including rejected):', data);
                 setNonMembers(data);
             })
             .catch(err => console.error(err))
@@ -290,6 +290,33 @@ export function GroupPage() {
             .catch(err => console.error(err))
         setShowTransferOwnership(prevState => !prevState)
     }
+
+    const handleDeleteShowtime = async (showtimeId) => {
+        console.log("Attempting to delete showtime with ID:", showtimeId)
+        
+        if (!showtimeId) {
+            console.error('No showtimeId provided')
+            return
+        }
+
+        if (window.confirm('Are you sure you want to remove this showtime from the group?')) {
+        try {
+            const response = await fetch(url + `/groups/deleteShowtime/${showtimeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+    
+            if (!response.ok) {
+                throw new Error('Failed to delete showtime')
+            }
+
+            console.log('Showtime deleted successfully')
+        } catch (error) {
+            console.error('Error deleting showtime:', error)
+        }}
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -358,13 +385,19 @@ export function GroupPage() {
             )}</div>
 
             <h2>Showtimes</h2>
-            <div className="results-container">
+            <div className="results-container-gp">
                 {groupShowtimes.length > 0 ? (
                     groupShowtimes.map((showtime) => (
-                    <div className="result-card" key={showtime.id}>
+                        <div>
+                    <div className="result-card-gp" key={showtime.id}>
                         <strong>{showtime.title}</strong>
                         <p>Theatre: {showtime.theater_name}</p>
                         <p>Start time: {showtime.show_time}</p>
+                    </div>
+                    <div class="center-item">
+                        <button className="x-mark" onClick={() => handleDeleteShowtime(showtime.showing_id)}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button></div>
                     </div>
                     ))
                 ) : (

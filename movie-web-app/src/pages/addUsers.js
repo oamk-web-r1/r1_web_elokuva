@@ -69,7 +69,7 @@ export function AddUsers() {
 
     return (
         <div class="select-users-page">
-        <div className="page-container">
+        <div className="page-container center-item">
             <h3 class="default-big-title-pink default-form-group">Select Users to Add to Group</h3>
             {error && <div className="error-message">{error}</div>}
             <div>
