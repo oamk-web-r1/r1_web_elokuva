@@ -312,6 +312,17 @@ export function GroupPage() {
                 throw new Error('Failed to delete showtime')
             }
 
+            // Refresh the showtimes after deletion
+            const updatedShowtimesResponse = await fetch(url + `/groups/groupShowtimes/${groupId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+
+            const updatedShowtimesData = await updatedShowtimesResponse.json()
+            setGroupShowtimes(updatedShowtimesData.showings)
+
             console.log('Showtime deleted successfully')
         } catch (error) {
             console.error('Error deleting showtime:', error)

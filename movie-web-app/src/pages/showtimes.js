@@ -196,12 +196,13 @@ const handleShareShowtime = async (schedule) => {
             {!selectedTheatre ? (
                 <p className="placeholder">Please select a theatre to view showtimes.</p>
             ) : filteredSchedules.length > 0 ? (
-                <div className="results-container">
+                <div className="results-container center-item">
                     {filteredSchedules.map((schedule, index) => (
                         <div key={index} className="result-card default-text-center">
                             <strong>{schedule.title}</strong>
                             <p>Theatre: {schedule.theatre}</p>
                             <p>Start Time: {schedule.startTime}</p>
+                            {user && user.token && (
                             <div class="share-showtime">
                             <select class="dropdown-dark" onChange={(e) => setSelectedGroupId(e.target.value)}>
                                 <option value="">Select a group</option>
@@ -213,6 +214,7 @@ const handleShareShowtime = async (schedule) => {
                             Share to Group
                         </button>
                         </div>
+                        )}
                         </div>
                     ))}
                 </div>
