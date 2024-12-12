@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser} from '../context/useUser';
+import { motion } from 'framer-motion';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
@@ -89,8 +90,25 @@ export default function MyProfile() {
     });
 };
     
-    return (
-        <>
+const pageVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
+const pageTransition = {
+    duration: 0.5,
+    ease: 'easeOut'
+};
+
+return (
+    <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+    >
             <Header/>
             <div class="center-item">
             <h1 class="default-big-title-white">My Profile</h1>
@@ -123,6 +141,6 @@ export default function MyProfile() {
                 <i class="fa-solid fa-share"></i>
                 </div>
             </div>
-        </>
+       </motion.div>
     );
 }

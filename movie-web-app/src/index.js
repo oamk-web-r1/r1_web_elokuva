@@ -50,37 +50,44 @@ const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
-      {
-        path: "/allgroups",
-        element: <AllGroups />,
-      },
-      {
-        path: "/creategroup",
-        element: <CreateGroup />,
-      },
-      {
-        path: "/userprofile",
-        element: <MyProfile/>,
-      },
-      {
-        path: "/grouppage/:groupId",
-        element: <GroupPage />,
-      },
-      {
-        path: "/addusers",
-        element: <AddUsers/>,
-      }
-    ]
-  }
-]);
+const AnimatedRoutes = () => {
+  const location = useLocation(); // Tracks the current route
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/moviepage/:movieId" element={<MoviePage />} />
+        <Route path="/showtimes" element={<Showtimes />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/favorites/:email" element={<FavoritesPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/allgroups" element={<AllGroups />} />
+          <Route path="/creategroup" element={<CreateGroup />} />
+          <Route path="/userprofile" element={<MyProfile />} />
+          <Route path="/grouppage/:groupId" element={<GroupPage />} />
+          <Route path="/addusers" element={<AddUsers />} />
+        </Route>
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <UserProvider>
+        <AnimatedRoutes />
+      </UserProvider>
+    </Router>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <UserProvider>
-      <RouterProvider router={router} />
-    </UserProvider>
+    <App />
   </React.StrictMode>
 );
-
-reportWebVitals();
