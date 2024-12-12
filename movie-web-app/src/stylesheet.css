@@ -239,12 +239,6 @@
     gap: 15px;
   }
   
-  .search-container.disabled {
-    opacity: 0.5;
-    pointer-events: all;
-    cursor: not-allowed;
-  }
-  
   .logo {
     display: flex;
     align-items: center;
@@ -268,15 +262,19 @@
     color: #000;
     border-radius: 0;
     cursor: pointer;
+    font-size: 0.8rem;
+    padding: 5px;
   }
 
   .filter-button-corner {
     padding-right: 13px;
+    padding-left: 5px;
     border: none;
     background-color: #fff;
     color: #000;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
+    font-size: 0.8rem;
   }
   
   .filter-button:hover {
@@ -380,6 +378,7 @@
     
   .search-input {
     flex: 1;
+    font-size: 0.8rem;
     border: none;
     outline: none;
   }
@@ -710,6 +709,63 @@
   /* MOBILE VERSION */
   @media (max-width: 768px) {
 
+    .movie-container {
+      gap: 10px;
+      padding: 0px;
+    }
+  
+    .movie-card {
+      width: 100px;
+    }
+
+    .header-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      padding-left: 5px;
+      box-sizing: border-box;
+      margin-bottom: 40px;
+    }
+
+    .search-outer-container {
+      gap: 4px;
+    }
+
+    .search-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 100%;
+    }
+  
+    .search-input {
+      flex: 1;
+      width: calc(100% - 50px);
+      padding: 7px;
+      font-size: 0.7rem;
+      box-sizing: border-box;
+    }
+
+    .search-button {
+      padding: 4px 7px;
+      font-size: 0.8rem;
+      margin-left: 0px;
+    }
+
+    .filter-button {
+      padding: 3px;
+      font-size: 0.7rem;
+    }
+  
+    .filter-button-corner {
+      padding-right: 8px;
+      padding-left: 3px;
+      font-size: 0.7rem;
+    }
+
     .movie-detail-container {
       flex-direction: column;
       gap: 20px;
@@ -749,6 +805,8 @@
     .header-content {
       flex-direction: column;
       align-items: center;
+      width: 100%;
+      gap: 10px;
     }
   
     .header-button-container {
@@ -782,6 +840,13 @@
     button.account-dropdown-item {
       text-align: center;
     }
+
+    .logo {
+      margin-bottom: 5px;
+      margin-right: 0px;
+    }
+
+    
 }
 
 .mobile-menu-toggle {
@@ -791,7 +856,7 @@
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 }
 
