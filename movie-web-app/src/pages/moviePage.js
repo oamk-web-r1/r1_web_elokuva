@@ -4,6 +4,7 @@ import { useUser } from '../context/useUser';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Header from '../components/header';
+import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 const MyKey = process.env.REACT_APP_API_KEY
@@ -192,8 +193,27 @@ const addMovieToGroup = async (groupId) => {
       console.error('Error deleting review:', err)
     }
   }
-    return (
-      <>
+
+  
+  const pageVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
+const pageTransition = {
+    duration: 0.5,
+    ease: 'easeOut'
+};
+
+return (
+    <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+    >
         <Header/>
         <div class="movie-detail-container">
       {movieDetails && (
@@ -315,6 +335,6 @@ const addMovieToGroup = async (groupId) => {
           ))
         )}
       </div>
-    </>
+    </motion.div>
     )
   }

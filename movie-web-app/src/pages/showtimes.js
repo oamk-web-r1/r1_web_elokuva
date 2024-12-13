@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser } from '../context/useUser';
+import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 
@@ -151,8 +152,26 @@ const handleShareShowtime = async (schedule) => {
     }
 }
 
-  return (
-    <>
+const pageVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
+
+const pageTransition = {
+    duration: 0.5,
+    ease: 'easeOut'
+};
+
+return (
+    <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+    >
         <Header />
         <div className="showtime-container">
             <h1 className="default-big-title-white">Showtimes</h1>
@@ -222,5 +241,6 @@ const handleShareShowtime = async (schedule) => {
                 <p className="placeholder">No showtimes available for the selected theatre and date.</p>
             )}
         </div>
-    </>
-)}
+    </motion.div>
+);
+}

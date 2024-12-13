@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/header';
 import Movie from '../components/movie';
+import { motion } from 'framer-motion';
 
 export function Home() {
   const [results, setResults] = useState([])
@@ -42,8 +43,25 @@ export function Home() {
   const handleNextPage = () => setPage((prev) => prev + 1)
   const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1))
 
-  return (
-    <>
+  const pageVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
+const pageTransition = {
+    duration: 0.5,
+    ease: 'easeOut'
+};
+
+return (
+    <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+    >
       <Header
         setQuery={setQuery}
         setSelectedGenre={setSelectedGenre}
@@ -62,6 +80,6 @@ export function Home() {
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
-    </>
+    </motion.div>
   )
 }

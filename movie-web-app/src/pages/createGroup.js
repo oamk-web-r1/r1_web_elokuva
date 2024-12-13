@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from '../context/useUser'; 
 import Header from '../components/header';
+import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 
@@ -46,8 +47,25 @@ export function CreateGroup() {
         }
     };
     
+    const pageVariants = {
+        initial: { opacity: 0, x: 50 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -50 },
+    };
+    
+    const pageTransition = {
+        duration: 0.5,
+        ease: 'easeOut'
+    };
+    
     return (
-    <>
+        <motion.div
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+        >
         <Header />
         <div className="page-container">
         <div>
@@ -83,6 +101,6 @@ export function CreateGroup() {
             </div>
         </div>
         </div>
-    </>
+    </motion.div>
     );
 }

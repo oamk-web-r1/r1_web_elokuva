@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import Header from '../components/header';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 const MyKey = process.env.REACT_APP_API_KEY
@@ -333,8 +334,25 @@ export function GroupPage() {
         return <p>Loading...</p>
     }
 
-    return (
-        <>
+const pageVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
+const pageTransition = {
+    duration: 0.5,
+    ease: 'easeOut'
+};
+
+return (
+    <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+    >
         <Header />
         <div className="center-item">
             <h2 className="default-big-title-white">{group.name}</h2>
@@ -457,6 +475,7 @@ export function GroupPage() {
                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Leave Group
                 </button>
             )}
-        </div></>
+        </div>
+        </motion.div>
     )
 }
