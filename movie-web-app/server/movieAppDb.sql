@@ -53,15 +53,15 @@ CREATE TABLE Reviews (
     UNIQUE (user_id, imdb_movie_id) -- Ensures one review per movie per user
 );
 
--- Group_Showings Table (Consolidating Showtimes)
+-- Group_Showings Table
 CREATE TABLE Group_Showings (
+    showing_id SERIAL PRIMARY KEY, -- Unique identifier for each showtime
     group_id INT REFERENCES Groups(group_id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL, -- Movie title
     theater_name VARCHAR(255) NOT NULL, -- Theater location
     show_time TIMESTAMP NOT NULL, -- Show start time (combined date and time)
     additional_info JSONB, -- Optional field for details like language, subtitles, etc.
     added_by INT REFERENCES Users(user_id) ON DELETE SET NULL, -- Tracks who shared the showtime
-    PRIMARY KEY (group_id, title, theater_name, show_time) -- Composite primary key ensures uniqueness
 );
 
 -- Group_Movies Table (Store movies associated with groups)

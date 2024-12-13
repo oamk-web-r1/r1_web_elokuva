@@ -138,8 +138,8 @@ return (
             </div>
 
             <div className="share-icon-container default-form-group " onClick={copyToClipboard} title="Copy to Clipboard">
-                <i class="fa-solid fa-share"></i>
-                </div>
+                <p class="default-text">Share your favorites</p>
+                <i class="fa-solid fa-share"></i></div>
             </div>
        </motion.div>
     );

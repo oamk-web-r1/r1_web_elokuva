@@ -57,12 +57,6 @@ export function GroupPage() {
                 .then(response => response.json())
                 .then(data => setNonMembers(data))
                 .catch(err => console.error(err))
-
-            //fetch and display the shared showtimes for a group    
-            fetch(url + `/groups/${groupId}/showtimes`)
-                .then((res) => res.json())
-                .then((data) => setGroupShowtimes(data))
-                .catch((err) => console.error('Error fetching group showtimes:', err));
             }
     }, [groupId, user.user_id, navigate])
 
@@ -92,30 +86,22 @@ export function GroupPage() {
         .catch((err) => console.error('Error fetching favorites:', err))
     }, [groupId])
 
-
-    const handleShareShowtime = (groupId, showtime) => {
-        fetch(url + `/groups/${groupId}/shareShowtime`, {
-            method: 'POST',
+    useEffect(() => {
+        // Fetch showtimes for the group
+        fetch(url + `/groups/groupShowtimes/${groupId}`, {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}`
-            },
-            body: JSON.stringify({
-                group_id: groupId,
-                title: showtime.title,
-                theatre_name: showtime.theatre,
-                show_time: showtime.startTime
-            })
+            }
         })
-        .then(response => response.json())
-        .then(data => {
-            alert('Showtime shared successfully!')
-            setGroupShowtimes(prev => [...prev, data])
-        })
-        .catch(err => console.error(err))
-    }
-
-
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Fetched showtimes:', data);
+            setGroupShowtimes(data.showings);
+        })        
+        .catch(err => console.error('Error fetching showtimes:', err))
+    }, [groupId, user.token])    
+    
     const handleAcceptRequest = (user_id) => {
         fetch(url + `/groupMembers/accept`, {
             method: 'POST',
@@ -148,7 +134,7 @@ export function GroupPage() {
         fetch(url + `/groupMembers/nonmembers/${groupId}`)
             .then(response => response.json())
             .then(data => {
-                console.log('Non-members (including rejected):', data);  // Add this log to check the data
+                console.log('Non-members (including rejected):', data);
                 setNonMembers(data);
             })
             .catch(err => console.error(err))
@@ -305,6 +291,44 @@ export function GroupPage() {
             .catch(err => console.error(err))
         setShowTransferOwnership(prevState => !prevState)
     }
+
+    const handleDeleteShowtime = async (showtimeId) => {
+        console.log("Attempting to delete showtime with ID:", showtimeId)
+        
+        if (!showtimeId) {
+            console.error('No showtimeId provided')
+            return
+        }
+
+        if (window.confirm('Are you sure you want to remove this showtime from the group?')) {
+        try {
+            const response = await fetch(url + `/groups/deleteShowtime/${showtimeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+    
+            if (!response.ok) {
+                throw new Error('Failed to delete showtime')
+            }
+
+            // Refresh the showtimes after deletion
+            const updatedShowtimesResponse = await fetch(url + `/groups/groupShowtimes/${groupId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
+
+            const updatedShowtimesData = await updatedShowtimesResponse.json()
+            setGroupShowtimes(updatedShowtimesData.showings)
+
+            console.log('Showtime deleted successfully')
+        } catch (error) {
+            console.error('Error deleting showtime:', error)
+        }}
+    }
     
     if (!group) {
         return <p>Loading...</p>
@@ -390,6 +414,25 @@ return (
             )}</div>
 
             <h2>Showtimes</h2>
+            <div className="results-container-gp">
+                {groupShowtimes.length > 0 ? (
+                    groupShowtimes.map((showtime) => (
+                        <div>
+                    <div className="result-card-gp" key={showtime.id}>
+                        <strong>{showtime.title}</strong>
+                        <p>Theatre: {showtime.theater_name}</p>
+                        <p>Start time: {showtime.show_time}</p>
+                    </div>
+                    <div class="center-item">
+                        <button className="x-mark" onClick={() => handleDeleteShowtime(showtime.showing_id)}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button></div>
+                    </div>
+                    ))
+                ) : (
+                    <p>No showtimes available for this group.</p>
+                )}
+            </div>
 
             {user.user_id === group.owner_id && (
                 <>

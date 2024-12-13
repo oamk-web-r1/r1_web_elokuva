@@ -266,7 +266,7 @@ return (
       {user.token ? (
         <div class="post-review">
           <div class="post-review-title">
-            <h2>Write a review</h2>
+            <h2 class="default-medium-title">Write a review</h2>
             <div class="review-stars">
               {[1, 2, 3, 4, 5].map((num) => (
                 <i

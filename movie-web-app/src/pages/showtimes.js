@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser } from '../context/useUser';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
@@ -11,14 +10,9 @@ export default function Showtimes() {
     const [selectedTheatre, setSelectedTheatre] = useState(''); 
     const [selectedDate, setSelectedDate] = useState('');
     const [filteredSchedules, setFilteredSchedules] = useState([]);
-    const [groups, setGroups] = useState([]);
     const { user } = useUser();
-    const navigate = useNavigate();
-    const [showGroupDropdown, setShowGroupDropdown] = useState(false);
     const [userGroups, setUserGroups] = useState([]);
-    const [dropdownVisible, setDropdownVisible] = useState(null);
     const [groupId, setSelectedGroupId] = useState(null);
-    const [showtime, setShowtime] = useState(null);
 
     const getFinnkinoSchedules = (xml) => {
         const parser = new DOMParser();
@@ -122,49 +116,41 @@ const generateDateOptions = () => {
 };
 
 const handleShareShowtime = async (schedule) => {
-    console.log('User  token:', user.token);
-    try {
-        // Ensure groupId is set before making the request
+    // Ensure groupId is set before making the request
         if (!groupId) {
-            alert('Please select a group to share the showtime.');
+            alert('Please select a group!');
             return;
         }
 
+        const payload = {
+            groupId,
+            title: schedule.title,
+            theatre_name: schedule.theatre,
+            startTime: schedule.startTime,
+            additional_info: {},
+        };
+    
+    try {
         const response = await fetch(`${url}/groups/addShowtime`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
+                Authorization: `Bearer ${user.token}`
             },
-            body: JSON.stringify({
-                groupId: groupId, // Ensure groupId is included
-                title: schedule.title,
-                theatre_name: schedule.theatre,
-                startTime: schedule.startTime,
-                additional_info: schedule.additional_info || null, // Include additional_info if available
-                added_by: user.user_id // Assuming you want to track who added the showtime
-            })
+            body: JSON.stringify(payload), 
         });
 
-        // Log the raw response text for debugging
-        const textResponse = await response.text();
-        console.log('Raw response:', textResponse); // Log the raw response
 
-        // Check if the response is OK
         if (!response.ok) {
-            throw new Error(`Error: ${textResponse}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to share showtime.");
         }
-
-        // Parse the JSON response
-        const data = JSON.parse(textResponse);
-        alert('Showtime shared successfully!');
-        console.log('Shared showtime data:', data); // Log the response data for debugging
-
+        alert("Showtime shared successfully!");
     } catch (error) {
-        console.error('Error sharing showtime:', error);
-        alert(`Failed to share showtime: ${error.message}`);
+        console.error("Error sharing showtime:", error);
+        alert(error.message);
     }
-};
+}
 
 const pageVariants = {
     initial: { opacity: 0, x: 50 },
@@ -229,26 +215,25 @@ return (
             {!selectedTheatre ? (
                 <p className="placeholder">Please select a theatre to view showtimes.</p>
             ) : filteredSchedules.length > 0 ? (
-                <div className="results-container">
+                <div className="results-container center-item">
                     {filteredSchedules.map((schedule, index) => (
-                        <div key={index} className="result-card">
-                            <strong>{schedule.title}</strong> <br />
-                            Theatre: {schedule.theatre} <br />
-                            Start Time: {schedule.startTime} <br />
-
-                            <select
-                                value={groupId}
-                                onChange={(e) => setSelectedGroupId(e.target.value)}
-                                className="dropdown"
-                            >
+                        <div key={index} className="result-card default-text-center">
+                            <strong>{schedule.title}</strong>
+                            <p>Theatre: {schedule.theatre}</p>
+                            <p>Start Time: {schedule.startTime}</p>
+                            {user && user.token && (
+                            <div class="share-showtime">
+                            <select class="dropdown-dark" onChange={(e) => setSelectedGroupId(e.target.value)}>
                                 <option value="">Select a group</option>
-                                {userGroups.map((group) => (
-                                    <option key={group.group_id} value={group.group_id}>{group.name}</option>
+                                {userGroups.map(group => (
+                                <option key={group.group_id} value={group.group_id}>{group.name}</option>
                                 ))}
                             </select>
-                            <button className="default-button-pink" onClick={() => handleShareShowtime({ ...schedule, groupId })}>
-                                Share to Group
-                            </button>
+                        <button className="default-button-pink" onClick={() => handleShareShowtime({ ...schedule, groupId })}>
+                            Share to Group
+                        </button>
+                        </div>
+                        )}
                         </div>
                     ))}
                 </div>
