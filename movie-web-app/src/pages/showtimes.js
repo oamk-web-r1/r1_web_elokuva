@@ -172,6 +172,7 @@ const pageVariants = {
     exit: { opacity: 0, x: -50 },
 };
 
+
 const pageTransition = {
     duration: 0.5,
     ease: 'easeOut'
