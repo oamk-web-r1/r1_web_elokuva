@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser } from '../context/useUser';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 
@@ -165,8 +166,26 @@ const handleShareShowtime = async (schedule) => {
     }
 };
 
-  return (
-    <>
+const pageVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
+
+const pageTransition = {
+    duration: 0.5,
+    ease: 'easeOut'
+};
+
+return (
+    <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+    >
         <Header />
         <div className="showtime-container">
             <h1 className="default-big-title-white">Showtimes</h1>
@@ -218,19 +237,18 @@ const handleShareShowtime = async (schedule) => {
                             Start Time: {schedule.startTime} <br />
 
                             <select
-                value={groupId}
-                onChange={(e) => setSelectedGroupId(e.target.value)}
-                className="dropdown"
-            >
-                <option value="">Select a group</option>
-                {userGroups.map((group) => (
-                    <option key={group.group_id} value={group.group_id}>{group.name}</option>
-                ))}
-            </select>
-            <button className="default-button-pink" onClick={() => handleShareShowtime({ ...schedule, groupId })}>
-    Share to Group
-</button>
-
+                                value={groupId}
+                                onChange={(e) => setSelectedGroupId(e.target.value)}
+                                className="dropdown"
+                            >
+                                <option value="">Select a group</option>
+                                {userGroups.map((group) => (
+                                    <option key={group.group_id} value={group.group_id}>{group.name}</option>
+                                ))}
+                            </select>
+                            <button className="default-button-pink" onClick={() => handleShareShowtime({ ...schedule, groupId })}>
+                                Share to Group
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -238,5 +256,6 @@ const handleShareShowtime = async (schedule) => {
                 <p className="placeholder">No showtimes available for the selected theatre and date.</p>
             )}
         </div>
-    </>
-)}
+    </motion.div>
+);
+}

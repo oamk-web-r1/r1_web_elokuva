@@ -3,6 +3,7 @@ import Header from '../components/header';
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/useUser';
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion';
 
 const url = process.env.REACT_APP_BACKEND_CONNECTION
 
@@ -58,8 +59,25 @@ export function AllGroups() {
           .catch(err => console.error(err))
       }
 
+      const pageVariants = {
+        initial: { opacity: 0, x: 50 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -50 },
+    };
+    
+    const pageTransition = {
+        duration: 0.5,
+        ease: 'easeOut'
+    };
+    
     return (
-        <>
+        <motion.div
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+        >
             <Header/>
             <div className="groups-page">
             <div class="center-item">
@@ -132,6 +150,6 @@ export function AllGroups() {
                     <p className="no-groups-message">You are not the owner of any groups.</p>
                 )}
             </div>
-        </>
+        </motion.div>
     )
 }
