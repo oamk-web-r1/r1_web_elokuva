@@ -23,7 +23,7 @@ const openDb = () => {
   const pool = openDb()
 
   pool.on('connect', () => {
-    console.log('Connected to Render database!')
+    console.log('Connected to database!')
   })
   
   pool.on('error', (err) => {
