@@ -53,7 +53,7 @@ return (
         transition={pageTransition}
     >
     <div>
-      <h1>Favorites</h1>
+      <h1 class="center-item">Favorites</h1>
       <div className="movie-container">
         {favorites.length > 0 ? (
           favorites.map((movie) => (
