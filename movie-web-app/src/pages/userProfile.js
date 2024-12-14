@@ -121,14 +121,14 @@ return (
             <div class="movie-container">
                 {favorites.length > 0 ? (
                     favorites.map((movie) => (
-                        <div class="movie-card" key={movie.id}>
+                        <div class="movie-card-pf" key={movie.id}>
+                            <button onClick={() => handleDelete(movie.id)} className="x-mark" title="Remove from favorites">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                             <img class="poster-image"
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
                             />
-                            <button onClick={() => handleDelete(movie.id)} className="x-mark" title="Remove from favorites">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
                         </div>
                     ))
             ) : (

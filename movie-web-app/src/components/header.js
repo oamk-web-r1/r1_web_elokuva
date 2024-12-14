@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import SearchBar from './search';
-import logo from '../assets/testlogo.png';
-import { Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../context/useUser';
 import DeleteAccount from './deleteAccount';
 
 const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRating }) => {
-  //const [visibleDropdown, setVisibleDropdown] = useState(null)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { user, signOut } = useUser()
   const navigate = useNavigate()
-  //console.log("Header component rendered")
+  const location = useLocation()
 
   const handleSignOut = () => {
     signOut()
@@ -26,11 +25,20 @@ const Header = ({ setQuery, setSelectedGenre, setSelectedYear, setSelectedAgeRat
     setMobileDropdownOpen((prevState) => !prevState)
   }
 
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.location.reload()
+    } else {
+      navigate('/')
+    }
+  }
+
   return (
     <div className="header-container">
       <div class="header-content">
-      <Link class="logo" to="/">
-          <img src={logo} alt="Logo" /></Link>
+      <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+          <img src={logo} alt="Logo" />
+        </div>
 
           <div class="search-outer-container">
             <button class="mobile-menu-toggle" onClick={toggleMobileDropdown}>
