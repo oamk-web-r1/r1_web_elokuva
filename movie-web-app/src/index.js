@@ -33,13 +33,13 @@ const AnimatedRoutes = () => {
         <Route path="/showtimes" element={<Showtimes />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/favorites/:email" element={<FavoritesPage />} />
-        <ProtectedRoute>
+        <Route element={<ProtectedRoute />}>
           <Route path="/allgroups" element={<AllGroups />} />
           <Route path="/creategroup" element={<CreateGroup />} />
           <Route path="/userprofile" element={<MyProfile />} />
           <Route path="/grouppage/:groupId" element={<GroupPage />} />
           <Route path="/addusers" element={<AddUsers />} />
-        </ProtectedRoute>
+        </Route>
       </Routes>
     </AnimatePresence>
   );
