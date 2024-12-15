@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser} from '../context/useUser';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
