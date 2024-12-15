@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/header';
 import { useUser} from '../context/useUser';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'; 
 
@@ -121,14 +122,15 @@ return (
             <div class="movie-container">
                 {favorites.length > 0 ? (
                     favorites.map((movie) => (
-                        <div class="movie-card" key={movie.id}>
-                            <img class="poster-image"
-                                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                                alt={movie.title}
-                            />
+                        <div class="movie-card-pf" key={movie.id}>
                             <button onClick={() => handleDelete(movie.id)} className="x-mark" title="Remove from favorites">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
+                            <Link to={`/moviepage/${movie.id}`}>
+                            <img class="poster-image"
+                                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                                alt={movie.title}
+                            /></Link>
                         </div>
                     ))
             ) : (

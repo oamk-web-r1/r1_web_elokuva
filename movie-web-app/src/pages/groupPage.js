@@ -398,15 +398,15 @@ return (
             <div class="movie-container">
                 {favorites.length > 0 ? (
                     favorites.map((movie) => (
-                        <div class="movie-card" key={movie.id}>
+                        <div class="movie-card-gp" key={movie.id}>
+                            <button className="x-mark" onClick={() => handleDeleteFavorite(movie.id)}>
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                             <Link to={`/moviepage/${movie.id}`}>
                             <img class="poster-image"
                                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                 alt={movie.title}
                             /></Link>
-                            <button className="x-mark" onClick={() => handleDeleteFavorite(movie.id)}>
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
                         </div>
                     ))
             ) : (
@@ -419,14 +419,15 @@ return (
                     groupShowtimes.map((showtime) => (
                         <div>
                     <div className="result-card-gp" key={showtime.id}>
+                    <button className="x-mark" onClick={() => handleDeleteShowtime(showtime.showing_id)}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
                         <strong>{showtime.title}</strong>
                         <p>Theatre: {showtime.theater_name}</p>
                         <p>Start time: {showtime.show_time}</p>
                     </div>
                     <div class="center-item">
-                        <button className="x-mark" onClick={() => handleDeleteShowtime(showtime.showing_id)}>
-                            <i className="fa-solid fa-xmark"></i>
-                        </button></div>
+                        </div>
                     </div>
                     ))
                 ) : (
