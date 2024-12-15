@@ -518,6 +518,8 @@
   .default-text {
     font-size: 1rem;
     color: #fff;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .default-text-center {
