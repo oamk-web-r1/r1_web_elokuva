@@ -518,8 +518,6 @@
   .default-text {
     font-size: 1rem;
     color: #fff;
-    word-break: break-word;
-    overflow-wrap: break-word;
   }
 
   .default-text-center {
@@ -643,6 +641,8 @@
     border-radius: 6px;
     position: relative;
     margin-bottom: 20px;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   
   .delete-button-container {
