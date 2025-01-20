@@ -31,6 +31,7 @@ The project was built using React and JavaScript for the frontend, with JavaScri
 <img src="screenshots/8.png" alt="sample eight" width="300" height="auto">
 <img src="screenshots/9.png" alt="sample nine" width="300" height="auto">
 
+# More Info
 The Documents folder in the movie-web-app folder contains the ERD for the
 database (initial plan and current version), and UI documentation.
 
