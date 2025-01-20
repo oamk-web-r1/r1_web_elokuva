@@ -16,10 +16,20 @@ The movie data and some reviews were fetched from The Movie Database API, while 
 The project was built using React and JavaScript for the frontend, with JavaScript also powering the backend. PostgreSQL was used for the database, and CSS for the UI. The database, backend, and frontend were all hosted on Render. Unfortunately, the database is currently offline due to hosting costs, which means the application is temporarily non-functional as we search for a new host for it.
 
 # Demo Video of The Desktop Version
+### In English
 [![Demo](https://i9.ytimg.com/vi/-bYTO3csi_Y/mqdefault.jpg?sqp=CIyRu7wG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAChgWKAgwIABABGF4gXiheMA8=&rs=AOn4CLDxlNFnftURODRLJvVhezrmgzi1Iw)](https://www.youtube.com/watch?v=-bYTO3csi_Y)
 
 # Mobile Version Samples
-
+### Taken on desktop
+<img src="screenshots/1.png" alt="sample one" width="300" height="auto">
+<img src="screenshots/2.png" alt="sample two" width="300" height="auto">
+<img src="screenshots/3.png" alt="sample three" width="300" height="auto">
+<img src="screenshots/4.png" alt="sample four" width="300" height="auto">
+<img src="screenshots/5.png" alt="sample five" width="300" height="auto">
+<img src="screenshots/6.png" alt="sample six" width="300" height="auto">
+<img src="screenshots/7.png" alt="sample seven" width="300" height="auto">
+<img src="screenshots/8.png" alt="sample eight" width="300" height="auto">
+<img src="screenshots/9.png" alt="sample nine" width="300" height="auto">
 
 The Documents folder in the movie-web-app folder contains the ERD for the
 database (initial plan and current version), and UI documentation.
