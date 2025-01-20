@@ -16,7 +16,7 @@ The movie data and some reviews were fetched from The Movie Database API, while 
 The project was built using React and JavaScript for the frontend, with JavaScript also powering the backend. PostgreSQL was used for the database, and CSS for the UI. The database, backend, and frontend were all hosted on Render. Unfortunately, the database is currently offline due to hosting costs, which means the application is temporarily non-functional as we search for a new host for it.
 
 # Demo Video of The Desktop Version
-[![Demo](https://www.youtube.com/watch?v=-bYTO3csi_Y)]
+[![Demo](https://img.youtube.com/vi/evrqCWDBZTA/0.jpg)](https://www.youtube.com/watch?v=-bYTO3csi_Y)
 
 # Mobile Version Samples
 
